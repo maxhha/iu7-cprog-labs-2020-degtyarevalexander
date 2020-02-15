@@ -19,6 +19,6 @@ int main()
         h = -h;
     }
 
-    printf("Square is %0.2lf\n", (h * (a + b) / 2.0));
+    printf("Square is %lf\n", (h * (a + b) / 2.0));
     return 0;
 }
