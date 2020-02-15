@@ -5,9 +5,9 @@
 double sin(double x)
 {
     double s = x, p = x;
-    for(int i = 2; i <= 20; i+=2)
+    for (int i = 2; i <= 20; i += 2)
     {
-        p = -p*x/i*x/(i+1);
+        p = -p * x / i * x / (i + 1);
         s += p;
     }
     return s;
@@ -31,7 +31,7 @@ int main()
         h = -h;
     }
 
-    printf("Square is %d\n", (int) (h*(a+b)/2.0));
+    printf("Square is %d\n", (int) (h * (a + b) / 2.0));
     return 0;
 }
 
