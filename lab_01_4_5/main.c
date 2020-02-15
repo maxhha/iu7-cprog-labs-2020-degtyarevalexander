@@ -9,9 +9,10 @@ int main()
 
     rc = scanf("%d", &n);
 
-    if (rc != 1 || rc == EOF || n <= 0) {
+    if (rc != 1 || rc == EOF || n <= 0)
+	{
         printf("no no no\n");
-        return 0;
+        return 1;
     }
 
     i = 2;
