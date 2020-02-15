@@ -13,7 +13,7 @@ int main()
     p = n / 36 + 1;
     l = n % 36 / 4 + 1;
 
-    printf("Level: %d; Entry: %d\n", l, p);
+    printf("Entry: %d\n; Level: %d", p, l);
 
     return 0;
 }
