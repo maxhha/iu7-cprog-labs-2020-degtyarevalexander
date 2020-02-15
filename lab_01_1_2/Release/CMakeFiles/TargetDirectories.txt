@@ -1,0 +1,3 @@
+/home/maxhha/Projects/c/lab_01_1_2/Release/CMakeFiles/rebuild_cache.dir
+/home/maxhha/Projects/c/lab_01_1_2/Release/CMakeFiles/lab_01_1_2.dir
+/home/maxhha/Projects/c/lab_01_1_2/Release/CMakeFiles/edit_cache.dir
