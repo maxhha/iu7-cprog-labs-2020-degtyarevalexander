@@ -2,12 +2,17 @@
 
 int main()
 {
-    int n, i;
+    int n, i, rc;
 
     setbuf(stdout, NULL);
     printf("N:\n");
 
-    scanf("%d", &n);
+    rc = scanf("%d", &n);
+
+    if (rc != 1 || rc == EOF || n <= 0) {
+        printf("no no no\n");
+        return 0;
+    }
 
     i = 2;
 
