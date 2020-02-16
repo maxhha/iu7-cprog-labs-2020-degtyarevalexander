@@ -10,7 +10,6 @@ double s_x(double x, double eps)
     while (fabs(t * n * (n + 1.0) / 2.0) >= eps)
     {
         res += t * n * (n + 1.0) / 2.0;
-        printf("%0.6lf\n", res);
 
         t = -t * x;
         n++;
@@ -25,7 +24,7 @@ int main(void)
     double fx, sx;
     double abs_err, rel_err;
 
-    printf("x, eps:\n    ");
+    printf("x, eps:\n");
 
     if (scanf("%lf %lf", &x, &eps) == 2 && fabs(x) < 1 && eps > 0)
     {
