@@ -12,12 +12,13 @@ int main()
 {
     float x1, y1, x2, y2, xa, ya;
     int rc;
+    char t;
 
     setbuf(stdout, NULL);
     printf("Segment and point:\n");
 
-    rc = scanf("%f %f %f %f %f %f", &x1, &y1, &x2, &y2, &xa, &ya);
-    if (rc != 6 || rc == EOF)
+    rc = scanf("%f %f %f %f %f %f%c", &x1, &y1, &x2, &y2, &xa, &ya, &t);
+    if (rc < 6 || rc == EOF || (rc == 7 && t != '\n'))
     {
         return 1;
     }
