@@ -22,13 +22,13 @@ int main()
         return 1;
     }
 
-    rc = scanf("%d%c", &x2, &t); 
+    rc = scanf("%d%c", &y1, &t); 
     if (rc != 2 || rc == EOF || t == '\n')
     {
         return 1;
     }
     
-    rc = scanf("%d%c", &y1, &t);
+    rc = scanf("%d%c", &x2, &t);
     if (rc != 2 || rc == EOF || t == '\n')
     {
         return 1;
