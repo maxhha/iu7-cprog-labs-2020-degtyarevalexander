@@ -17,7 +17,7 @@ int main()
     printf("Segment and point:\n");
 
     rc = scanf("%d %d %d %d %d %d%c", &x1, &y1, &x2, &y2, &xa, &ya, &t);
-    if ((rc != 7 && rc != EOF) || t != '\n')
+    if (rc != 7 || rc == EOF || t != '\n')
     {
         return 1;
     }
