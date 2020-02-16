@@ -4,15 +4,16 @@
 double s_x(double x, double eps)
 {
     double res = 1;
-    double t = 1;
-    long int n = 1;
+    double t = -x;
+    long int n = 2;
 
-    while (fabs(t * n * (n + 1.0) / 2.0) > eps)
+    while (fabs(t * n * (n + 1.0) / 2.0) >= eps)
     {
+        res += t * n * (n + 1.0) / 2.0;
+        printf("%0.6lf\n", res);
+
         t = -t * x;
         n++;
-
-        res += t * n * (n + 1.0) / 2.0;
     }
 
     return res;
