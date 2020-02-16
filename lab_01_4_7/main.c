@@ -3,20 +3,19 @@
 
 double s_x(double x, double eps)
 {
-    double res = 0;
+    double res = 1;
     double t = 1;
     long int n = 1;
 
-    while (fabs(t) > eps)
+    while (fabs(t * n * (n + 1.0) / 2.0) > eps)
     {
-        res += t;
+        t = -t * x;
+        n++;
 
-        t = -t / n * (n + 2) * x;
-
-        n += 1;
+        res += t * n * (n + 1.0) / 2.0;
     }
 
-    return res + t;
+    return res;
 }
 
 int main(void)
@@ -25,7 +24,7 @@ int main(void)
     double fx, sx;
     double abs_err, rel_err;
 
-    printf("Введите x и eps:\n    ");
+    printf("x, eps:\n    ");
 
     if (scanf("%lf %lf", &x, &eps) == 2 && fabs(x) < 1 && eps > 0)
     {
@@ -44,7 +43,7 @@ int main(void)
     }
     else
     {
-        printf("Ошибка при вводе данных\n");
+        printf("nonono\n");
         return 1;
     }
 }
