@@ -11,7 +11,7 @@ int is_on_segment(int x1, int y1, int x2, int y2, int xa, int ya)
 int main()
 {
     int x1, y1, x2, y2, xa, ya, rc;
-	char t;
+    char t;
 
     setbuf(stdout, NULL);
     printf("Segment and point:\n");
@@ -47,7 +47,7 @@ int main()
     }
     
     rc = scanf("%d%c", &ya, &t);
-    if (rc != 2 || rc == EOF || t == '\n')
+    if (rc != 2 || rc == EOF)
     {
         return 1;
     }    
