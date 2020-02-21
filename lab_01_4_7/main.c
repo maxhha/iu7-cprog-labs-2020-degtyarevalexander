@@ -27,7 +27,7 @@ int main(void)
 
     printf("x, eps:\n    ");
 
-    if (scanf("%f %f", &x, &eps) == 2 && fabs(x) < 1 && eps > 0)
+    if (scanf("%f %f", &x, &eps) == 2 && fabs(x) < 1 && eps > 0 && eps < 1)
     {
         sx = s_x(x, eps);
         fx = exp(-3 * log(1 + x));
