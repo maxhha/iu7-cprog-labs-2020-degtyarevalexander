@@ -25,19 +25,19 @@ int main()
     float fx, sx;
     float err;
 
-    printf("x, eps:\n    ");
+    printf("x, eps:\n");
 
     if (scanf("%f %f", &x, &eps) == 2 && fabs(x) < 1 && eps > 0 && eps < 1)
     {
         sx = s_x(x, eps);
         fx = exp(-3 * log(1 + x));
 
-        printf("\ns(x): %.6f \nf(x): %.6f\n", sx, fx);
+        printf("s(x): %.6f\nf(x): %.6f\n", sx, fx);
 
         err = fabs(fx - sx);
 
-        printf("\nAbsolute error: %.6f", err);
-        printf("\nRelative error: %.6f\n", fabs(err / fx));
+        printf("Absolute error: %.6f\n", err);
+        printf("Relative error: %.6f\n", fabs(err / fx));
 
         return 0;
     }
