@@ -19,11 +19,11 @@ float s_x(float x, float eps)
     return res;
 }
 
-int main(void)
+int main()
 {
     float x, eps;
     float fx, sx;
-    float abs_err, rel_err;
+    float err;
 
     printf("x, eps:\n    ");
 
@@ -34,17 +34,16 @@ int main(void)
 
         printf("\ns(x): %.6f \nf(x): %.6f\n", sx, fx);
 
-        abs_err = fabs(fx - sx);
-        rel_err = fabs(abs_err / fx);
+        err = fabs(fx - sx);
 
-        printf("\nAbsolute error: %.6f", abs_err);
-        printf("\nRelative error: %.6f\n", rel_err);
+        printf("\nAbsolute error: %.6f", err);
+        printf("\nRelative error: %.6f\n", fabs(err / fx));
 
         return 0;
     }
     else
     {
-        printf("Ошибка при вводе данных\n");
+        printf("no no no\n");
         return 1;
     }
 }
