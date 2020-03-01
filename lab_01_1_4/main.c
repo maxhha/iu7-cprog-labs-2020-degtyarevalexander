@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#define OK 0
+
 int main()
 {
     int n, l, p;
@@ -13,7 +15,7 @@ int main()
     p = n / 36 + 1;
     l = n % 36 / 4 + 1;
 
-    printf("%d %d\n", p, l);
+    printf("Entry: %d\nLevel: %d\n", p, l);
 
-    return 0;
+    return OK;
 }

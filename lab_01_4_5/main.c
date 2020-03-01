@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+#define OK 0
+#define INPUT_ERR 1
+
 int main()
 {
     int n, i, rc;
@@ -12,11 +15,10 @@ int main()
     if (rc != 1 || rc == EOF || n <= 0)
     {
         printf("no no no\n");
-        return 1;
+        return INPUT_ERR;
     }
 
     i = 2;
-
     while (n != 1)
     {
         if (n % i == 0)
@@ -31,5 +33,5 @@ int main()
     }
     printf("\n");
 
-    return 0;
+    return OK;
 }

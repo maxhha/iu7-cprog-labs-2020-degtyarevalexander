@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <math.h>
 
-float s_x(float x, float eps)
+#define OK 0
+#define INPUT_ERR 1
+
+float my_f(float x, float eps)
 {
     float res = 0;
     float t = 1;
@@ -22,28 +25,26 @@ float s_x(float x, float eps)
 int main()
 {
     float x, eps;
-    float fx, sx;
+    float fx, my_fx;
     float err;
 
     printf("x, eps:\n");
 
     if (scanf("%f %f", &x, &eps) == 2 && fabs(x) < 1 && eps > 0 && eps < 1)
     {
-        sx = s_x(x, eps);
+        my_fx = my_f(x, eps);
         fx = exp(-3 * log(1 + x));
+        err = fabs(fx - my_fx);
 
-        printf("s(x): %.6f\nf(x): %.6f\n", sx, fx);
-
-        err = fabs(fx - sx);
-
+        printf("s(x): %.6f\nf(x): %.6f\n", my_fx, fx);
         printf("Absolute error: %.6f\n", err);
         printf("Relative error: %.6f\n", fabs(err / fx));
 
-        return 0;
+        return OK;
     }
     else
     {
         printf("no no no\n");
-        return 1;
+        return INPUT_ERR;
     }
 }

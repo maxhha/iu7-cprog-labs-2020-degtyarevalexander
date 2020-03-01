@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
-# define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846
+#define OK 0
 
 int main()
 {
@@ -20,5 +21,5 @@ int main()
     }
 
     printf("Square is %lf\n", (h * (a + b) / 2.0));
-    return 0;
+    return OK;
 }
