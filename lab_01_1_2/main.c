@@ -3,6 +3,7 @@
 
 #define M_PI 3.14159265358979323846
 #define OK 0
+#define DEGREES_IN_PI 180.0
 
 int main()
 {
@@ -13,7 +14,7 @@ int main()
 
     scanf("%f %f %f", &a, &b, &alpha);
 
-    h = (b - a) / 2.0 * tan(alpha * M_PI / 180.0);
+    h = (b - a) / 2.0 * tan(alpha * M_PI / DEGREES_IN_PI);
 
     if (h < 0)
     {

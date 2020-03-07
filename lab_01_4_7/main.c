@@ -4,10 +4,10 @@
 #define OK 0
 #define INPUT_ERR 1
 
-float my_f(float x, float eps)
+double calc_func_as_series(double x, double eps)
 {
-    float res = 0;
-    float t = 1;
+    double res = 0;
+    double t = 1;
     long int n = 1;
 
     while (fabs(t) > eps)
@@ -24,27 +24,24 @@ float my_f(float x, float eps)
 
 int main()
 {
-    float x, eps;
-    float fx, my_fx;
-    float err;
+    double x, eps;
+    double f, s;
+    double err;
 
     printf("x, eps:\n");
 
-    if (scanf("%f %f", &x, &eps) == 2 && fabs(x) < 1 && eps > 0 && eps < 1)
-    {
-        my_fx = my_f(x, eps);
-        fx = exp(-3 * log(1 + x));
-        err = fabs(fx - my_fx);
-
-        printf("s(x): %.6f\nf(x): %.6f\n", my_fx, fx);
-        printf("Absolute error: %.6f\n", err);
-        printf("Relative error: %.6f\n", fabs(err / fx));
-
-        return OK;
-    }
-    else
+    if (scanf("%lf %lf", &x, &eps) != 2 || fabs(x) >= 1 || eps <= 0 || eps >= 1)
     {
         printf("no no no\n");
         return INPUT_ERR;
     }
+    s = calc_func_as_series(x, eps);
+    f = exp(-3 * log(1 + x));
+    err = fabs(f - s);
+
+    printf("s(x): %.6lf\nf(x): %.6lf\n", s, f);
+    printf("Absolute error: %.6lf\n", err);
+    printf("Relative error: %.6lf\n", fabs(err / f));
+
+    return OK;
 }
