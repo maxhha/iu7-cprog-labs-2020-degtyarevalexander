@@ -46,9 +46,9 @@ void sort_array(int a[], int n)
     {
         int x = a[i];
         int j = i;
-        while (j > 0 && a[j-1] > x)
+        while (j > 0 && a[j - 1] > x)
         {
-            a[j] = a[j-1];
+            a[j] = a[j - 1];
             j--;
         }
         a[j] = x;
