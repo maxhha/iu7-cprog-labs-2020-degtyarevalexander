@@ -1,0 +1,91 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:5
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define MAX_ARRAY_SIZE 10
+        -:    4:#define OK 0
+        -:    5:#define INPUT_LEN_ERR 1
+        -:    6:#define INPUT_ELEMENTS_ERR 2
+        -:    7:
+        5:    8:int scanf_array(int a[], int *len)
+        -:    9:{
+        -:   10:    int n;
+        5:   11:    printf("Enter array length:\n");
+        5:   12:    int rc = scanf("%d", &n);
+        5:   13:    *len = n;
+        -:   14:
+        5:   15:    if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
+        -:   16:    {
+        1:   17:        return INPUT_LEN_ERR;
+        -:   18:    }
+        -:   19:
+        4:   20:    printf("Enter array elements:\n");
+        -:   21:
+       11:   22:    for (int i = 0; i < n; i++)
+        -:   23:    {
+        8:   24:        rc = scanf("%d", &a[i]);
+        -:   25:
+        8:   26:        if (rc != 1 || rc == EOF)
+        -:   27:        {
+        1:   28:            return INPUT_ELEMENTS_ERR;
+        -:   29:        }
+        -:   30:    }
+        3:   31:    return OK;
+        -:   32:}
+        -:   33:
+        3:   34:void print_array(int a[], int n)
+        -:   35:{
+       10:   36:    for (int i = 0; i < n; i++)
+        -:   37:    {
+        7:   38:        printf("%d ", a[i]);
+        -:   39:    }
+        3:   40:    printf("\n");
+        3:   41:}
+        -:   42:
+        3:   43:void sort_array(int a[], int n)
+        -:   44:{
+        7:   45:    for (int i = 1; i < n; i++)
+        -:   46:    {
+        4:   47:        int x = a[i];
+        4:   48:        int j = i;
+       12:   49:        while (j > 0 && a[j - 1] > x)
+        -:   50:        {
+        4:   51:            a[j] = a[j - 1];
+        4:   52:            j--;
+        -:   53:        }
+        4:   54:        a[j] = x;
+        -:   55:    }
+        3:   56:}
+        -:   57:
+        5:   58:int main(void)
+        -:   59:{
+        -:   60:    int a[MAX_ARRAY_SIZE];
+        -:   61:    int n_a, rc;
+        -:   62:
+        5:   63:    rc = scanf_array(a, &n_a);
+        -:   64:
+        5:   65:    if (rc == INPUT_LEN_ERR)
+        -:   66:    {
+        1:   67:        printf("Array size is invalid.\n");
+        1:   68:        return rc;
+        -:   69:    }
+        4:   70:    else if (rc == INPUT_ELEMENTS_ERR)
+        -:   71:    {
+        1:   72:        printf("Oops! It was a bad element.\n");
+        1:   73:        return rc;
+        -:   74:    }
+        3:   75:    else if (rc != OK)
+        -:   76:    {
+    #####:   77:        printf("Unknown code error %d.\n", rc);
+    #####:   78:        return rc;
+        -:   79:    }
+        -:   80:
+        3:   81:    sort_array(a, n_a);
+        -:   82:
+        3:   83:    print_array(a, n_a);
+        -:   84:
+        3:   85:    return OK;
+        -:   86:}
