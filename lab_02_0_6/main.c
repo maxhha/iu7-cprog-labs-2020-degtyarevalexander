@@ -132,7 +132,7 @@ int main(void)
     min_time = 1.0 / 0.0;
     max_time = -min_time;
 
-    for (int i = 0; i < repeats; i++)
+    for (int i = 0; i < repeats + 2; i++)
     {
         gettimeofday(&tv_start, NULL);
         process_1(a, n);
@@ -152,7 +152,7 @@ int main(void)
             max_time = current_time;
     }
 
-    printf("%0.6lf µs | ", (sum - min_time - max_time) / (repeats - 2));
+    printf("%0.6lf µs | ", (sum - min_time - max_time) / repeats);
 
     // Измерение формальной замены операции индексации на выражение *(a + i)
 
@@ -160,7 +160,7 @@ int main(void)
     min_time = 1.0 / 0.0;
     max_time = -min_time;
 
-    for (int i = 0; i < repeats; i++)
+    for (int i = 0; i < repeats + 2; i++)
     {
         gettimeofday(&tv_start, NULL);
         process_2(a, n);
@@ -180,7 +180,7 @@ int main(void)
             max_time = current_time;
     }
 
-    printf("%0.6lf µs | ", (sum - min_time - max_time) / (repeats - 2));
+    printf("%0.6lf µs | ", (sum - min_time - max_time) / repeats);
 
     // Измерение использования указателей для работы с массивом.
 
@@ -188,7 +188,7 @@ int main(void)
     min_time = 1.0 / 0.0;
     max_time = -min_time;
 
-    for (int i = 0; i < repeats; i++)
+    for (int i = 0; i < repeats + 2; i++)
     {
         gettimeofday(&tv_start, NULL);
         process_3(a, n);
@@ -203,7 +203,7 @@ int main(void)
             max_time = current_time;
     }
 
-    printf("%0.6lf µs | ", (sum - min_time - max_time) / (repeats - 2));
+    printf("%0.6lf µs | ", (sum - min_time - max_time) / repeats);
 
     printf("\n");
 
