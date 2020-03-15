@@ -5,6 +5,9 @@
 
 void print_factor(int n)
 {
+    if (n < 0)
+        n = -n;
+    
     int i = 2;
     while (n != 1)
     {
