@@ -14,12 +14,7 @@ int main()
 
     scanf("%f %f %f", &a, &b, &alpha);
 
-    h = (b - a) / 2.0 * tan(alpha * M_PI / DEGREES_IN_PI);
-
-    if (h < 0)
-    {
-        h = -h;
-    }
+    h = fabs((b - a) / 2.0 * tan(alpha * M_PI / DEGREES_IN_PI));
 
     printf("Square is %lf\n", (h * (a + b) / 2.0));
     return OK;
