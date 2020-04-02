@@ -1,13 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define OK 0
 #define INPUT_ERR 1
 
 void print_factor(int n)
 {
-    if (n < 0)
-        n = -n;
-    
+    n = abs(n);
+
     int i = 2;
     while (n != 1)
     {
