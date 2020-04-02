@@ -36,9 +36,11 @@ int process_1(int *a, int n)
     int l = 0;
     int r = n - 1;
     int max = a[l] + a[r];
+    int x;
+
     while (l <= r)
     {
-        int x = a[l] + a[r];
+        x = a[l] + a[r];
         if (x > max)
             max = x;
         l++;
@@ -53,9 +55,11 @@ int process_2(int *a, int n)
     int l = 0;
     int r = n - 1;
     int max = *(a + l) + *(a + r);
+    int x;
+
     while (l <= r)
     {
-        int x = *(a + l) + *(a + r);
+        x = *(a + l) + *(a + r);
         if (x > max)
             max = x;
         l++;
@@ -70,9 +74,11 @@ int process_3(int *a, int n)
     int *l = a;
     int *r = a + n - 1;
     int max = *l + *r;
+    int x;
+
     while (l <= r)
     {
-        int x = *l + *r;
+        x = *l + *r;
         if (x > max)
             max = x;
         l++;
@@ -81,13 +87,53 @@ int process_3(int *a, int n)
     return max;
 }
 
+void print_header()
+{
+    printf("| Количество повторов (N) ");
+    printf("| Размер массива | a[i] ");
+    printf("| *(a + i) ");
+    printf("| Работа с указателями ");
+    printf("|\n");
+
+    printf("| ---:| ---:| ---:| ---:| ---:|\n");
+}
+
+double time_function(int (*process)(int*, int), int *a, int n, int repeats)
+{
+    double sum = 0;
+    double min_time = INFINITY;
+    double max_time = -INFINITY;
+    double current_time;
+
+    struct timeval tv_start, tv_stop;
+
+    for (int i = 0; i < repeats + 2; i++)
+    {
+        gettimeofday(&tv_start, NULL);
+        process(a, n);
+        gettimeofday(&tv_stop, NULL);
+
+        current_time = (
+            (tv_stop.tv_sec - tv_start.tv_sec) * 1000000LL
+            + (tv_stop.tv_usec - tv_start.tv_usec)
+        );
+
+        sum += current_time;
+
+        if (current_time < min_time)
+            min_time = current_time;
+
+        if (current_time > max_time)
+            max_time = current_time;
+    }
+
+    return (sum - min_time - max_time) / repeats;
+}
+
 int main(void)
 {
     int a[MAX_ARRAY_SIZE];
     int n, rc, repeats, header;
-
-    struct timeval tv_start, tv_stop;
-    double sum, min_time, max_time, current_time;
 
     setbuf(stdout, NULL);
 
@@ -119,90 +165,19 @@ int main(void)
 
     if (header)
     {
-        printf("| Количество повторов (N) | Размер массива | a[i] | *(a + i) | Работа с указателями |\n");
-        printf("| ---:| ---:| ---:| ---:| ---:|\n");
+        print_header();
     }
 
     printf("| %d | %d | ", repeats, n);
 
     // Измерение использования операции индексации
-
-    sum = 0;
-    min_time = INFINITY;
-    max_time = -INFINITY;
-
-    for (int i = 0; i < repeats + 2; i++)
-    {
-        gettimeofday(&tv_start, NULL);
-        process_1(a, n);
-        gettimeofday(&tv_stop, NULL);
-
-        current_time = (
-            (tv_stop.tv_sec - tv_start.tv_sec) * 1000000LL
-            + (tv_stop.tv_usec - tv_start.tv_usec)
-        );
-
-        sum += current_time;
-
-        if (current_time < min_time)
-            min_time = current_time;
-
-        if (current_time > max_time)
-            max_time = current_time;
-    }
-
-    printf("%0.6lf µs | ", (sum - min_time - max_time) / repeats);
+    printf("%0.6lf µs | ", time_function(process_1, a, n, repeats));
 
     // Измерение формальной замены операции индексации на выражение *(a + i)
-
-    sum = 0;
-    min_time = INFINITY;
-    max_time = -INFINITY;
-
-    for (int i = 0; i < repeats + 2; i++)
-    {
-        gettimeofday(&tv_start, NULL);
-        process_2(a, n);
-        gettimeofday(&tv_stop, NULL);
-
-        current_time = (
-            (tv_stop.tv_sec - tv_start.tv_sec) * 1000000LL
-            + (tv_stop.tv_usec - tv_start.tv_usec)
-        );
-
-        sum += current_time;
-
-        if (current_time < min_time)
-            min_time = current_time;
-
-        if (current_time > max_time)
-            max_time = current_time;
-    }
-
-    printf("%0.6lf µs | ", (sum - min_time - max_time) / repeats);
+    printf("%0.6lf µs | ", time_function(process_2, a, n, repeats));
 
     // Измерение использования указателей для работы с массивом.
-
-    sum = 0;
-    min_time = INFINITY;
-    max_time = -INFINITY;
-
-    for (int i = 0; i < repeats + 2; i++)
-    {
-        gettimeofday(&tv_start, NULL);
-        process_3(a, n);
-        gettimeofday(&tv_stop, NULL);
-
-        sum += current_time;
-
-        if (current_time < min_time)
-            min_time = current_time;
-
-        if (current_time > max_time)
-            max_time = current_time;
-    }
-
-    printf("%0.6lf µs | ", (sum - min_time - max_time) / repeats);
+    printf("%0.6lf µs | ", time_function(process_3, a, n, repeats));
 
     printf("\n");
 

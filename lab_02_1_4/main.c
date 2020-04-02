@@ -38,12 +38,14 @@ void print_array(int *a, int n)
     printf("\n");
 }
 
+// Используется метод сортировки вставками
 void sort_array(int *a, int n)
 {
+    int x, j;
     for (int i = 1; i < n; i++)
     {
-        int x = a[i];
-        int j = i;
+        x = a[i];
+        j = i;
         while (j > 0 && a[j - 1] > x)
         {
             a[j] = a[j - 1];

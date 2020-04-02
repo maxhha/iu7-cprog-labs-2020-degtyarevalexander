@@ -36,9 +36,11 @@ int clever_max(int *a, int *r_a)
     int *l = a;
     int *r = r_a - 1;
     int max = *l + *r;
+    int x;
+    
     while (l <= r)
     {
-        int x = *l + *r;
+        x = *l + *r;
         if (x > max)
             max = x;
         l++;
