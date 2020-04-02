@@ -5,23 +5,21 @@
 #define INPUT_LEN_ERR 1
 #define INPUT_ELEMENTS_ERR 2
 
-int scanf_array(int a[], int *len)
+int scanf_array(int *a, int *len)
 {
-    int n;
     printf("Enter array length:\n");
-    int rc = scanf("%d", &n);
-    *len = n;
+    int rc = scanf("%d", len);
 
-    if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
+    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
     {
         return INPUT_LEN_ERR;
     }
 
     printf("Enter array elements:\n");
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < *len; i++)
     {
-        rc = scanf("%d", &a[i]);
+        rc = scanf("%d", a + i);
 
         if (rc != 1 || rc == EOF)
         {
@@ -31,7 +29,7 @@ int scanf_array(int a[], int *len)
     return OK;
 }
 
-void print_array(int a[], int n)
+void print_array(int *a, int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -40,7 +38,7 @@ void print_array(int a[], int n)
     printf("\n");
 }
 
-void sort_array(int a[], int n)
+void sort_array(int *a, int n)
 {
     for (int i = 1; i < n; i++)
     {

@@ -1,27 +1,26 @@
 #include <stdio.h>
 #include <sys/time.h>
+#include <math.h>
 
 #define MAX_ARRAY_SIZE 10000
 #define OK 0
 #define INPUT_ERR 1
 
-int scanf_array(int a[], int *len)
+int scanf_array(int *a, int *len)
 {
-    int n;
     printf("Enter array length:\n");
-    int rc = scanf("%d", &n);
-    *len = n;
+    int rc = scanf("%d", len);
 
-    if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
+    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
     {
         return INPUT_ERR;
     }
 
     printf("Enter array elements:\n");
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < *len; i++)
     {
-        rc = scanf("%d", &a[i]);
+        rc = scanf("%d", a + i);
 
         if (rc != 1 || rc == EOF)
         {
@@ -32,7 +31,7 @@ int scanf_array(int a[], int *len)
 }
 
 // использование операции индексации a[i]
-int process_1(int a[], int n)
+int process_1(int *a, int n)
 {
     int l = 0;
     int r = n - 1;
@@ -49,7 +48,7 @@ int process_1(int a[], int n)
 }
 
 // формальная замена операции индексации на выражение *(a + i)
-int process_2(int a[], int n)
+int process_2(int *a, int n)
 {
     int l = 0;
     int r = n - 1;
@@ -66,7 +65,7 @@ int process_2(int a[], int n)
 }
 
 // использование указателей для работы с массивом.
-int process_3(int a[], int n)
+int process_3(int *a, int n)
 {
     int *l = a;
     int *r = a + n - 1;
@@ -129,8 +128,8 @@ int main(void)
     // Измерение использования операции индексации
 
     sum = 0;
-    min_time = 1.0 / 0.0;
-    max_time = -min_time;
+    min_time = INFINITY;
+    max_time = -INFINITY;
 
     for (int i = 0; i < repeats + 2; i++)
     {
@@ -157,8 +156,8 @@ int main(void)
     // Измерение формальной замены операции индексации на выражение *(a + i)
 
     sum = 0;
-    min_time = 1.0 / 0.0;
-    max_time = -min_time;
+    min_time = INFINITY;
+    max_time = -INFINITY;
 
     for (int i = 0; i < repeats + 2; i++)
     {
@@ -185,8 +184,8 @@ int main(void)
     // Измерение использования указателей для работы с массивом.
 
     sum = 0;
-    min_time = 1.0 / 0.0;
-    max_time = -min_time;
+    min_time = INFINITY;
+    max_time = -INFINITY;
 
     for (int i = 0; i < repeats + 2; i++)
     {

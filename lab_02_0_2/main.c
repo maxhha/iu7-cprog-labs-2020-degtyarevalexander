@@ -6,23 +6,21 @@
 #define INPUT_ELEMENTS_ERR 2
 #define PROCESS_ERR 3
 
-int scanf_array(int a[], int *len)
+int scanf_array(int *a, int *len)
 {
-    int n;
     printf("Enter array length:\n");
-    int rc = scanf("%d", &n);
-    *len = n;
+    int rc = scanf("%d", len);
 
-    if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
+    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
     {
         return INPUT_LEN_ERR;
     }
 
     printf("Enter array elements:\n");
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < *len; i++)
     {
-        rc = scanf("%d", &a[i]);
+        rc = scanf("%d", a + i);
 
         if (rc != 1 || rc == EOF)
         {
@@ -32,7 +30,7 @@ int scanf_array(int a[], int *len)
     return OK;
 }
 
-void print_array(int a[], int n)
+void print_array(int *a, int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -41,17 +39,17 @@ void print_array(int a[], int n)
     printf("\n");
 }
 
-float get_average(int a[], int n)
+double get_average(int *a, int n)
 {
     int s = 0;
     for (int i = 0; i < n; i++)
     {
         s += a[i];
     }
-    return (float) s / n;
+    return (double) s / n;
 }
 
-void copy_greater(int a[], int n, float threshold, int out_a[], int *out_n)
+void copy_greater(int *a, int n, double threshold, int *out_a, int *out_n)
 {
     int j = 0;
     for (int i = 0; i < n; i++)
@@ -91,7 +89,7 @@ int main(void)
 
     if (n_b == 0)
     {
-        printf("No greater than average elements.\n");
+        printf("No greater than elements average.\n");
         return PROCESS_ERR;
     }
 

@@ -5,7 +5,7 @@
 #define INPUT_LEN_ERR 1
 #define INPUT_ELEMENTS_ERR 2
 
-int scanf_array(int a[], int **right)
+int scanf_array(int *a, int **right)
 {
     int n;
     printf("Enter array length:\n");
@@ -31,7 +31,7 @@ int scanf_array(int a[], int **right)
     return OK;
 }
 
-int clever_max(int a[], int *r_a)
+int clever_max(int *a, int *r_a)
 {
     int *l = a;
     int *r = r_a - 1;
