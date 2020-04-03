@@ -46,7 +46,7 @@ int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
 
 void print_array(bool *a, int len)
 {
-    for(int i = 0; i < len; i++)
+    for (int i = 0; i < len; i++)
     {
         printf("%d ", a[i]);
     }
