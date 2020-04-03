@@ -29,12 +29,14 @@ int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
 
     printf("Enter elements:\n");
 
-    for(int i = 0; i < *rows; i++)
+    for (int i = 0; i < *rows; i++)
     {
-        for(int j = 0; j < *columns; j++)
+        for (int j = 0; j < *columns; j++)
         {
             rc = scanf("%d", *(a + i) + j);
-            if (rc != 1 || rc == EOF) {
+
+            if (rc != 1 || rc == EOF)
+            {
                 return INPUT_ERR;
             }
         }
@@ -53,14 +55,15 @@ void print_array(bool *a, int len)
 
 void magic_reduce(int a[][MAX_COLUMNS], int rows, int columns, bool *result)
 {
-    for(int col = 0; col < columns; col++)
+    for (int col = 0; col < columns; col++)
     {
         int prev = a[0][col];
-        result[col] = rows == 1;
+        result[col] = rows > 1;
 
-        for(int row = 1; row < rows; row++)
+        for (int row = 1; row < rows; row++)
         {
-            if (prev <= a[row][col]) {
+            if (prev <= a[row][col])
+            {
                 result[col] = false;
                 break;
             }
