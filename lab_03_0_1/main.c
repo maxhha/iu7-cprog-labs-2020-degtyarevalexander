@@ -14,7 +14,7 @@ bool is_valid_size(int rows, int columns)
         && rows <= MAX_ROWS
         && columns > 0
         && columns <= MAX_COLUMNS
-    );
+        );
 }
 
 int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
@@ -51,17 +51,12 @@ void print_array(bool *a, int len)
     printf("\n");
 }
 
-void get_matrix_columns_in_desc_order(
-    int a[][MAX_COLUMNS],
-    int rows,
-    int columns,
-    bool *result
-)
+void magic_reduce(int a[][MAX_COLUMNS], int rows, int columns, bool *result)
 {
     for(int col = 0; col < columns; col++)
     {
         int prev = a[0][col];
-        result[col] = true;
+        result[col] = rows == 1;
 
         for(int row = 1; row < rows; row++)
         {
@@ -86,10 +81,11 @@ int main(void)
     if (rc != OK)
     {
         fprintf(stderr, "Invalid input\n");
+
         return INPUT_ERR;
     }
 
-    get_matrix_columns_in_desc_order(a, a_rows, a_columns, b);
+    magic_reduce(a, a_rows, a_columns, b);
 
     print_array(b, a_columns);
 
