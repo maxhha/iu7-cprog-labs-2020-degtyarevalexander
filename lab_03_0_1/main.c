@@ -42,15 +42,35 @@ int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
     return OK;
 }
 
-void print_matrix(int a[][MAX_COLUMNS], int rows, int columns)
+void print_array(bool *a, int len)
 {
-    for(int i = 0; i < rows; i++)
+    for(int i = 0; i < len; i++)
     {
-        for(int j = 0; j < columns; j++)
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+}
+
+void get_matrix_columns_in_desc_order(
+    int a[][MAX_COLUMNS],
+    int rows,
+    int columns,
+    bool *result
+)
+{
+    for(int col = 0; col < columns; col++)
+    {
+        int prev = a[0][col];
+        result[col] = true;
+
+        for(int row = 1; row < rows; row++)
         {
-            printf("%d ", a[i][j]);
+            if (prev <= a[row][col]) {
+                result[col] = false;
+                break;
+            }
+            prev = a[row][col];
         }
-        printf("\n");
     }
 }
 
@@ -58,6 +78,7 @@ int main(void)
 {
     int a[MAX_ROWS][MAX_COLUMNS];
     int a_rows, a_columns;
+    bool b[MAX_COLUMNS];
     int rc;
 
     rc = scanf_matrix(a, &a_rows, &a_columns);
@@ -68,9 +89,9 @@ int main(void)
         return INPUT_ERR;
     }
 
-    printf("You enter:\n");
+    get_matrix_columns_in_desc_order(a, a_rows, a_columns, b);
 
-    print_matrix(a, a_rows, a_columns);
+    print_array(b, a_columns);
 
     return OK;
 }
