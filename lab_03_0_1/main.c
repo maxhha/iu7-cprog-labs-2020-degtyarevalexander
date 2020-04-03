@@ -17,7 +17,7 @@ bool is_valid_size(int rows, int columns)
     );
 }
 
-int scanf_matrix(int (*a)[MAX_COLUMNS], int *rows, int *columns)
+int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
 {
     printf("Enter matrix size:\n");
     int rc = scanf("%d %d", rows, columns);
@@ -42,7 +42,7 @@ int scanf_matrix(int (*a)[MAX_COLUMNS], int *rows, int *columns)
     return OK;
 }
 
-void print_matrix(int (*a)[MAX_COLUMNS], int rows, int columns)
+void print_matrix(int a[][MAX_COLUMNS], int rows, int columns)
 {
     for(int i = 0; i < rows; i++)
     {
