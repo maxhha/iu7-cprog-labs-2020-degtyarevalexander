@@ -81,7 +81,8 @@ void swap_arrays(int *a, int *b, int n)
 
 void sort_rows_by_weights(int a[][MAX_COLUMNS], int rows, int columns, int *weights)
 {
-    if (rows < 2) return;
+    if (rows < 2)
+        return;
 
     int l = 0;
     int r = rows - 1;
@@ -90,10 +91,14 @@ void sort_rows_by_weights(int a[][MAX_COLUMNS], int rows, int columns, int *weig
 
     while (l < r)
     {
-        while (weights[l] < pivot) l++;
-        while (weights[r] > pivot) r--;
+        while (weights[l] < pivot)
+            l++;
+        
+        while (weights[r] > pivot)
+            r--;
 
-        if (l <= r) {
+        if (l <= r)
+        {
             temp = weights[l];
             weights[l] = weights[r];
             weights[r] = temp;
