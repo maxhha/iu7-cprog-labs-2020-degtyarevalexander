@@ -1,0 +1,145 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:4
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdbool.h>
+        -:    3:
+        -:    4:#define OK 0
+        -:    5:#define INPUT_ERR 1
+        -:    6:
+        -:    7:#define MAX_ROWS 10
+        -:    8:#define MAX_COLUMNS 10
+        -:    9:
+        3:   10:bool is_valid_size(int rows, int columns)
+        -:   11:{
+        -:   12:    return (
+        -:   13:        rows > 0
+        3:   14:        && rows <= MAX_ROWS
+        3:   15:        && columns > 0
+        6:   16:        && columns <= MAX_COLUMNS
+        -:   17:        );
+        -:   18:}
+        -:   19:
+        4:   20:int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
+        -:   21:{
+        4:   22:    printf("Enter matrix size:\n");
+        4:   23:    int rc = scanf("%d %d", rows, columns);
+        -:   24:
+        4:   25:    if (rc != 2 || rc == EOF || !is_valid_size(*rows, *columns))
+        -:   26:    {
+        1:   27:        return INPUT_ERR;
+        -:   28:    }
+        -:   29:
+        3:   30:    printf("Enter elements:\n");
+        -:   31:
+       16:   32:    for (int i = 0; i < *rows; i++)
+        -:   33:    {
+       33:   34:        for (int j = 0; j < *columns; j++)
+        -:   35:        {
+       20:   36:            rc = scanf("%d", *(a + i) + j);
+        -:   37:
+       20:   38:            if (rc != 1 || rc == EOF)
+        -:   39:            {
+        1:   40:                return INPUT_ERR;
+        -:   41:            }
+        -:   42:        }
+        -:   43:    }
+        2:   44:    return OK;
+        -:   45:}
+        -:   46:
+        2:   47:void print_matrix(int a[][MAX_COLUMNS], int rows, int columns)
+        -:   48:{
+       15:   49:    for (int i = 0; i < rows; i++)
+        -:   50:    {
+       32:   51:        for (int j = 0; j < columns; j++)
+        -:   52:        {
+       19:   53:            printf("%d ", a[i][j]);
+        -:   54:        }
+       13:   55:        printf("\n");
+        -:   56:    }
+        2:   57:}
+        -:   58:
+        2:   59:void get_rows_sums(int a[][MAX_COLUMNS], int rows, int columns, int *sums)
+        -:   60:{
+       15:   61:    for (int r = 0; r < rows; r++)
+        -:   62:    {
+       13:   63:        sums[r] = 0;
+       32:   64:        for (int c = 0; c < columns; c++)
+        -:   65:        {
+       19:   66:            sums[r] += a[r][c];
+        -:   67:        }
+        -:   68:    }
+        2:   69:}
+        -:   70:
+       14:   71:void swap_arrays(int *a, int *b, int n)
+        -:   72:{
+        -:   73:    int temp;
+       34:   74:    for (int i = 0; i < n; i++)
+        -:   75:    {
+       20:   76:        temp = a[i];
+       20:   77:        a[i] = b[i];
+       20:   78:        b[i] = temp;
+        -:   79:    }
+       14:   80:}
+        -:   81:
+       24:   82:void sort_rows_by_weights(int a[][MAX_COLUMNS], int rows, int columns, int *weights)
+        -:   83:{
+       24:   84:    if (rows < 2)
+       13:   85:        return;
+        -:   86:
+       11:   87:    int l = 0;
+       11:   88:    int r = rows - 1;
+       11:   89:    int pivot = weights[(l + r) >> 1];
+        -:   90:    int temp;
+        -:   91:
+       37:   92:    while (l < r)
+        -:   93:    {
+       35:   94:        while (weights[l] < pivot)
+        5:   95:            l++;
+        -:   96:        
+       45:   97:        while (weights[r] > pivot)
+       15:   98:            r--;
+        -:   99:
+       15:  100:        if (l <= r)
+        -:  101:        {
+       14:  102:            temp = weights[l];
+       14:  103:            weights[l] = weights[r];
+       14:  104:            weights[r] = temp;
+        -:  105:
+       14:  106:            swap_arrays(*(a + l), *(a + r), columns);
+        -:  107:
+       14:  108:            l++;
+       14:  109:            r--;
+        -:  110:        }
+        -:  111:    }
+       11:  112:    sort_rows_by_weights(a, r + 1, columns, weights);
+       11:  113:    sort_rows_by_weights(a + l, rows - l, columns, weights + l);
+        -:  114:}
+        -:  115:
+        -:  116:
+        4:  117:int main(void)
+        -:  118:{
+        -:  119:    int a[MAX_ROWS][MAX_COLUMNS];
+        -:  120:    int a_rows, a_columns;
+        -:  121:    int sums[MAX_ROWS];
+        -:  122:    int rc;
+        -:  123:
+        4:  124:    rc = scanf_matrix(a, &a_rows, &a_columns);
+        -:  125:
+        4:  126:    if (rc != OK)
+        -:  127:    {
+        2:  128:        fprintf(stderr, "Invalid input\n");
+        -:  129:
+        2:  130:        return INPUT_ERR;
+        -:  131:    }
+        -:  132:
+        2:  133:    get_rows_sums(a, a_rows, a_columns, sums);
+        -:  134:
+        2:  135:    sort_rows_by_weights(a, a_rows, a_columns, sums);
+        -:  136:
+        2:  137:    print_matrix(a, a_rows, a_columns);
+        -:  138:
+        2:  139:    return OK;
+        -:  140:}
