@@ -15,8 +15,7 @@ bool is_valid_size(int rows, int columns)
         && rows <= MAX_ROWS
         && columns > 0
         && columns <= MAX_COLUMNS
-        && columns == rows
-        );
+        && columns == rows);
 }
 
 int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
@@ -46,19 +45,13 @@ int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
     return OK;
 }
 
-int find_min(
-    int a[][MAX_ROWS],
-    int rows,
-    int columns,
-    bool (*predicat)(int, int, int),
-    int *result
-)
+int find_min(int a[][MAX_ROWS], int rows, int columns, bool (*predicat)(int, int, int), int *result)
 {
     int min;
     bool first = true;
 
     for (int r = 0; r < rows; r++)
-        for(int c = 0; c < columns; c++)
+        for (int c = 0; c < columns; c++)
             if (predicat(a[r][c], c, r) && (first || min > a[r][c]))
             {
                 min = a[r][c];
