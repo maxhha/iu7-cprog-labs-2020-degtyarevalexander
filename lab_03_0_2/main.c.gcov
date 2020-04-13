@@ -1,0 +1,193 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:10
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <stdbool.h>
+        -:    4:
+        -:    5:#define OK 0
+        -:    6:#define INPUT_ERR 1
+        -:    7:#define PROCESS_ERR 2
+        -:    8:
+        -:    9:#define MAX_ROWS 10
+        -:   10:#define MAX_COLUMNS 10
+        -:   11:#define MAGIC_VALUE 100
+        -:   12:
+        9:   13:bool is_valid_size(int rows, int columns)
+        -:   14:{
+        -:   15:    return (
+        -:   16:        rows > 0
+        9:   17:        && rows <= MAX_ROWS
+        8:   18:        && columns > 0
+       16:   19:        && columns <= MAX_COLUMNS
+        -:   20:        );
+        -:   21:}
+        -:   22:
+       10:   23:int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
+        -:   24:{
+       10:   25:    printf("Enter matrix size:\n");
+       10:   26:    int rc = scanf("%d %d", rows, columns);
+        -:   27:
+       10:   28:    if (rc != 2 || rc == EOF || !is_valid_size(*rows, *columns))
+        -:   29:    {
+        3:   30:        return INPUT_ERR;
+        -:   31:    }
+        -:   32:
+        7:   33:    printf("Enter elements:\n");
+        -:   34:
+       30:   35:    for (int i = 0; i < *rows; i++)
+        -:   36:    {
+       73:   37:        for (int j = 0; j < *columns; j++)
+        -:   38:        {
+       50:   39:            rc = scanf("%d", *(a + i) + j);
+        -:   40:
+       50:   41:            if (rc != 1 || rc == EOF)
+        -:   42:            {
+        1:   43:                return INPUT_ERR;
+        -:   44:            }
+        -:   45:        }
+        -:   46:    }
+        6:   47:    return OK;
+        -:   48:}
+        -:   49:
+        3:   50:void print_matrix(int a[][MAX_COLUMNS], int rows, int columns)
+        -:   51:{
+       16:   52:    for(int i = 0; i < rows; i++)
+        -:   53:    {
+       40:   54:        for(int j = 0; j < columns; j++)
+        -:   55:        {
+       27:   56:            printf("%d ", a[i][j]);
+        -:   57:        }
+       13:   58:        printf("\n");
+        -:   59:    }
+        3:   60:}
+        -:   61:
+       24:   62:bool is_starting_with_digit(int x, int digit)
+        -:   63:{
+       24:   64:    x = abs(x);
+       63:   65:    while (x > 9)
+        -:   66:    {
+       15:   67:        x /= 10;
+        -:   68:    }
+       24:   69:    return x == digit;
+        -:   70:}
+        -:   71:
+       24:   72:bool is_ending_with_digit(int x, int digit)
+        -:   73:{
+       24:   74:    return abs(x) % 10 == digit;
+        -:   75:}
+        -:   76:
+       15:   77:bool is_match_magic_pattern(int *a, int n, int digit)
+        -:   78:{
+       15:   79:    int number_starts = 0;
+       15:   80:    int number_ends = 0;
+        -:   81:
+       39:   82:    for (int *i = a; i < a + n; i++)
+        -:   83:    {
+       24:   84:        number_starts += is_starting_with_digit(*i, digit);
+       24:   85:        number_ends += is_ending_with_digit(*i, digit);
+        -:   86:    }
+        -:   87:
+       15:   88:    return (number_starts == number_ends) && (number_ends != 0);
+        -:   89:}
+        -:   90:
+        9:   91:void copy_array(int *src, int *dest, int n)
+        -:   92:{
+        9:   93:    int *p_src = src;
+        9:   94:    int *p_dest = dest;
+       36:   95:    while (p_src < src + n)
+        -:   96:    {
+       18:   97:        *(p_dest++) = *(p_src++);
+        -:   98:    }
+        9:   99:}
+        -:  100:
+        4:  101:void fill_array_with_magic(int *a, int n)
+        -:  102:{
+       13:  103:    for (int *p = a; p < a + n; p++)
+        -:  104:    {
+        9:  105:        *p = MAGIC_VALUE;
+        -:  106:    }
+        4:  107:}
+        -:  108:
+        4:  109:int magic_update(int a[][MAX_COLUMNS], int *rows, int *columns, int digit)
+        -:  110:{
+        -:  111:    bool matching_rows[MAX_ROWS];
+        4:  112:    int new_rows = *rows;
+        -:  113:
+        4:  114:    int (*a_row)[MAX_COLUMNS] = a;
+        4:  115:    bool *m_row = matching_rows;
+        -:  116:
+       23:  117:    while (a_row < a + *rows)
+        -:  118:    {
+       15:  119:        *m_row = is_match_magic_pattern(*a_row, *columns, digit);
+       15:  120:        new_rows += *m_row;
+       15:  121:        a_row++;
+       15:  122:        m_row++;
+        -:  123:    }
+        -:  124:
+        4:  125:    if (new_rows > MAX_ROWS) {
+        1:  126:        return PROCESS_ERR;
+        -:  127:    }
+        -:  128:
+        3:  129:    a_row = a + *rows - 1;
+        3:  130:    m_row = matching_rows + *rows - 1;
+        -:  131:
+       16:  132:    for (int (*na_row)[MAX_COLUMNS] = a + new_rows - 1; na_row >= a; na_row--)
+        -:  133:    {
+       13:  134:        if (*m_row)
+        -:  135:        {
+        4:  136:            *m_row = false;
+        4:  137:            fill_array_with_magic(*na_row, *columns);
+        4:  138:            continue;
+        -:  139:        }
+        9:  140:        copy_array(*(a_row--), *na_row, *columns);
+        9:  141:        m_row--;
+        -:  142:    }
+        -:  143:
+        3:  144:    *rows = new_rows;
+        -:  145:
+        3:  146:    return OK;
+        -:  147:}
+        -:  148:
+       10:  149:int main(void)
+        -:  150:{
+        -:  151:    int a[MAX_ROWS][MAX_COLUMNS];
+        -:  152:    int a_rows, a_columns;
+        -:  153:    int digit;
+        -:  154:    int rc;
+        -:  155:
+       10:  156:    rc = scanf_matrix(a, &a_rows, &a_columns);
+        -:  157:
+       10:  158:    if (rc != OK)
+        -:  159:    {
+        4:  160:        fprintf(stderr, "Invalid input\n");
+        -:  161:
+        4:  162:        return INPUT_ERR;
+        -:  163:    }
+        -:  164:
+        6:  165:    printf("Enter digit:\n");
+        -:  166:
+        6:  167:    rc = scanf("%d", &digit);
+        -:  168:
+        6:  169:    if (rc != 1 || rc == EOF || digit < 0 || digit > 9)
+        -:  170:    {
+        2:  171:        fprintf(stderr, "Invalid input\n");
+        -:  172:
+        2:  173:        return INPUT_ERR;
+        -:  174:    }
+        -:  175:
+        4:  176:    rc = magic_update(a, &a_rows, &a_columns, digit);
+        -:  177:
+        4:  178:    if (rc != OK)
+        -:  179:    {
+        1:  180:        fprintf(stderr, "Matrix update error\n");
+        -:  181:
+        1:  182:        return PROCESS_ERR;
+        -:  183:    }
+        -:  184:
+        3:  185:    print_matrix(a, a_rows, a_columns);
+        -:  186:
+        3:  187:    return OK;
+        -:  188:}

@@ -1,0 +1,145 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:4
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <stdbool.h>
+        -:    4:#include <math.h>
+        -:    5:
+        -:    6:#define OK 0
+        -:    7:#define INPUT_ERR 1
+        -:    8:#define PROCESS_ERR 2
+        -:    9:
+        -:   10:#define MAX_ROWS 10
+        -:   11:#define MAX_COLUMNS 10
+        -:   12:
+        3:   13:bool is_valid_size(int rows, int columns)
+        -:   14:{
+        -:   15:    return (
+        -:   16:        rows > 0
+        3:   17:        && rows <= MAX_ROWS
+        3:   18:        && columns > 0
+        6:   19:        && columns <= MAX_COLUMNS);
+        -:   20:}
+        -:   21:
+        4:   22:int scanf_matrix(int a[][MAX_COLUMNS], int *rows, int *columns)
+        -:   23:{
+        4:   24:    printf("Enter matrix size:\n");
+        4:   25:    int rc = scanf("%d %d", rows, columns);
+        -:   26:
+        4:   27:    if (rc != 2 || rc == EOF || !is_valid_size(*rows, *columns))
+        -:   28:    {
+        1:   29:        return INPUT_ERR;
+        -:   30:    }
+        -:   31:
+        3:   32:    printf("Enter elements:\n");
+        -:   33:
+        9:   34:    for (int i = 0; i < *rows; i++)
+        -:   35:    {
+       26:   36:        for (int j = 0; j < *columns; j++)
+        -:   37:        {
+       20:   38:            rc = scanf("%d", *(a + i) + j);
+        -:   39:
+       20:   40:            if (rc != 1 || rc == EOF)
+        -:   41:            {
+        1:   42:                return INPUT_ERR;
+        -:   43:            }
+        -:   44:        }
+        -:   45:    }
+        2:   46:    return OK;
+        -:   47:}
+        -:   48:
+        1:   49:void print_matrix(int a[][MAX_COLUMNS], int rows, int columns)
+        -:   50:{
+        4:   51:    for (int i = 0; i < rows; i++)
+        -:   52:    {
+       12:   53:        for (int j = 0; j < columns; j++)
+        -:   54:        {
+        9:   55:            printf("%d ", a[i][j]);
+        -:   56:        }
+        3:   57:        printf("\n");
+        -:   58:    }
+        1:   59:}
+        -:   60:
+       27:   61:bool is_prime(int x)
+        -:   62:{
+       27:   63:    x = abs(x);
+       27:   64:    if (x < 2)
+        2:   65:        return false;
+        -:   66:
+       25:   67:    int limit = (int) sqrt(x) + 1;
+        -:   68:
+       30:   69:    for (int i = 2; i < limit; i++)
+       24:   70:        if (x % i == 0)
+       19:   71:            return false;
+        -:   72:
+        6:   73:    return true;
+        -:   74:}
+        -:   75:
+        2:   76:void filter_primes(int a[][MAX_COLUMNS], int a_rows, int a_columns, int *primes, int *primes_n)
+        -:   77:{
+        2:   78:    *primes_n = 0;
+        -:   79:
+        8:   80:    for (int r = 0; r < a_rows; r++)
+       24:   81:        for (int c = 0; c < a_columns; c++)
+       18:   82:            if (is_prime(a[r][c]))
+        3:   83:                primes[(*primes_n)++] = a[r][c];
+        2:   84:}
+        -:   85:
+        1:   86:void reverse_array(int *a, int n)
+        -:   87:{
+        -:   88:    int temp;
+        -:   89:
+        2:   90:    for (int i = 0; i < n / 2; i++)
+        -:   91:    {
+        1:   92:        temp = a[i];
+        1:   93:        a[i] = a[n - 1 - i];
+        1:   94:        a[n - 1 - i] = temp;
+        -:   95:    }
+        1:   96:}
+        -:   97:
+        1:   98:void replace_primes_in(int a[][MAX_COLUMNS], int a_rows, int a_columns, int *to_data, int to_data_len)
+        -:   99:{
+        1:  100:    int k = 0;
+        4:  101:    for (int r = 0; r < a_rows && k < to_data_len; r++)
+       12:  102:        for (int c = 0; c < a_columns && k < to_data_len; c++)
+        9:  103:            if (is_prime(a[r][c]))
+        3:  104:                a[r][c] = to_data[k++];
+        1:  105:}
+        -:  106:
+        4:  107:int main(void)
+        -:  108:{
+        -:  109:    int a[MAX_ROWS][MAX_COLUMNS];
+        -:  110:    int a_rows, a_columns;
+        -:  111:    int primes[MAX_ROWS * MAX_COLUMNS];
+        -:  112:    int primes_n;
+        -:  113:    int rc;
+        -:  114:
+        4:  115:    rc = scanf_matrix(a, &a_rows, &a_columns);
+        -:  116:
+        4:  117:    if (rc != OK)
+        -:  118:    {
+        2:  119:        fprintf(stderr, "Invalid input\n");
+        -:  120:
+        2:  121:        return INPUT_ERR;
+        -:  122:    }
+        -:  123:
+        2:  124:    filter_primes(a, a_rows, a_columns, primes, &primes_n);
+        -:  125:
+        2:  126:    if (primes_n == 0)
+        -:  127:    {
+        1:  128:        fprintf(stderr, "There is no prime numbers\n");
+        -:  129:
+        1:  130:        return PROCESS_ERR;
+        -:  131:    }
+        -:  132:
+        1:  133:    reverse_array(primes, primes_n);
+        -:  134:
+        1:  135:    replace_primes_in(a, a_rows, a_columns, primes, primes_n);
+        -:  136:
+        1:  137:    print_matrix(a, a_rows, a_columns);
+        -:  138:
+        1:  139:    return OK;
+        -:  140:}
