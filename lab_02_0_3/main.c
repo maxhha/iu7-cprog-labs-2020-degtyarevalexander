@@ -6,23 +6,21 @@
 #define INPUT_ELEMENTS_ERR 2
 #define PROCESS_ERR 3
 
-int scanf_array(int a[], int *len)
+int scanf_array(int *a, int *const len)
 {
-    int n;
     printf("Enter array length:\n");
-    int rc = scanf("%d", &n);
-    *len = n;
+    int rc = scanf("%d", len);
 
-    if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
+    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
     {
         return INPUT_LEN_ERR;
     }
 
     printf("Enter array elements:\n");
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < *len; i++)
     {
-        rc = scanf("%d", &a[i]);
+        rc = scanf("%d", a + i);
 
         if (rc != 1 || rc == EOF)
         {
@@ -32,7 +30,7 @@ int scanf_array(int a[], int *len)
     return OK;
 }
 
-void print_array(int a[], int n)
+void print_array(const int *a, const int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -57,7 +55,7 @@ int is_palindrome(int x)
     return reversed == initial;
 }
 
-void filter_palindromes(int a[], int n, int out_a[], int *out_n)
+void filter_palindromes(const int a[], const int n, int out_a[], int *const out_n)
 {
     int j = 0;
     for (int i = 0; i < n; i++)

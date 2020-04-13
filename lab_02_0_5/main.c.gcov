@@ -10,12 +10,12 @@
         -:    5:#define INPUT_LEN_ERR 1
         -:    6:#define INPUT_ELEMENTS_ERR 2
         -:    7:
-        4:    8:int scanf_array(int *a, int **right)
+        4:    8:int scanf_array(int *a, int **const end)
         -:    9:{
         -:   10:    int n;
         4:   11:    printf("Enter array length:\n");
         4:   12:    int rc = scanf("%d", &n);
-        4:   13:    *right = a + n;
+        4:   13:    *end = a + n;
         -:   14:
         4:   15:    if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
         -:   16:    {
@@ -24,61 +24,56 @@
         -:   19:
         3:   20:    printf("Enter array elements:\n");
         -:   21:
-        7:   22:    for (int *i = a; i < *right; i++)
+       11:   22:    while(a < *end && rc == 1)
         -:   23:    {
-        5:   24:        rc = scanf("%d", i);
-        -:   25:
-        5:   26:        if (rc != 1 || rc == EOF)
-        -:   27:        {
-        1:   28:            return INPUT_ELEMENTS_ERR;
-        -:   29:        }
-        -:   30:    }
-        2:   31:    return OK;
-        -:   32:}
-        -:   33:
-        2:   34:int clever_max(int *a, int *r_a)
-        -:   35:{
-        2:   36:    int *l = a;
-        2:   37:    int *r = r_a - 1;
-        2:   38:    int max = *l + *r;
-        -:   39:    int x;
-        -:   40:    
-        7:   41:    while (l <= r)
-        -:   42:    {
-        3:   43:        x = *l + *r;
-        3:   44:        if (x > max)
-        1:   45:            max = x;
-        3:   46:        l++;
-        3:   47:        r--;
-        -:   48:    }
-        2:   49:    return max;
-        -:   50:}
-        -:   51:
-        4:   52:int main(void)
-        -:   53:{
-        -:   54:    int a[MAX_ARRAY_SIZE];
-        -:   55:    int *r_a;
-        -:   56:    int rc;
-        -:   57:
-        4:   58:    rc = scanf_array(a, &r_a);
-        -:   59:
-        4:   60:    if (rc == INPUT_LEN_ERR)
+        5:   24:        rc = scanf("%d", a++);
+        -:   25:    }
+        3:   26:    return rc == 1 ? OK : INPUT_ELEMENTS_ERR;
+        -:   27:}
+        -:   28:
+        2:   29:int clever_max(const int *a, const int *end)
+        -:   30:{
+        2:   31:    const int *f = a;
+        2:   32:    const int *l = end - 1;
+        2:   33:    int max = *f + *l;
+        -:   34:    int x;
+        -:   35:
+        7:   36:    while (f <= l)
+        -:   37:    {
+        3:   38:        x = *f + *l;
+        3:   39:        if (x > max)
+        1:   40:            max = x;
+        3:   41:        f++;
+        3:   42:        l--;
+        -:   43:    }
+        2:   44:    return max;
+        -:   45:}
+        -:   46:
+        4:   47:int main(void)
+        -:   48:{
+        -:   49:    int a[MAX_ARRAY_SIZE];
+        -:   50:    int *a_end;
+        -:   51:    int rc;
+        -:   52:
+        4:   53:    rc = scanf_array(a, &a_end);
+        -:   54:
+        4:   55:    if (rc == INPUT_LEN_ERR)
+        -:   56:    {
+        1:   57:        printf("Array size is invalid.\n");
+        1:   58:        return rc;
+        -:   59:    }
+        3:   60:    else if (rc == INPUT_ELEMENTS_ERR)
         -:   61:    {
-        1:   62:        printf("Array size is invalid.\n");
+        1:   62:        printf("Oops! It was a bad element.\n");
         1:   63:        return rc;
         -:   64:    }
-        3:   65:    else if (rc == INPUT_ELEMENTS_ERR)
+        2:   65:    else if (rc != OK)
         -:   66:    {
-        1:   67:        printf("Oops! It was a bad element.\n");
-        1:   68:        return rc;
+    #####:   67:        printf("Unknown code error %d.\n", rc);
+    #####:   68:        return rc;
         -:   69:    }
-        2:   70:    else if (rc != OK)
-        -:   71:    {
-    #####:   72:        printf("Unknown code error %d.\n", rc);
-    #####:   73:        return rc;
-        -:   74:    }
-        -:   75:
-        2:   76:    printf("Max is %d\n", clever_max(a, r_a));
-        -:   77:
-        2:   78:    return OK;
-        -:   79:}
+        -:   70:
+        2:   71:    printf("Max is %d\n", clever_max(a, a_end));
+        -:   72:
+        2:   73:    return OK;
+        -:   74:}

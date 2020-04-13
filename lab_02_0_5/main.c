@@ -5,12 +5,12 @@
 #define INPUT_LEN_ERR 1
 #define INPUT_ELEMENTS_ERR 2
 
-int scanf_array(int *a, int **right)
+int scanf_array(int *a, int **const end)
 {
     int n;
     printf("Enter array length:\n");
     int rc = scanf("%d", &n);
-    *right = a + n;
+    *end = a + n;
 
     if (rc != 1 || n <= 0 || n > MAX_ARRAY_SIZE)
     {
@@ -19,32 +19,27 @@ int scanf_array(int *a, int **right)
 
     printf("Enter array elements:\n");
 
-    for (int *i = a; i < *right; i++)
+    while(a < *end && rc == 1)
     {
-        rc = scanf("%d", i);
-
-        if (rc != 1 || rc == EOF)
-        {
-            return INPUT_ELEMENTS_ERR;
-        }
+        rc = scanf("%d", a++);
     }
-    return OK;
+    return rc == 1 ? OK : INPUT_ELEMENTS_ERR;
 }
 
-int clever_max(int *a, int *r_a)
+int clever_max(const int *a, const int *end)
 {
-    int *l = a;
-    int *r = r_a - 1;
-    int max = *l + *r;
+    const int *f = a;
+    const int *l = end - 1;
+    int max = *f + *l;
     int x;
-    
-    while (l <= r)
+
+    while (f <= l)
     {
-        x = *l + *r;
+        x = *f + *l;
         if (x > max)
             max = x;
-        l++;
-        r--;
+        f++;
+        l--;
     }
     return max;
 }
@@ -52,10 +47,10 @@ int clever_max(int *a, int *r_a)
 int main(void)
 {
     int a[MAX_ARRAY_SIZE];
-    int *r_a;
+    int *a_end;
     int rc;
 
-    rc = scanf_array(a, &r_a);
+    rc = scanf_array(a, &a_end);
 
     if (rc == INPUT_LEN_ERR)
     {
@@ -73,7 +68,7 @@ int main(void)
         return rc;
     }
 
-    printf("Max is %d\n", clever_max(a, r_a));
+    printf("Max is %d\n", clever_max(a, a_end));
 
     return OK;
 }

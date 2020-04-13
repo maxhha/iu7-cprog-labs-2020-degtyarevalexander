@@ -6,7 +6,7 @@
 #define INPUT_ELEMENTS_ERR 2
 #define PROCESS_ERR 3
 
-int scanf_array(int *a, int *len)
+int scanf_array(int *a, int *const len)
 {
     printf("Enter array length:\n");
     int rc = scanf("%d", len);
@@ -30,7 +30,7 @@ int scanf_array(int *a, int *len)
     return OK;
 }
 
-int sum_even_elements(int *a, int n, int *ans)
+int sum_even_elements(const int *a, const int n, int *const ans)
 {
     int s = 0, count = 0;
     for (int i = 0; i < n; i++)

@@ -5,7 +5,7 @@
 #define INPUT_LEN_ERR 1
 #define INPUT_ELEMENTS_ERR 2
 
-int scanf_array(int *a, int *len)
+int scanf_array(int *a, int *const len)
 {
     printf("Enter array length:\n");
     int rc = scanf("%d", len);
@@ -29,7 +29,7 @@ int scanf_array(int *a, int *len)
     return OK;
 }
 
-void print_array(int *a, int n)
+void print_array(const int *a, const int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -38,8 +38,10 @@ void print_array(int *a, int n)
     printf("\n");
 }
 
-// Используется метод сортировки вставками
-void sort_array(int *a, int n)
+/*
+ * Сортировка методом вставок
+ */
+void sort_array(int *a, const int n)
 {
     int x, j;
     for (int i = 1; i < n; i++)

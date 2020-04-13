@@ -4,50 +4,50 @@
         -:    0:Runs:5
         -:    0:Programs:1
         -:    1:#include <stdio.h>
-        -:    2:#include <stdlib.h>
-        -:    3:
-        -:    4:#define MAX_ARRAY_SIZE 10
-        -:    5:#define OK 0
-        -:    6:#define INPUT_LEN_ERR 1
-        -:    7:#define INPUT_ELEMENTS_ERR 2
-        -:    8:#define PROCESS_ERR 3
-        -:    9:
-        5:   10:int scanf_array(int *a, int *len)
-        -:   11:{
-        5:   12:    printf("Enter array length:\n");
-        5:   13:    int rc = scanf("%d", len);
-        -:   14:
-        5:   15:    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
-        -:   16:    {
-        1:   17:        return INPUT_LEN_ERR;
-        -:   18:    }
-        -:   19:
-        4:   20:    printf("Enter array elements:\n");
-        -:   21:
-       11:   22:    for (int i = 0; i < *len; i++)
-        -:   23:    {
-        8:   24:        rc = scanf("%d", a + i);
-        -:   25:
-        8:   26:        if (rc != 1 || rc == EOF)
-        -:   27:        {
-        1:   28:            return INPUT_ELEMENTS_ERR;
-        -:   29:        }
-        -:   30:    }
-        3:   31:    return OK;
-        -:   32:}
-        -:   33:
-        2:   34:void print_array(int *a, int n)
-        -:   35:{
-        4:   36:    for (int i = 0; i < n; i++)
-        -:   37:    {
-        2:   38:        printf("%d ", a[i]);
-        -:   39:    }
-        2:   40:    printf("\n");
-        2:   41:}
-        -:   42:
-        7:   43:int is_palindrome(int x)
-        -:   44:{
-        7:   45:    x = abs(x);
+        -:    2:
+        -:    3:#define MAX_ARRAY_SIZE 10
+        -:    4:#define OK 0
+        -:    5:#define INPUT_LEN_ERR 1
+        -:    6:#define INPUT_ELEMENTS_ERR 2
+        -:    7:#define PROCESS_ERR 3
+        -:    8:
+        5:    9:int scanf_array(int *a, int *const len)
+        -:   10:{
+        5:   11:    printf("Enter array length:\n");
+        5:   12:    int rc = scanf("%d", len);
+        -:   13:
+        5:   14:    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
+        -:   15:    {
+        1:   16:        return INPUT_LEN_ERR;
+        -:   17:    }
+        -:   18:
+        4:   19:    printf("Enter array elements:\n");
+        -:   20:
+       11:   21:    for (int i = 0; i < *len; i++)
+        -:   22:    {
+        8:   23:        rc = scanf("%d", a + i);
+        -:   24:
+        8:   25:        if (rc != 1 || rc == EOF)
+        -:   26:        {
+        1:   27:            return INPUT_ELEMENTS_ERR;
+        -:   28:        }
+        -:   29:    }
+        3:   30:    return OK;
+        -:   31:}
+        -:   32:
+        2:   33:void print_array(const int *a, const int n)
+        -:   34:{
+        4:   35:    for (int i = 0; i < n; i++)
+        -:   36:    {
+        2:   37:        printf("%d ", a[i]);
+        -:   38:    }
+        2:   39:    printf("\n");
+        2:   40:}
+        -:   41:
+        7:   42:int is_palindrome(int x)
+        -:   43:{
+        7:   44:    if (x < 0)
+        2:   45:        x = -x;
         -:   46:
         7:   47:    int initial = x, reversed = 0;
         -:   48:
@@ -60,7 +60,7 @@
         7:   55:    return reversed == initial;
         -:   56:}
         -:   57:
-        3:   58:void filter_palindromes(int *a, int n, int *out_a, int *out_n)
+        3:   58:void filter_palindromes(const int a[], const int n, int out_a[], int *const out_n)
         -:   59:{
         3:   60:    int j = 0;
        10:   61:    for (int i = 0; i < n; i++)

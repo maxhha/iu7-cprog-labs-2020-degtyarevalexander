@@ -1,12 +1,17 @@
 #include <stdio.h>
-#include <sys/time.h>
+#include <time.h>
 #include <math.h>
+
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+
+#define MICROSEC_PER_SEC 1000000LL
 
 #define MAX_ARRAY_SIZE 10000
 #define OK 0
 #define INPUT_ERR 1
 
-int scanf_array(int *a, int *len)
+int scanf_array(int *a, int *const len)
 {
     printf("Enter array length:\n");
     int rc = scanf("%d", len);
@@ -30,67 +35,74 @@ int scanf_array(int *a, int *len)
     return OK;
 }
 
-// использование операции индексации a[i]
-int process_1(int *a, int n)
+/**
+ * Использование операции индексации a[i]
+ */
+int process_1(const int *a, const int n)
 {
-    int l = 0;
-    int r = n - 1;
-    int max = a[l] + a[r];
+    int f = 0;
+    int l = n - 1;
+    int max = a[f] + a[l];
     int x;
 
-    while (l <= r)
+    while (f <= l)
     {
-        x = a[l] + a[r];
+        x = a[f] + a[l];
         if (x > max)
             max = x;
-        l++;
-        r--;
+        f++;
+        l--;
     }
     return max;
 }
 
-// формальная замена операции индексации на выражение *(a + i)
-int process_2(int *a, int n)
+/**
+ * Формальная замена операции индексации на выражение *(a + i)
+ */
+int process_2(const int *a, const int n)
 {
-    int l = 0;
-    int r = n - 1;
-    int max = *(a + l) + *(a + r);
+    int f = 0;
+    int l = n - 1;
+    int max = *(a + f) + *(a + l);
     int x;
 
-    while (l <= r)
+    while (f <= l)
     {
-        x = *(a + l) + *(a + r);
+        x = *(a + f) + *(a + l);
         if (x > max)
             max = x;
-        l++;
-        r--;
+        f++;
+        l--;
     }
     return max;
 }
 
-// использование указателей для работы с массивом.
-int process_3(int *a, int n)
+/**
+ * Использование указателей для работы с массивом.
+ */
+int process_3(const int *a, const int n)
 {
-    int *l = a;
-    int *r = a + n - 1;
-    int max = *l + *r;
+    const int *f = a;
+    const int *l = a + n - 1;
+    int max = *f + *l;
     int x;
 
-    while (l <= r)
+    while (f <= l)
     {
-        x = *l + *r;
+        x = *f + *l;
         if (x > max)
             max = x;
-        l++;
-        r--;
+        f++;
+        l--;
     }
     return max;
 }
 
-void print_header()
+void print_header(void)
 {
     printf("| Количество повторов (N) ");
-    printf("| Размер массива | a[i] ");
+    printf("| Размер массива ");
+    printf("| a[i] ");
     printf("| *(a + i) ");
     printf("| Работа с указателями ");
     printf("|\n");
@@ -98,33 +110,27 @@ void print_header()
     printf("| ---:| ---:| ---:| ---:| ---:|\n");
 }
 
-double time_function(int (*process)(int*, int), int *a, int n, int repeats)
+double time_function(int (*const process)(const int*, const int), const int *a, const int n, const int repeats)
 {
     double sum = 0;
     double min_time = INFINITY;
     double max_time = -INFINITY;
     double current_time;
 
-    struct timeval tv_start, tv_stop;
+    clock_t start, stop;
 
     for (int i = 0; i < repeats + 2; i++)
     {
-        gettimeofday(&tv_start, NULL);
+        start = clock();
         process(a, n);
-        gettimeofday(&tv_stop, NULL);
+        stop = clock();
 
-        current_time = (
-            (tv_stop.tv_sec - tv_start.tv_sec) * 1000000LL
-            + (tv_stop.tv_usec - tv_start.tv_usec)
-        );
+        current_time = (double) (stop - start) / CLOCKS_PER_SEC * MICROSEC_PER_SEC;
 
         sum += current_time;
 
-        if (current_time < min_time)
-            min_time = current_time;
-
-        if (current_time > max_time)
-            max_time = current_time;
+        min_time = MIN(min_time, current_time);
+        max_time = MAX(max_time, current_time);
     }
 
     return (sum - min_time - max_time) / repeats;

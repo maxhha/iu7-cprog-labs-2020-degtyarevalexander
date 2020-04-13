@@ -6,7 +6,7 @@
 #define INPUT_ELEMENTS_ERR 2
 #define PROCESS_ERR 3
 
-int scanf_array(int *a, int *len)
+int scanf_array(int *a, int *const len)
 {
     printf("Enter array length:\n");
     int rc = scanf("%d", len);
@@ -30,7 +30,7 @@ int scanf_array(int *a, int *len)
     return OK;
 }
 
-void print_array(int *a, int n)
+void print_array(const int *a, const int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -39,7 +39,7 @@ void print_array(int *a, int n)
     printf("\n");
 }
 
-double get_average(int *a, int n)
+double get_average(const int *a, const int n)
 {
     int s = 0;
     for (int i = 0; i < n; i++)
@@ -49,7 +49,7 @@ double get_average(int *a, int n)
     return (double) s / n;
 }
 
-void copy_greater(int *a, int n, double threshold, int *out_a, int *out_n)
+void copy_greater(const int *a, const int n, const double threshold, int *out_a, int *const out_n)
 {
     int j = 0;
     for (int i = 0; i < n; i++)
