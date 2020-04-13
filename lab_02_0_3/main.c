@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_ARRAY_SIZE 10
 #define OK 0
@@ -41,8 +42,7 @@ void print_array(const int *a, const int n)
 
 int is_palindrome(int x)
 {
-    if (x < 0)
-        x = -x;
+    x = abs(x);
 
     int initial = x, reversed = 0;
 
