@@ -19,7 +19,7 @@ int scanf_array(int *a, int **const end)
 
     printf("Enter array elements:\n");
 
-    while(a < *end && rc == 1)
+    while (a < *end && rc == 1)
     {
         rc = scanf("%d", a++);
     }
