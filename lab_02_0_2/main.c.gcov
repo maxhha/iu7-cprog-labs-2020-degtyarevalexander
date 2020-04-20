@@ -1,0 +1,104 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:4
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define MAX_ARRAY_SIZE 10
+        -:    4:#define OK 0
+        -:    5:#define INPUT_LEN_ERR 1
+        -:    6:#define INPUT_ELEMENTS_ERR 2
+        -:    7:#define PROCESS_ERR 3
+        -:    8:
+        4:    9:int scanf_array(int *a, int *const len)
+        -:   10:{
+        4:   11:    printf("Enter array length:\n");
+        4:   12:    int rc = scanf("%d", len);
+        -:   13:
+        4:   14:    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
+        -:   15:    {
+        1:   16:        return INPUT_LEN_ERR;
+        -:   17:    }
+        -:   18:
+        3:   19:    printf("Enter array elements:\n");
+        -:   20:
+        7:   21:    for (int i = 0; i < *len; i++)
+        -:   22:    {
+        5:   23:        rc = scanf("%d", a + i);
+        -:   24:
+        5:   25:        if (rc != 1 || rc == EOF)
+        -:   26:        {
+        1:   27:            return INPUT_ELEMENTS_ERR;
+        -:   28:        }
+        -:   29:    }
+        2:   30:    return OK;
+        -:   31:}
+        -:   32:
+        1:   33:void print_array(const int *a, const int n)
+        -:   34:{
+        2:   35:    for (int i = 0; i < n; i++)
+        -:   36:    {
+        1:   37:        printf("%d ", a[i]);
+        -:   38:    }
+        1:   39:    printf("\n");
+        1:   40:}
+        -:   41:
+        2:   42:double get_average(const int *a, const int n)
+        -:   43:{
+        2:   44:    int s = 0;
+        6:   45:    for (int i = 0; i < n; i++)
+        -:   46:    {
+        4:   47:        s += a[i];
+        -:   48:    }
+        2:   49:    return (double) s / n;
+        -:   50:}
+        -:   51:
+        2:   52:void copy_greater(const int *a, const int n, const double threshold, int *out_a, int *const out_n)
+        -:   53:{
+        2:   54:    int j = 0;
+        6:   55:    for (int i = 0; i < n; i++)
+        -:   56:    {
+        4:   57:        if (a[i] > threshold)
+        -:   58:        {
+        1:   59:            out_a[j++] = a[i];
+        -:   60:        }
+        -:   61:    }
+        2:   62:    *out_n = j;
+        2:   63:}
+        -:   64:
+        4:   65:int main(void)
+        -:   66:{
+        -:   67:    int a[MAX_ARRAY_SIZE], b[MAX_ARRAY_SIZE];
+        -:   68:    int n_a, n_b, rc;
+        -:   69:
+        4:   70:    rc = scanf_array(a, &n_a);
+        -:   71:
+        4:   72:    if (rc == INPUT_LEN_ERR)
+        -:   73:    {
+        1:   74:        printf("Array size is invalid.\n");
+        1:   75:        return rc;
+        -:   76:    }
+        3:   77:    else if (rc == INPUT_ELEMENTS_ERR)
+        -:   78:    {
+        1:   79:        printf("Oops! It was a bad element.\n");
+        1:   80:        return rc;
+        -:   81:    }
+        2:   82:    else if (rc != OK)
+        -:   83:    {
+    #####:   84:        printf("Unknown code error %d.\n", rc);
+    #####:   85:        return rc;
+        -:   86:    }
+        -:   87:
+        2:   88:    copy_greater(a, n_a, get_average(a, n_a), b, &n_b);
+        -:   89:
+        2:   90:    if (n_b == 0)
+        -:   91:    {
+        1:   92:        printf("No greater than elements average.\n");
+        1:   93:        return PROCESS_ERR;
+        -:   94:    }
+        -:   95:
+        1:   96:    print_array(b, n_b);
+        -:   97:
+        1:   98:    return OK;
+        -:   99:}
