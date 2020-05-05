@@ -14,7 +14,6 @@ void scanf_matrix(char b[][M], int *n_rows, int *n_columns)
     int c = 0;
 
     int rc = scanf("%s", s);
-    printf("->%s\n", s);
 
     while (rc != EOF)
     {
