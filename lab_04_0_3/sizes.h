@@ -1,0 +1,3 @@
+#define STR_MAX_SIZE 256
+#define WORD_STR_MAX_SIZE 16
+#define MAX_WORDS 128
