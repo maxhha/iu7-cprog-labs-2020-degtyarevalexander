@@ -5,70 +5,73 @@
 #define N 10
 #define M 8
 
-void scanf_matrix(int b[][M], int *n_rows, int *n_columns)
+void scanf_matrix(char b[][M], int *n_rows, int *n_columns)
 {
     *n_columns = M;
     *n_rows = 0;
-    int x;
-    int col;
-    int rc = scanf("%d", &x);
+    char s[M+1];
+    char *i;
+    int c = 0;
 
-    while (rc == 1 && *n_rows < N)
+    int rc = scanf("%s", s);
+    printf("->%s\n", s);
+
+    while (rc != EOF)
     {
-        for (col = 0; x > 0; col++)
+        c = 0;
+        for (i = s; *i != '\0'; i++)
         {
-            b[*n_rows][col] = x % 10;
-            x /= 10;
+            b[*n_rows][c++] = *i;
         }
 
-        while (col < M)
+        while (c < M)
         {
-            b[*n_rows][col++] = 0;
+            b[*n_rows][c++] = '0';
         }
 
         (*n_rows)++;
 
-        rc = scanf("%d", &x);
+        rc = scanf("%s", s);
     }
 }
 
-int *find_min_even_number(const int b[][M], int n_rows, int n_columns)
+char *find_min_even_number(const char b[][M], int n_rows, int n_columns)
 {
-    const int *min = NULL;
+    const char *min = NULL;
 
     for (int r = 0; r < n_rows; r++)
         for (int c = 0; c < n_columns; c++)
-            if (b[r][c] % 2 == 0 && (min == NULL || *min > b[r][c]))
+            if ((b[r][c] - '0') % 2 == 0 && (min == NULL || *min > b[r][c]))
                 min = &b[r][c];
 
-    return (int *) min;
+    return (char *) min;
 }
 
-void print_matrix_market(const int b[][M], int n_rows, int n_columns)
+void print_matrix_market(const char b[][M], int n_rows, int n_columns)
 {
     int non_zero = 0;
     for (int r = 0; r < n_rows; r++)
         for (int c = 0; c < n_columns; c++)
-            non_zero += b[r][c] != 0;
+            non_zero += b[r][c] != '0';
 
     printf("%d %d %d\n", n_rows, n_columns, non_zero);
 
     for (int r = 0; r < n_rows; r++)
         for (int c = 0; c < n_columns; c++)
-            if (b[r][c] != 0)
-                printf("%d %d %d\n", r+1, c+1, b[r][c]);
+            if (b[r][c] != '0')
+                printf("%d %d %c\n", r+1, c+1, b[r][c]);
 
 }
 
 int main(void)
 {
-    int b[N][M];
+    char b[N][M];
     int n_rows;
     int n_columns;
 
     scanf_matrix(b, &n_rows, &n_columns);
 
-    int *min_even = find_min_even_number((const int (*)[M]) b, n_rows, n_columns);
+    char *min_even = find_min_even_number((const char (*)[M]) b, n_rows, n_columns);
 
     if (min_even == NULL)
     {
@@ -76,10 +79,10 @@ int main(void)
     }
     else
     {
-        printf("%% min even number = %d\n", *min_even);
+        printf("%% min even number = %c\n", *min_even);
     }
 
-    print_matrix_market((const int (*)[M]) b, n_rows, n_columns);
+    print_matrix_market((const char (*)[M]) b, n_rows, n_columns);
 
     return EXIT_SUCCESS;
 }
