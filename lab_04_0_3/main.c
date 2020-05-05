@@ -23,7 +23,7 @@ void magic_process_word(char *word)
     *dest = '\0';
 }
 
-char* strcat_reverse(char *dest, char *what)
+char *strcat_reverse(char *dest, char *what)
 {
     int word_len = strlen(what);
     char *p = strrchr(dest, '\0');
