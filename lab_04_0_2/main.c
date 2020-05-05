@@ -20,7 +20,7 @@ int main(void)
         return EXIT_FAILURE;
     }
 
-    words_n = count_words(words, words_n, counts);
+    count_words(words, words_n, counts);
 
     printf("Result:\n");
     print_words_counts((const char(*)[WORD_STR_MAX_SIZE + 1]) words, counts, words_n);
