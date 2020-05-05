@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* my_strpbrk(const char *s, const char *accept)
+char *my_strpbrk(const char *s, const char *accept)
 {
     for (;*s != '\0';s++)
         for (const char *i = accept; *i != '\0'; i++)
@@ -41,7 +41,7 @@ size_t my_strcspn(const char *s, const char *accept)
     return len;
 }
 
-char* my_strchr(const char *s, int c)
+char *my_strchr(const char *s, int c)
 {
     for (; *s != '\0'; s++)
         if (*s == c)
@@ -53,7 +53,7 @@ char* my_strchr(const char *s, int c)
     return NULL;
 }
 
-char* my_strrchr(const char *s, int c)
+char *my_strrchr(const char *s, int c)
 {
     const char *i = NULL;
     for (; *s != '\0'; s++)

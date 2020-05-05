@@ -10,8 +10,7 @@ int is_word_delimiter(char c)
         || c == '-'
         || c == '.'
         || c == '!'
-        || c == '?'
-    );
+        || c == '?');
 }
 
 int scan_words(char words[][WORD_STR_MAX_SIZE + 1])

@@ -23,7 +23,7 @@ int main(void)
     words_n = count_words(words, words_n, counts);
 
     printf("Result:\n");
-    print_words_counts( (const char(*)[WORD_STR_MAX_SIZE + 1]) words, counts, words_n);
+    print_words_counts((const char(*)[WORD_STR_MAX_SIZE + 1]) words, counts, words_n);
 
     return EXIT_SUCCESS;
 }
