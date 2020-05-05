@@ -1,0 +1,29 @@
+        -:    0:Source:process.c
+        -:    1:#include <string.h>
+        -:    2:#include "process.h"
+        -:    3:
+        4:    4:int count_words(char words[][WORD_STR_MAX_SIZE + 1], int words_n, int *counts)
+        -:    5:{
+        4:    6:    int n = 0;
+        -:    7:    int j;
+        -:    8:
+       18:    9:    for (int i = 0; i < words_n; i++)
+        -:   10:    {
+       30:   11:        for (j = 0; j < i; j++)
+       18:   12:            if (strcmp(words[i], words[j]) == 0)
+        2:   13:                break;
+        -:   14:
+       14:   15:        if (j < i)
+        -:   16:        {
+        2:   17:            counts[j] += 1;
+        2:   18:            continue;
+        -:   19:        }
+        -:   20:
+       12:   21:        if (n != i)
+        3:   22:            memcpy(words[n], words[i], WORD_STR_MAX_SIZE + 1);
+        -:   23:
+       12:   24:        counts[n] = 1;
+       12:   25:        n++;
+        -:   26:    }
+        4:   27:    return n;
+        -:   28:}

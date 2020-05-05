@@ -1,0 +1,130 @@
+        -:    0:Source:input.c
+        -:    0:Graph:input.gcno
+        -:    0:Data:input.gcda
+        -:    0:Runs:5
+        -:    1:#include <stdio.h>
+        -:    2:#include "input.h"
+        -:    3:
+function is_word_delimiter called 98 returned 100% blocks executed 100%
+       98:    4:int is_word_delimiter(char c)
+        -:    5:{
+        -:    6:    return (c == ' '
+       75:    7:        || c == ','
+       75:    7-block  0
+branch  0 taken 72 (fallthrough)
+branch  1 taken 3
+       72:    8:        || c == ';'
+       72:    8-block  0
+branch  0 taken 71 (fallthrough)
+branch  1 taken 1
+       71:    9:        || c == ':'
+       71:    9-block  0
+branch  0 taken 71 (fallthrough)
+branch  1 taken 0
+       71:   10:        || c == '-'
+       71:   10-block  0
+branch  0 taken 71 (fallthrough)
+branch  1 taken 0
+       71:   11:        || c == '.'
+       71:   11-block  0
+branch  0 taken 70 (fallthrough)
+branch  1 taken 1
+       70:   12:        || c == '!'
+       70:   12-block  0
+branch  0 taken 62 (fallthrough)
+branch  1 taken 8
+      173:   13:        || c == '?');
+       98:   13-block  0
+branch  0 taken 75 (fallthrough)
+branch  1 taken 23
+       62:   13-block  1
+branch  2 taken 0 (fallthrough)
+branch  3 taken 62
+       36:   13-block  2
+       62:   13-block  3
+       98:   13-block  4
+        -:   14:}
+        -:   15:
+function scan_words called 5 returned 100% blocks executed 100%
+        5:   16:int scan_words(char words[][WORD_STR_MAX_SIZE + 1])
+        -:   17:{
+        -:   18:    char c;
+        5:   19:    char *word = words[0];
+        5:   20:    int word_len = 0;
+        5:   21:    int n = 0;
+        -:   22:
+      103:   23:    for (int i = 0; i <= STR_MAX_SIZE && word_len <= WORD_STR_MAX_SIZE; i++)
+        5:   23-block  0
+       98:   23-block  1
+      103:   23-block  2
+branch  0 taken 103 (fallthrough)
+branch  1 taken 0
+      103:   23-block  3
+branch  2 taken 102
+branch  3 taken 1 (fallthrough)
+        -:   24:    {
+      102:   25:        c = getchar();
+      102:   25-block  0
+call    0 returned 102
+        -:   26:
+      102:   27:        if (c == '\n' || c == EOF)
+branch  0 taken 98 (fallthrough)
+branch  1 taken 4
+       98:   27-block  0
+branch  2 taken 0 (fallthrough)
+branch  3 taken 98
+        -:   28:        {
+        4:   29:            if (word_len == 0)
+        4:   29-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 3
+        -:   30:            {
+        1:   31:                break;
+        1:   31-block  0
+        -:   32:            }
+        3:   33:            n++;
+        3:   34:            *word = '\0';
+        3:   35:            break;
+        3:   35-block  0
+        -:   36:        }
+        -:   37:
+       98:   38:        if (!is_word_delimiter(c))
+       98:   38-block  0
+call    0 returned 98
+branch  1 taken 62 (fallthrough)
+branch  2 taken 36
+        -:   39:        {
+       62:   40:            word_len++;
+       62:   41:            *(word++) = c;
+       62:   41-block  0
+        -:   42:        }
+       36:   43:        else if (word_len > 0)
+       36:   43-block  0
+branch  0 taken 11 (fallthrough)
+branch  1 taken 25
+        -:   44:        {
+       11:   45:            word_len = 0;
+       11:   46:            *word = '\0';
+       11:   47:            word = words[++n];
+       11:   47-block  0
+        -:   48:        }
+        -:   49:    }
+        -:   50:
+        5:   51:    if ((c == '\n' || c == EOF) && n > 0)
+        5:   51-block  0
+branch  0 taken 1 (fallthrough)
+branch  1 taken 4
+        1:   51-block  1
+branch  2 taken 0 (fallthrough)
+branch  3 taken 1
+        4:   51-block  2
+branch  4 taken 4 (fallthrough)
+branch  5 taken 0
+        -:   52:    {
+        4:   53:        return n;
+        4:   53-block  0
+        -:   54:    }
+        -:   55:
+        1:   56:    return INPUT_ERR;
+        1:   56-block  0
+        -:   57:}
