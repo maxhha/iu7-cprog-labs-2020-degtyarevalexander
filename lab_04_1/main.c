@@ -1,54 +1,83 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "my_string.h"
 
-#define OK 1
-#define FAILED 0
+#define BEGIN_TEST(RESULT_T, F) \
+    { \
+        RESULT_T _r; \
+        RESULT_T _my_r; \
+        __typeof__ (__typeof__ (F) * ) _f = &F; \
+        __typeof__ (_f) _my_f = &my_ ## F; \
+        int sum = 0, n = 0; \
+        printf("Testing " #F ":\n");
 
-char* my_strrchr(const char *s, int c)
-{
-    const char *i = NULL;
-    while (*s != '\0')
-    {
-        if (*s == c)
-            i = s;
-        s++;
-    }
-    if (*s == c)
-        return (char *) s;
-    return (char *) i;
-}
+#define TEST(...) \
+        _r = _f(__VA_ARGS__); \
+        _my_r = _my_f(__VA_ARGS__); \
+        printf("Test%d - %s\n", ++n, _r == _my_r ? "pass" : "fail"); \
+        sum += _r == _my_r;
 
-int test(const char *s, int c, int test_n)
-{
-    char *target_result = strrchr(s, c);
-    char *my_result = my_strrchr(s, c);
-    if (my_result == target_result)
-    {
-        printf("Test%2d - passed\n", test_n);
-        return OK;
+#define END_TEST(F) \
+        printf(#F ": passed %d/%d\n", sum, n); \
     }
-    else
-    {
-        printf("Test%2d - failed:\n", test_n);
-        printf("  s: \"%s\"\n", s);
-        printf("  c: '%c'\n", c);
-        printf("  target: %d\n", (int) (target_result - s));
-        printf("  result: %d\n", (int) (my_result - s));
-        return FAILED;
-    }
-}
 
 int main(void)
 {
-    int sum_passed = 0;
-    int n = 0;
+    BEGIN_TEST (char *, strpbrk);
+    TEST ("", "1");
+    TEST ("a", "1");
+    TEST ("baa", "1");
+    TEST ("baa", "b");
+    TEST ("baa", "\0");
+    TEST ("aabaacaa", "bc");
+    END_TEST (strpbrk);
 
-    sum_passed += test("", '1', ++n);
-    sum_passed += test("a", '1', ++n);
-    sum_passed += test("baa", 'a', ++n);
-    sum_passed += test("baa", 'b', ++n);
-    sum_passed += test("baa", '\0', ++n);
+    printf("\n");
 
-    printf("passed %d/%d\n", sum_passed, n);
+    BEGIN_TEST (size_t, strspn);
+    TEST ("", "");
+    TEST ("", "b");
+    TEST ("baba", "");
+    TEST ("baba", "b");
+    TEST ("baba", "a");
+    TEST ("baba", "ba");
+    TEST ("babac", "ba");
+    END_TEST (strspn);
+
+    printf("\n");
+
+    BEGIN_TEST (size_t, strcspn);
+    TEST ("", "");
+    TEST ("", "b");
+    TEST ("baba", "");
+    TEST ("baba", "b");
+    TEST ("baba", "a");
+    TEST ("baba", "ba");
+    TEST ("cbaba", "ba");
+    END_TEST (strcspn);
+
+    printf("\n");
+
+    BEGIN_TEST (char *, strchr);
+    TEST ("", '1');
+    TEST ("a", '1');
+    TEST ("ab", '1');
+    TEST ("ab", 'a');
+    TEST ("ab", 'b');
+    TEST ("baa", 'a');
+    TEST ("baa", '\0');
+    END_TEST (strrchr);
+
+    printf("\n");
+
+    BEGIN_TEST (char *, strrchr);
+    TEST ("", '1');
+    TEST ("a", '1');
+    TEST ("ab", '1');
+    TEST ("ab", 'a');
+    TEST ("ab", 'b');
+    TEST ("baa", 'a');
+    TEST ("baa", '\0');
+    END_TEST (strrchr);
 }
