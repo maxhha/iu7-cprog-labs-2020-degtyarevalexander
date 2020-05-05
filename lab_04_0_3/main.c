@@ -53,11 +53,6 @@ void magic_process(char *dest, char words[][WORD_STR_MAX_SIZE + 1], int n_words)
 
         magic_process_word(*word);
 
-        if (strlen(*word) == 0)
-        {
-            continue;
-        }
-
         if (!first)
         {
             strcat_reverse(dest, " ");
