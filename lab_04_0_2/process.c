@@ -9,7 +9,7 @@ char *my_strstr(const char *where, const char *what)
     {
         i = where;
         j = what;
-        while( *i == *j && *j != '\0')
+        while (*i == *j && *j != '\0')
         {
             i++;
             j++;
