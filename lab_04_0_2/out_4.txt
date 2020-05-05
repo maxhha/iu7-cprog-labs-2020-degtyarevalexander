@@ -1,0 +1,4 @@
+aba 6
+abababababa 1
+ab 7
+a 10
