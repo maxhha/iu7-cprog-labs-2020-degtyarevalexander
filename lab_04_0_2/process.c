@@ -1,15 +1,36 @@
 #include <string.h>
 #include "process.h"
 
+char *my_strstr(const char *where, const char *what)
+{
+    const char *i, *j;
+
+    for (; *where != '\0'; where++)
+    {
+        i = where;
+        j = what;
+        while( *i == *j && *j != '\0')
+        {
+            i++;
+            j++;
+        }
+        if (*j == '\0')
+        {
+            return (char *) where;
+        }
+    }
+    return NULL;
+}
+
 int count_strstr(const char *where, const char *what)
 {
     int c = 0;
-    where = strstr(where, what);
+    where = my_strstr(where, what);
 
     while (where != NULL)
     {
         c++;
-        where = strstr(where + 1, what);
+        where = my_strstr(where + 1, what);
     }
 
     return c;
