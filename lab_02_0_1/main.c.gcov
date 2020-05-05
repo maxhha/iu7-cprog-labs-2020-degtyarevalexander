@@ -1,0 +1,98 @@
+        -:    0:Source:main.c
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:5
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:
+        -:    3:#define MAX_ARRAY_SIZE 10
+        -:    4:#define OK 0
+        -:    5:#define INPUT_LEN_ERR 1
+        -:    6:#define INPUT_ELEMENTS_ERR 2
+        -:    7:#define PROCESS_ERR 3
+        -:    8:
+        5:    9:int scanf_array(int *a, int *const len)
+        -:   10:{
+        5:   11:    printf("Enter array length:\n");
+        5:   12:    int rc = scanf("%d", len);
+        -:   13:
+        5:   14:    if (rc != 1 || *len <= 0 || *len > MAX_ARRAY_SIZE)
+        -:   15:    {
+        1:   16:        return INPUT_LEN_ERR;
+        -:   17:    }
+        -:   18:
+        4:   19:    printf("Enter array elements:\n");
+        -:   20:
+       10:   21:    for (int i = 0; i < *len; i++)
+        -:   22:    {
+        7:   23:        rc = scanf("%d", a + i);
+        -:   24:
+        7:   25:        if (rc != 1 || rc == EOF)
+        -:   26:        {
+        1:   27:            return INPUT_ELEMENTS_ERR;
+        -:   28:        }
+        -:   29:    }
+        3:   30:    return OK;
+        -:   31:}
+        -:   32:
+        3:   33:int sum_even_elements(const int *a, const int n, int *const ans)
+        -:   34:{
+        3:   35:    int s = 0, count = 0;
+        9:   36:    for (int i = 0; i < n; i++)
+        -:   37:    {
+        6:   38:        if (a[i] % 2 == 0)
+        -:   39:        {
+        3:   40:            s += a[i];
+        3:   41:            count++;
+        -:   42:        }
+        -:   43:    }
+        -:   44:
+        3:   45:    if (count == 0)
+        -:   46:    {
+        1:   47:        return PROCESS_ERR;
+        -:   48:    }
+        2:   49:    *ans = s;
+        -:   50:
+        2:   51:    return OK;
+        -:   52:}
+        -:   53:
+        5:   54:int main(void)
+        -:   55:{
+        -:   56:    int a[MAX_ARRAY_SIZE];
+        -:   57:    int n, sum, rc;
+        -:   58:
+        5:   59:    rc = scanf_array(a, &n);
+        -:   60:
+        5:   61:    if (rc == INPUT_LEN_ERR)
+        -:   62:    {
+        1:   63:        printf("Array size is invalid.\n");
+        1:   64:        return rc;
+        -:   65:    }
+        4:   66:    else if (rc == INPUT_ELEMENTS_ERR)
+        -:   67:    {
+        1:   68:        printf("Oops! It was a bad element.\n");
+        1:   69:        return rc;
+        -:   70:    }
+        3:   71:    else if (rc != OK)
+        -:   72:    {
+    #####:   73:        printf("Unknown code error %d.\n", rc);
+    #####:   74:        return rc;
+        -:   75:    }
+        -:   76:
+        3:   77:    rc = sum_even_elements(a, n, &sum);
+        -:   78:
+        3:   79:    if (rc == PROCESS_ERR)
+        -:   80:    {
+        1:   81:        printf("No even elements in array.\n");
+        1:   82:        return rc;
+        -:   83:    }
+        2:   84:    else if (rc != OK)
+        -:   85:    {
+    #####:   86:        printf("Unknown code error %d.\n", rc);
+    #####:   87:        return rc;
+        -:   88:    }
+        -:   89:
+        2:   90:    printf("Sum of even elements is %d\n", sum);
+        -:   91:
+        2:   92:    return OK;
+        -:   93:}
