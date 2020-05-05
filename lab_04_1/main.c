@@ -14,6 +14,8 @@ char* my_strrchr(const char *s, int c)
             i = s;
         s++;
     }
+    if (*s == c)
+        return (char *) s;
     return (char *) i;
 }
 
@@ -46,6 +48,7 @@ int main(void)
     sum_passed += test("a", '1', ++n);
     sum_passed += test("baa", 'a', ++n);
     sum_passed += test("baa", 'b', ++n);
+    sum_passed += test("baa", '\0', ++n);
 
     printf("passed %d/%d\n", sum_passed, n);
 }
