@@ -11,10 +11,8 @@ int main(void)
         fprintf(stderr, "Input error\n");
         return EXIT_FAILURE;
     }
-    else
-    {
-        printf("%d\n", count);
-    }
+
+    printf("%d\n", count);
 
     return EXIT_SUCCESS;
 }
