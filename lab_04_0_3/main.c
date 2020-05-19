@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../lab_04_0_2/sizes.h"
-#include "../lab_04_0_2/input.h"
+#include "sizes.h"
+#include "input.h"
 
 void magic_process_word(char *word)
 {

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "my_string.h"
 
 char *my_strpbrk(const char *s, const char *accept)
 {
@@ -13,54 +14,40 @@ char *my_strpbrk(const char *s, const char *accept)
 size_t my_strspn(const char *s, const char *accept)
 {
     size_t len = 0;
-    const char *i;
 
-    for (;*s != '\0'; s++, len++)
-    {
-        for (i = accept; *i != '\0'; i++)
-            if (*s == *i)
-                break;
-        if (*s != *i)
-            return len;
-    }
+    while (*s != '\0' && my_strchr(accept, *s++) != NULL)
+        len++;
+
     return len;
 }
 
 size_t my_strcspn(const char *s, const char *accept)
 {
     size_t len = 0;
-    const char *i;
-    for (; *s != '\0'; s++, len++)
-    {
-        for (i = accept; *i != '\0'; i++)
-            if (*s == *i)
-                break;
-        if (*i != '\0')
-            return len;
-    }
+
+    while (*s != '\0' && my_strchr(accept, *s++) == NULL)
+        len++;
+
     return len;
 }
 
 char *my_strchr(const char *s, int c)
 {
-    for (; *s != '\0'; s++)
-        if (*s == c)
-            return (char *) s;
+    while (*s != (char) c)
+        if (*s++ == '\0')
+            return NULL;
 
-    if (*s == c)
-        return (char *) s;
-
-    return NULL;
+    return (char *) s;
 }
 
 char *my_strrchr(const char *s, int c)
 {
     const char *i = NULL;
-    for (; *s != '\0'; s++)
+
+    do {
         if (*s == c)
             i = s;
+    } while (*s++ != '\0');
 
-    if (*s == c)
-        return (char *) s;
     return (char *) i;
 }
