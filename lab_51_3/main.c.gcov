@@ -1,0 +1,41 @@
+        -:    0:Source:main.c
+        -:    1:/**
+        -:    2: * This program can:
+        -:    3: *  *   generate binary file with random numbers of int type
+        -:    4: *  *   print values stored in binary file
+        -:    5: *  *   sort values in binary file in ascending order using bubble sort
+        -:    6: *
+        -:    7:*/
+        -:    8:#include <stdio.h>
+        -:    9:#include <stdlib.h>
+        -:   10:#include <string.h>
+        -:   11:#include "main.h"
+        -:   12:
+       19:   13:int main(int argc, char **argv)
+        -:   14:{
+       19:   15:    if (argc == 1)
+        -:   16:    {
+        1:   17:        fprintf(stderr, "No operation argument passed.\n");
+        1:   18:        return EXIT_FAILURE;
+        -:   19:    }
+        -:   20:
+       18:   21:    if (strcmp(argv[1], "c") == 0)
+        -:   22:    {
+        7:   23:        return main_create(argc - 2, argv + 2);
+        -:   24:    }
+        -:   25:
+       11:   26:    if (strcmp(argv[1], "p") == 0)
+        -:   27:    {
+        5:   28:        return main_print(argc - 2, argv + 2);
+        -:   29:    }
+        -:   30:
+        6:   31:    if (strcmp(argv[1], "s") == 0)
+        -:   32:    {
+        5:   33:        return main_sort(argc - 2, argv + 2);
+        -:   34:    }
+        -:   35:
+        1:   36:    fprintf(stderr, "Unknown operation argument.\n"
+        -:   37:        "Supports: (c)reate, (p)rint, (s)ort.\n");
+        -:   38:
+        1:   39:    return EXIT_FAILURE;
+        -:   40:}

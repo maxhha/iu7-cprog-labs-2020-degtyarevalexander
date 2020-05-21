@@ -1,0 +1,47 @@
+        -:    0:Source:print.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "main.h"
+        -:    4:
+        -:    5:#define OK 0
+        -:    6:#define ENOTFOUND -1
+        -:    7:
+        4:    8:int print_file(char *filename)
+        -:    9:{
+        4:   10:    FILE *f = fopen(filename, "rb");
+        4:   11:    if (f == NULL)
+        -:   12:    {
+        1:   13:        return ENOTFOUND;
+        -:   14:    }
+        -:   15:
+        -:   16:    NUMBER_TYPE x;
+        3:   17:    fread(&x, sizeof(NUMBER_TYPE), 1, f);
+        -:   18:
+       33:   19:    while (feof(f) == 0)
+        -:   20:    {
+       30:   21:        printf(NUMBER_FORMAT " ", x);
+       30:   22:        fread(&x, sizeof(NUMBER_TYPE), 1, f);
+        -:   23:    }
+        3:   24:    printf("\n");
+        -:   25:
+        3:   26:    return OK;
+        -:   27:}
+        -:   28:
+        5:   29:int main_print(int argc, char **argv)
+        -:   30:{
+        5:   31:    if (argc == 0)
+        -:   32:    {
+        1:   33:        fprintf(stderr, "No filename argument.\n");
+        1:   34:        return EXIT_FAILURE;
+        -:   35:    }
+        -:   36:
+        4:   37:    int rc = print_file(argv[0]);
+        -:   38:
+        4:   39:    if (rc == ENOTFOUND)
+        -:   40:    {
+        1:   41:        fprintf(stderr, "File not found.\n");
+        1:   42:        return EXIT_FAILURE;
+        -:   43:    }
+        -:   44:
+        3:   45:    return EXIT_SUCCESS;
+        -:   46:}
