@@ -38,7 +38,7 @@
         -:   37:    }
         -:   38:
         4:   39:    generate_file(argv[1], number);
-        4:   40:    printf("Successful.\n");
+        -:   40:    // printf("Successful.\n");
         -:   41:
         4:   42:    return EXIT_SUCCESS;
         -:   43:}

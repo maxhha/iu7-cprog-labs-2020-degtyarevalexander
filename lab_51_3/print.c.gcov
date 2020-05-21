@@ -19,10 +19,10 @@
         -:   18:
        33:   19:    while (feof(f) == 0)
         -:   20:    {
-       30:   21:        printf(NUMBER_FORMAT " ", x);
+       30:   21:        printf(NUMBER_FORMAT, x);
        30:   22:        fread(&x, sizeof(NUMBER_TYPE), 1, f);
-        -:   23:    }
-        3:   24:    printf("\n");
+       30:   23:        printf("%c", feof(f) == 0 ? ' ' : '\n');
+        -:   24:    }
         -:   25:
         3:   26:    return OK;
         -:   27:}

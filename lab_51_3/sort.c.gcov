@@ -59,11 +59,11 @@
        55:   58:        for (int j = 0; j < n - 1 - i; j++)
         -:   59:        {
        45:   60:            a = get_number_by_pos(f, j);
-       45:   61:            b = get_number_by_pos(f, j+1);
+       45:   61:            b = get_number_by_pos(f, j + 1);
        45:   62:            if (a > b)
         -:   63:            {
        29:   64:                set_number_by_pos(f, j, b);
-       29:   65:                set_number_by_pos(f, j+1, a);
+       29:   65:                set_number_by_pos(f, j + 1, a);
         -:   66:            }
         -:   67:        }
         -:   68:    }
@@ -107,6 +107,6 @@
         2:  106:        return EXIT_FAILURE;
         -:  107:    }
         -:  108:
-        1:  109:    printf("Successful.\n");
+        -:  109:    // printf("Successful.\n");
         1:  110:    return EXIT_SUCCESS;
         -:  111:}

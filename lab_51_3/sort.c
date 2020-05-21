@@ -58,11 +58,11 @@ int sort(FILE *f)
         for (int j = 0; j < n - 1 - i; j++)
         {
             a = get_number_by_pos(f, j);
-            b = get_number_by_pos(f, j+1);
+            b = get_number_by_pos(f, j + 1);
             if (a > b)
             {
                 set_number_by_pos(f, j, b);
-                set_number_by_pos(f, j+1, a);
+                set_number_by_pos(f, j + 1, a);
             }
         }
     }
@@ -106,6 +106,6 @@ int main_sort(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    printf("Successful.\n");
+    // printf("Successful.\n");
     return EXIT_SUCCESS;
 }

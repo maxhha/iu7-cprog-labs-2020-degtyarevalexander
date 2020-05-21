@@ -18,10 +18,10 @@ int print_file(char *filename)
 
     while (feof(f) == 0)
     {
-        printf(NUMBER_FORMAT " ", x);
+        printf(NUMBER_FORMAT, x);
         fread(&x, sizeof(NUMBER_TYPE), 1, f);
+        printf("%c", feof(f) == 0 ? ' ' : '\n');
     }
-    printf("\n");
 
     return OK;
 }

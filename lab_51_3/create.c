@@ -37,7 +37,7 @@ int main_create(int argc, char **argv)
     }
 
     generate_file(argv[1], number);
-    printf("Successful.\n");
+    // printf("Successful.\n");
 
     return EXIT_SUCCESS;
 }
