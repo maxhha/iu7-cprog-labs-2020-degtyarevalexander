@@ -11,22 +11,22 @@
         -:   10:#include <string.h>
         -:   11:#include "main.h"
         -:   12:
-       19:   13:int main(int argc, char **argv)
+       20:   13:int main(int argc, char **argv)
         -:   14:{
-       19:   15:    if (argc == 1)
+       20:   15:    if (argc == 1)
         -:   16:    {
         1:   17:        fprintf(stderr, "No operation argument passed.\n");
         1:   18:        return EXIT_FAILURE;
         -:   19:    }
         -:   20:
-       18:   21:    if (strcmp(argv[1], "c") == 0)
+       19:   21:    if (strcmp(argv[1], "c") == 0)
         -:   22:    {
         7:   23:        return main_create(argc - 2, argv + 2);
         -:   24:    }
         -:   25:
-       11:   26:    if (strcmp(argv[1], "p") == 0)
+       12:   26:    if (strcmp(argv[1], "p") == 0)
         -:   27:    {
-        5:   28:        return main_print(argc - 2, argv + 2);
+        6:   28:        return main_print(argc - 2, argv + 2);
         -:   29:    }
         -:   30:
         6:   31:    if (strcmp(argv[1], "s") == 0)

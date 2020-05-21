@@ -18,6 +18,9 @@ echocmd gcc --std=c99 -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic 
 	echocmd ./a.out c 10 _f.bin
 	echocmd ./a.out p _f.bin
 	rm -f _f.bin
+	echo "1234" > _f.bin
+	echocmd ./a.out p _f.bin
+	rm -f _f.bin
 
 	echocmd ./a.out s
 	echocmd ./a.out s _f.bin
@@ -28,7 +31,7 @@ echocmd gcc --std=c99 -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic 
 	rm -f _f.bin
 	echo > _f.bin
 	echocmd ./a.out s _f.bin
-	echo "1" > _f.bin
+	echo "1234" > _f.bin
 	echocmd ./a.out s _f.bin
 	rm -f _f.bin
 

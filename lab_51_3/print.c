@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "main.h"
+#include "common.h"
 
 #define OK 0
 #define ENOTFOUND -1
@@ -13,6 +13,14 @@ int print_file(char *filename)
         return ENOTFOUND;
     }
 
+    int n;
+    int rc = count_numbers_in_file(f, &n);
+    if (rc != OK)
+    {
+        fclose(f);
+        return EFILESIZE;
+    }
+
     NUMBER_TYPE x;
     fread(&x, sizeof(NUMBER_TYPE), 1, f);
 
@@ -22,6 +30,8 @@ int print_file(char *filename)
         fread(&x, sizeof(NUMBER_TYPE), 1, f);
         printf("%c", feof(f) == 0 ? ' ' : '\n');
     }
+
+    fclose(f);
 
     return OK;
 }
@@ -39,6 +49,11 @@ int main_print(int argc, char **argv)
     if (rc == ENOTFOUND)
     {
         fprintf(stderr, "File not found.\n");
+        return EXIT_FAILURE;
+    }
+    if (rc == EFILESIZE)
+    {
+        fprintf(stderr, "File size is invalid.\n");
         return EXIT_FAILURE;
     }
 

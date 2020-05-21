@@ -1,112 +1,87 @@
         -:    0:Source:sort.c
         -:    1:#include <stdio.h>
         -:    2:#include <stdlib.h>
-        -:    3:#include "main.h"
+        -:    3:#include "common.h"
         -:    4:
-        -:    5:#define OK 0
-        -:    6:#define ENOTFOUND -1
-        -:    7:#define EFILESIZE -2
-        -:    8:
-        3:    9:int count_numbers_in_file(FILE *f, int *count)
-        -:   10:{
-        3:   11:    if (fseek(f, 0, SEEK_END) != 0)
-    #####:   12:        return EFILESIZE;
-        -:   13:
-        3:   14:    int s = ftell(f);
-        -:   15:
-        3:   16:    if (s < 0)
-    #####:   17:        return EFILESIZE;
+       90:    5:NUMBER_TYPE get_number_by_pos(FILE *f, int pos)
+        -:    6:{
+       90:    7:    fseek(f, pos * sizeof(NUMBER_TYPE), SEEK_SET);
+        -:    8:    NUMBER_TYPE x;
+       90:    9:    fread(&x, sizeof(NUMBER_TYPE), 1, f);
+       90:   10:    return x;
+        -:   11:}
+        -:   12:
+       58:   13:void set_number_by_pos(FILE *f, int pos, NUMBER_TYPE number)
+        -:   14:{
+       58:   15:    fseek(f, pos * sizeof(NUMBER_TYPE), SEEK_SET);
+       58:   16:    fwrite(&number, sizeof(NUMBER_TYPE), 1, f);
+       58:   17:}
         -:   18:
-        3:   19:    if (s % sizeof(NUMBER_TYPE) != 0)
-        2:   20:        return EFILESIZE;
-        -:   21:
-        1:   22:    *count = s / sizeof(NUMBER_TYPE);
+        3:   19:int sort(FILE *f)
+        -:   20:{
+        -:   21:    int n;
+        3:   22:    int rc = count_numbers_in_file(f, &n);
         -:   23:
-        1:   24:    if (fseek(f, 0, SEEK_SET) != 0)
-    #####:   25:        return EFILESIZE;
-        -:   26:
-        1:   27:    return OK;
-        -:   28:}
-        -:   29:
-       90:   30:NUMBER_TYPE get_number_by_pos(FILE *f, int pos)
-        -:   31:{
-       90:   32:    fseek(f, pos * sizeof(NUMBER_TYPE), SEEK_SET);
-        -:   33:    NUMBER_TYPE x;
-       90:   34:    fread(&x, sizeof(NUMBER_TYPE), 1, f);
-       90:   35:    return x;
-        -:   36:}
-        -:   37:
-       58:   38:void set_number_by_pos(FILE *f, int pos, NUMBER_TYPE number)
-        -:   39:{
-       58:   40:    fseek(f, pos * sizeof(NUMBER_TYPE), SEEK_SET);
-       58:   41:    fwrite(&number, sizeof(NUMBER_TYPE), 1, f);
-       58:   42:}
-        -:   43:
-        3:   44:int sort(FILE *f)
-        -:   45:{
-        -:   46:    int n;
-        3:   47:    int rc = count_numbers_in_file(f, &n);
-        -:   48:
-        3:   49:    if (rc != OK)
-        -:   50:    {
-        2:   51:        return EFILESIZE;
-        -:   52:    }
-        -:   53:
-        -:   54:    NUMBER_TYPE a, b;
+        3:   24:    if (rc != OK)
+        -:   25:    {
+        2:   26:        return EFILESIZE;
+        -:   27:    }
+        -:   28:
+        -:   29:    NUMBER_TYPE a, b;
+        -:   30:
+       11:   31:    for (int i = 0; i < n; i++)
+        -:   32:    {
+       55:   33:        for (int j = 0; j < n - 1 - i; j++)
+        -:   34:        {
+       45:   35:            a = get_number_by_pos(f, j);
+       45:   36:            b = get_number_by_pos(f, j + 1);
+       45:   37:            if (a > b)
+        -:   38:            {
+       29:   39:                set_number_by_pos(f, j, b);
+       29:   40:                set_number_by_pos(f, j + 1, a);
+        -:   41:            }
+        -:   42:        }
+        -:   43:    }
+        -:   44:
+        1:   45:    return OK;
+        -:   46:}
+        -:   47:
+        4:   48:int sort_file(char *filename)
+        -:   49:{
+        4:   50:    FILE *f = fopen(filename, "r+b");
+        4:   51:    if (f == NULL)
+        -:   52:    {
+        1:   53:        return ENOTFOUND;
+        -:   54:    }
         -:   55:
-       11:   56:    for (int i = 0; i < n; i++)
-        -:   57:    {
-       55:   58:        for (int j = 0; j < n - 1 - i; j++)
-        -:   59:        {
-       45:   60:            a = get_number_by_pos(f, j);
-       45:   61:            b = get_number_by_pos(f, j + 1);
-       45:   62:            if (a > b)
-        -:   63:            {
-       29:   64:                set_number_by_pos(f, j, b);
-       29:   65:                set_number_by_pos(f, j + 1, a);
-        -:   66:            }
-        -:   67:        }
-        -:   68:    }
-        -:   69:
-        1:   70:    return OK;
-        -:   71:}
+        3:   56:    int rc = sort(f);
+        -:   57:
+        3:   58:    fclose(f);
+        -:   59:
+        3:   60:    return rc;
+        -:   61:}
+        -:   62:
+        5:   63:int main_sort(int argc, char **argv)
+        -:   64:{
+        5:   65:    if (argc == 0)
+        -:   66:    {
+        1:   67:        fprintf(stderr, "No filename argument.\n");
+        1:   68:        return EXIT_FAILURE;
+        -:   69:    }
+        -:   70:
+        4:   71:    int rc = sort_file(argv[0]);
         -:   72:
-        4:   73:int sort_file(char *filename)
-        -:   74:{
-        4:   75:    FILE *f = fopen(filename, "r+b");
-        4:   76:    if (f == NULL)
-        -:   77:    {
-        1:   78:        return ENOTFOUND;
-        -:   79:    }
-        -:   80:
-        3:   81:    int rc = sort(f);
-        -:   82:
-        3:   83:    fclose(f);
-        -:   84:
-        3:   85:    return rc;
+        4:   73:    if (rc == ENOTFOUND)
+        -:   74:    {
+        1:   75:        fprintf(stderr, "File not found.\n");
+        1:   76:        return EXIT_FAILURE;
+        -:   77:    }
+        3:   78:    if (rc == EFILESIZE)
+        -:   79:    {
+        2:   80:        fprintf(stderr, "File size is invalid.\n");
+        2:   81:        return EXIT_FAILURE;
+        -:   82:    }
+        -:   83:
+        -:   84:    // printf("Successful.\n");
+        1:   85:    return EXIT_SUCCESS;
         -:   86:}
-        -:   87:
-        5:   88:int main_sort(int argc, char **argv)
-        -:   89:{
-        5:   90:    if (argc == 0)
-        -:   91:    {
-        1:   92:        fprintf(stderr, "No filename argument.\n");
-        1:   93:        return EXIT_FAILURE;
-        -:   94:    }
-        -:   95:
-        4:   96:    int rc = sort_file(argv[0]);
-        -:   97:
-        4:   98:    if (rc == ENOTFOUND)
-        -:   99:    {
-        1:  100:        fprintf(stderr, "File not found.\n");
-        1:  101:        return EXIT_FAILURE;
-        -:  102:    }
-        3:  103:    if (rc == EFILESIZE)
-        -:  104:    {
-        2:  105:        fprintf(stderr, "File size is invalid.\n");
-        2:  106:        return EXIT_FAILURE;
-        -:  107:    }
-        -:  108:
-        -:  109:    // printf("Successful.\n");
-        1:  110:    return EXIT_SUCCESS;
-        -:  111:}

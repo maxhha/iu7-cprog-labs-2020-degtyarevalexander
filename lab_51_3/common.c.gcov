@@ -1,0 +1,24 @@
+        -:    0:Source:common.c
+        -:    1:#include <stdio.h>
+        -:    2:#include "common.h"
+        -:    3:
+        7:    4:int count_numbers_in_file(FILE *f, int *count)
+        -:    5:{
+        7:    6:    if (fseek(f, 0, SEEK_END) != 0)
+    #####:    7:        return EFILESIZE;
+        -:    8:
+        7:    9:    int s = ftell(f);
+        -:   10:
+        7:   11:    if (s <= 0)
+    #####:   12:        return EFILESIZE;
+        -:   13:
+        7:   14:    if (s % sizeof(NUMBER_TYPE) != 0)
+        3:   15:        return EFILESIZE;
+        -:   16:
+        4:   17:    *count = s / sizeof(NUMBER_TYPE);
+        -:   18:
+        4:   19:    if (fseek(f, 0, SEEK_SET) != 0)
+    #####:   20:        return EFILESIZE;
+        -:   21:
+        4:   22:    return OK;
+        -:   23:}
