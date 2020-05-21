@@ -13,7 +13,7 @@ int count_numbers_in_file(FILE *f, int *count)
 
     int s = ftell(f);
 
-    if (s < 0)
+    if (s <= 0)
         return EFILESIZE;
 
     if (s % sizeof(NUMBER_TYPE) != 0)
