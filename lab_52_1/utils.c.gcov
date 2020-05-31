@@ -1,0 +1,16 @@
+        -:    0:Source:utils.c
+        -:    1:#include <stdio.h>
+        -:    2:#include "common.h"
+        -:    3:
+       27:    4:void printf_student(FILE *f, struct Student student)
+        -:    5:{
+       27:    6:    fprintf(
+        -:    7:        f,
+        -:    8:        "%s %s %d %d %d %d\n",
+        -:    9:        student.last_name,
+        -:   10:        student.first_name,
+        -:   11:        student.marks[0],
+        -:   12:        student.marks[1],
+        -:   13:        student.marks[2],
+        -:   14:        student.marks[3]);
+       27:   15:}

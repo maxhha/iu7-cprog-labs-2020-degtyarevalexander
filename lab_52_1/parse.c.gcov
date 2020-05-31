@@ -1,0 +1,45 @@
+        -:    0:Source:parse.c
+        -:    1:#include <stdio.h>
+        -:    2:#include "common.h"
+        -:    3:
+        -:    4:/* Input format:
+        -:    5: *   last_name first_name mark1 mark2 mark3 mark4
+        -:    6: * last_name - string[25]
+        -:    7: * first_name - string[10]
+        -:    8: * mark1..4 - unsigned int
+        -:    9:**/
+       22:   10:int parse_file(FILE *f, int max_size, struct Student *array, int *array_len)
+        -:   11:{
+        -:   12:    struct Student student;
+        -:   13:
+       22:   14:    *array_len = 0;
+        -:   15:
+       52:   16:    while (*array_len < max_size)
+        -:   17:    {
+       52:   18:        int rc = fscanf(f,
+        -:   19:            "%"XSTR(MAXLEN_LAST_NAME)"s"
+        -:   20:            "%"XSTR(MAXLEN_LAST_NAME)"s"
+        -:   21:            "%u %u %u %u",
+        -:   22:            student.last_name,
+        -:   23:            student.first_name,
+        -:   24:            student.marks,
+        -:   25:            student.marks + 1,
+        -:   26:            student.marks + 2,
+        -:   27:            student.marks + 3);
+        -:   28:
+       52:   29:        if (rc == EOF)
+        -:   30:        {
+       18:   31:            break;
+        -:   32:        }
+        -:   33:
+       34:   34:        if (rc != 6)
+        -:   35:        {
+        4:   36:            return EPARSE;
+        -:   37:        }
+        -:   38:
+       30:   39:        *array_len += 1;
+       30:   40:        *(array++) = student;
+        -:   41:    }
+        -:   42:
+       18:   43:    return OK;
+        -:   44:}
