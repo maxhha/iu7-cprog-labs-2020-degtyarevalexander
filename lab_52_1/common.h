@@ -3,6 +3,7 @@
 #define __COMMON_H__
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define XSTR(A) STR(A)
 #define STR(A) #A
@@ -18,7 +19,7 @@ struct s_Student
 {
     char last_name[MAXLEN_LAST_NAME + 1];
     char first_name[MAXLEN_FIRST_NAME + 1];
-    unsigned int marks[4];
+    uint32_t marks[4];
 };
 
 struct s_Student get_from_file(FILE *f, int i);
