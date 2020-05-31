@@ -11,7 +11,7 @@
         1:   10:        return EXIT_FAILURE;
         -:   11:    }
         -:   12:
-        -:   13:    struct Student students[MAX_STUDENTS];
+        -:   13:    struct s_Student students[MAX_STUDENTS];
         -:   14:    int students_n;
         -:   15:
         4:   16:    if (parse_file(stdin, MAX_STUDENTS, students, &students_n) != OK)
@@ -34,7 +34,7 @@
     #####:   33:        return EXIT_FAILURE;
         -:   34:    }
         -:   35:
-        2:   36:    if (fwrite(students, sizeof(struct Student), students_n, f) != students_n)
+        2:   36:    if (fwrite(students, sizeof(struct s_Student), students_n, f) != students_n)
         -:   37:    {
     #####:   38:        fclose(f);
     #####:   39:        fprintf(stderr, "Some students hadnt written to file.\n");

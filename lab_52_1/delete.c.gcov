@@ -5,8 +5,8 @@
         -:    4:#include "common.h"
         -:    5:
         -:    6:#define TYPE array
-        -:    7:#define IN_TYPE struct Student *
-        -:    8:#include "delete_template.c"
+        -:    7:#define IN_TYPE struct s_Student *
+        -:    8:#include "delete.c.template"
         -:    9:#undef TYPE
         -:   10:#undef IN_TYPE
         -:   11:
@@ -26,7 +26,7 @@
         1:   25:        return EXIT_FAILURE;
         -:   26:    }
         -:   27:
-        -:   28:    struct Student students[MAX_STUDENTS];
+        -:   28:    struct s_Student students[MAX_STUDENTS];
         -:   29:    int students_n;
         -:   30:
         6:   31:    if (parse_file(f, MAX_STUDENTS, students, &students_n) != OK)
@@ -62,7 +62,7 @@
         -:   61:
         -:   62:#define TYPE file
         -:   63:#define IN_TYPE FILE *
-        -:   64:#include "delete_template.c"
+        -:   64:#include "delete.c.template"
         -:   65:#undef TYPE
         -:   66:#undef IN_TYPE
         -:   67:
@@ -85,14 +85,14 @@
         6:   84:    fseek(f, 0, SEEK_END);
         6:   85:    int size = ftell(f);
         -:   86:
-        6:   87:    if (size % sizeof(struct Student) != 0 || size <= 0)
+        6:   87:    if (size % sizeof(struct s_Student) != 0 || size <= 0)
         -:   88:    {
         2:   89:        fclose(f);
         2:   90:        fprintf(stderr, "File size is incorrect\n");
         2:   91:        return EXIT_FAILURE;
         -:   92:    }
         4:   93:    fseek(f, 0, SEEK_SET);
-        4:   94:    int students_n = size / sizeof(struct Student);
+        4:   94:    int students_n = size / sizeof(struct s_Student);
         -:   95:
         4:   96:    students_n = delete_file(f, f, students_n);
         -:   97:

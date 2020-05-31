@@ -7,9 +7,9 @@
  * first_name - string[10]
  * mark1..4 - unsigned int
 **/
-int parse_file(FILE *f, int max_size, struct Student *array, int *array_len)
+int parse_file(FILE *f, int max_size, struct s_Student *array, int *array_len)
 {
-    struct Student student;
+    struct s_Student student;
 
     *array_len = 0;
 

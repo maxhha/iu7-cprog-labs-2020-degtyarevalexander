@@ -2,7 +2,7 @@
         -:    1:#include <stdio.h>
         -:    2:#include "common.h"
         -:    3:
-       27:    4:void printf_student(FILE *f, struct Student student)
+       27:    4:void printf_student(FILE *f, struct s_Student student)
         -:    5:{
        27:    6:    fprintf(
         -:    7:        f,

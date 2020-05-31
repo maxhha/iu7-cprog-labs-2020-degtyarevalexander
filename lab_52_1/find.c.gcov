@@ -4,8 +4,8 @@
         -:    3:#include "common.h"
         -:    4:
         -:    5:#define TYPE array
-        -:    6:#define IN_TYPE struct Student *
-        -:    7:#include "find_template.c"
+        -:    6:#define IN_TYPE struct s_Student *
+        -:    7:#include "find.c.template"
         -:    8:#undef TYPE
         -:    9:#undef IN_TYPE
         -:   10:
@@ -25,7 +25,7 @@
         1:   24:        return EXIT_FAILURE;
         -:   25:    }
         -:   26:
-        -:   27:    struct Student students[MAX_STUDENTS];
+        -:   27:    struct s_Student students[MAX_STUDENTS];
         -:   28:    int students_n;
         -:   29:
         6:   30:    if (parse_file(f_in, MAX_STUDENTS, students, &students_n) != OK)
@@ -70,7 +70,7 @@
         -:   69:
         -:   70:#define TYPE file
         -:   71:#define IN_TYPE FILE *
-        -:   72:#include "find_template.c"
+        -:   72:#include "find.c.template"
         -:   73:#undef TYPE
         -:   74:#undef IN_TYPE
         -:   75:
@@ -93,14 +93,14 @@
         6:   92:    fseek(f_in, 0, SEEK_END);
         6:   93:    int size = ftell(f_in);
         -:   94:
-        6:   95:    if (size % sizeof(struct Student) != 0 || size <= 0)
+        6:   95:    if (size % sizeof(struct s_Student) != 0 || size <= 0)
         -:   96:    {
         2:   97:        fclose(f_in);
         2:   98:        fprintf(stderr, "File size is incorrect\n");
         2:   99:        return EXIT_FAILURE;
         -:  100:    }
         4:  101:    fseek(f_in, 0, SEEK_SET);
-        4:  102:    int students_n = size / sizeof(struct Student);
+        4:  102:    int students_n = size / sizeof(struct s_Student);
         -:  103:
         4:  104:    FILE *f_out = fopen(argv[2], "wb");
         -:  105:

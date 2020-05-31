@@ -4,8 +4,8 @@
         -:    3:#include "common.h"
         -:    4:
         -:    5:#define TYPE array
-        -:    6:#define IN_TYPE struct Student *
-        -:    7:#include "sort_template.c"
+        -:    6:#define IN_TYPE struct s_Student *
+        -:    7:#include "sort.c.template"
         -:    8:#undef TYPE
         -:    9:#undef IN_TYPE
         -:   10:
@@ -25,7 +25,7 @@
         1:   24:        return EXIT_FAILURE;
         -:   25:    }
         -:   26:
-        -:   27:    struct Student students[MAX_STUDENTS];
+        -:   27:    struct s_Student students[MAX_STUDENTS];
         -:   28:    int students_n;
         -:   29:
         6:   30:    if (parse_file(f, MAX_STUDENTS, students, &students_n) != OK)
@@ -54,7 +54,7 @@
         -:   53:
         -:   54:#define TYPE file
         -:   55:#define IN_TYPE FILE *
-        -:   56:#include "sort_template.c"
+        -:   56:#include "sort.c.template"
         -:   57:#undef TYPE
         -:   58:#undef IN_TYPE
         -:   59:
@@ -77,23 +77,23 @@
         6:   76:    fseek(f, 0, SEEK_END);
         6:   77:    int size = ftell(f);
         -:   78:
-        6:   79:    if (size % sizeof(struct Student) != 0 || size <= 0)
+        6:   79:    if (size % sizeof(struct s_Student) != 0 || size <= 0)
         -:   80:    {
         2:   81:        fclose(f);
         2:   82:        fprintf(stderr, "File size is incorrect\n");
         2:   83:        return EXIT_FAILURE;
         -:   84:    }
         4:   85:    fseek(f, 0, SEEK_SET);
-        4:   86:    int students_n = size / sizeof(struct Student);
+        4:   86:    int students_n = size / sizeof(struct s_Student);
         -:   87:
         4:   88:    sort_file(f, students_n);
         -:   89:
         4:   90:    fseek(f, 0, SEEK_SET);
-        -:   91:    struct Student student;
+        -:   91:    struct s_Student student;
         -:   92:
        13:   93:    for (int i = 0; i < students_n; i++)
         -:   94:    {
-        9:   95:        fread(&student, sizeof(struct Student), 1, f);
+        9:   95:        fread(&student, sizeof(struct s_Student), 1, f);
         9:   96:        printf_student(stdout, student);
         -:   97:    }
         -:   98:

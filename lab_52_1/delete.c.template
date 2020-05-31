@@ -4,7 +4,7 @@
 
 /* Params:
  *   TYPE - file / array
- *   IN_TYPE - FILE * / struct Student *
+ *   IN_TYPE - FILE * / struct s_Student *
 **/
 
 #ifdef TYPE
@@ -14,7 +14,7 @@
 
 int TEMPLATE(delete, TYPE) (IN_TYPE students_in, IN_TYPE students_out, int n)
 {
-    struct Student a;
+    struct s_Student a;
     double mean = 0;
 
     for (int i = 0; i < n; i++)
