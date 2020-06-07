@@ -4,7 +4,7 @@
 
 /* Params:
  *   TYPE - file / array
- *   IN_TYPE - FILE * / struct s_Student *
+ *   IN_TYPE - FILE * / struct s_student *
 **/
 
 #ifdef TYPE
@@ -14,7 +14,7 @@
 
 void TEMPLATE(sort, TYPE) (IN_TYPE students, int n)
 {
-    struct s_Student a, b;
+    struct s_student a, b;
     for (int i = 1; i < n; i++)
     {
         for (int j = 0; j < n - i; j++)

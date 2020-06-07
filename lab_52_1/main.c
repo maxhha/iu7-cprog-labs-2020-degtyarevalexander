@@ -11,7 +11,6 @@
 #define DELETE_TXT "dt"
 #define DELETE_BIN "db"
 
-
 int main(int argc, char **argv)
 {
     if (argc < 2)
@@ -30,7 +29,7 @@ int main(int argc, char **argv)
 
     if (strcmp(cmd, SORT_TXT) == 0)
     {
-        return main_sort_text(argc - 1, argv + 1);
+        return EWRONG_FILE;
     }
 
     if (strcmp(cmd, SORT_BIN) == 0)
@@ -40,7 +39,7 @@ int main(int argc, char **argv)
 
     if (strcmp(cmd, FIND_TXT) == 0)
     {
-        return main_find_text(argc - 1, argv + 1);
+        return EWRONG_FILE;
     }
 
     if (strcmp(cmd, FIND_BIN) == 0)
@@ -50,7 +49,7 @@ int main(int argc, char **argv)
 
     if (strcmp(cmd, DELETE_TXT) == 0)
     {
-        return main_delete_text(argc - 1, argv + 1);
+        return EWRONG_FILE;
     }
 
     if (strcmp(cmd, DELETE_BIN) == 0)

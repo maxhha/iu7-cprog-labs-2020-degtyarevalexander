@@ -4,73 +4,73 @@
         -:    3:#include "common.h"
         -:    4:
         -:    5:#define TYPE array
-        -:    6:#define IN_TYPE struct s_Student *
-        -:    7:#include "find.c.template"
+        -:    6:#define IN_TYPE struct s_student *
+        -:    7:#include "find_template.c"
         -:    8:#undef TYPE
         -:    9:#undef IN_TYPE
         -:   10:
-       10:   11:int main_find_text(int argc, char **argv)
+    #####:   11:int main_find_text(int argc, char **argv)
         -:   12:{
-       10:   13:    if (argc < 4)
+    #####:   13:    if (argc < 4)
         -:   14:    {
-        3:   15:        fprintf(stderr, "Not enough arguments\n");
-        3:   16:        return EXIT_FAILURE;
+    #####:   15:        fprintf(stderr, "Not enough arguments\n");
+    #####:   16:        return EXIT_FAILURE;
         -:   17:    }
         -:   18:
-        7:   19:    FILE *f_in = fopen(argv[1], "r");
+    #####:   19:    FILE *f_in = fopen(argv[1], "r");
         -:   20:
-        7:   21:    if (f_in == NULL)
+    #####:   21:    if (f_in == NULL)
         -:   22:    {
-        1:   23:        fprintf(stderr, "File open error\n");
-        1:   24:        return EXIT_FAILURE;
+    #####:   23:        fprintf(stderr, "File open error\n");
+    #####:   24:        return EXIT_FAILURE;
         -:   25:    }
         -:   26:
-        -:   27:    struct s_Student students[MAX_STUDENTS];
+        -:   27:    struct s_student students[MAX_STUDENTS];
         -:   28:    int students_n;
         -:   29:
-        6:   30:    if (parse_file(f_in, MAX_STUDENTS, students, &students_n) != OK)
+    #####:   30:    if (parse_file(f_in, MAX_STUDENTS, students, &students_n) != OK)
         -:   31:    {
-        1:   32:        fclose(f_in);
-        1:   33:        fprintf(stderr, "Parse error on %d\n", students_n + 1);
-        1:   34:        return EXIT_FAILURE;
+    #####:   32:        fclose(f_in);
+    #####:   33:        fprintf(stderr, "Parse error on %d\n", students_n + 1);
+    #####:   34:        return EXIT_FAILURE;
         -:   35:    }
-        5:   36:    fclose(f_in);
+    #####:   36:    fclose(f_in);
         -:   37:
-        5:   38:    if (students_n == 0)
+    #####:   38:    if (students_n == 0)
         -:   39:    {
-        1:   40:        fprintf(stderr, "No students\n");
-        1:   41:        return EXIT_FAILURE;
+    #####:   40:        fprintf(stderr, "No students\n");
+    #####:   41:        return EXIT_FAILURE;
         -:   42:    }
         -:   43:
-        4:   44:    students_n = find_array(students, students, students_n, argv[3]);
+    #####:   44:    students_n = find_array(students, students, students_n, argv[3]);
         -:   45:
-        4:   46:    if (students_n == 0)
+    #####:   46:    if (students_n == 0)
         -:   47:    {
-        3:   48:        fprintf(stderr, "No students were found\n");
-        3:   49:        return EXIT_FAILURE;
+    #####:   48:        fprintf(stderr, "No students were found\n");
+    #####:   49:        return EXIT_FAILURE;
         -:   50:    }
         -:   51:
-        1:   52:    FILE *f_out = fopen(argv[2], "w");
+    #####:   52:    FILE *f_out = fopen(argv[2], "w");
         -:   53:
-        1:   54:    if (f_out == NULL)
+    #####:   54:    if (f_out == NULL)
         -:   55:    {
     #####:   56:        fprintf(stderr, "Output file open error\n");
     #####:   57:        return EXIT_FAILURE;
         -:   58:    }
         -:   59:
-        4:   60:    for (int i = 0; i < students_n; i++)
+    #####:   60:    for (int i = 0; i < students_n; i++)
         -:   61:    {
-        3:   62:        printf_student(f_out, students[i]);
+    #####:   62:        printf_student(f_out, students[i]);
         -:   63:    }
         -:   64:
-        1:   65:    return EXIT_SUCCESS;
+    #####:   65:    return EXIT_SUCCESS;
         -:   66:}
         -:   67:
         -:   68:
         -:   69:
         -:   70:#define TYPE file
         -:   71:#define IN_TYPE FILE *
-        -:   72:#include "find.c.template"
+        -:   72:#include "find_template.c"
         -:   73:#undef TYPE
         -:   74:#undef IN_TYPE
         -:   75:
@@ -93,14 +93,14 @@
         6:   92:    fseek(f_in, 0, SEEK_END);
         6:   93:    int size = ftell(f_in);
         -:   94:
-        6:   95:    if (size % sizeof(struct s_Student) != 0 || size <= 0)
+        6:   95:    if (size % sizeof(struct s_student) != 0 || size <= 0)
         -:   96:    {
         2:   97:        fclose(f_in);
         2:   98:        fprintf(stderr, "File size is incorrect\n");
         2:   99:        return EXIT_FAILURE;
         -:  100:    }
         4:  101:    fseek(f_in, 0, SEEK_SET);
-        4:  102:    int students_n = size / sizeof(struct s_Student);
+        4:  102:    int students_n = size / sizeof(struct s_student);
         -:  103:
         4:  104:    FILE *f_out = fopen(argv[2], "wb");
         -:  105:

@@ -4,8 +4,8 @@
 #include "common.h"
 
 #define TYPE array
-#define IN_TYPE struct s_Student *
-#include "delete.c.template"
+#define IN_TYPE struct s_student *
+#include "delete_template.c"
 #undef TYPE
 #undef IN_TYPE
 
@@ -25,7 +25,7 @@ int main_delete_text(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    struct s_Student students[MAX_STUDENTS];
+    struct s_student students[MAX_STUDENTS];
     int students_n;
 
     if (parse_file(f, MAX_STUDENTS, students, &students_n) != OK)
@@ -61,7 +61,7 @@ int main_delete_text(int argc, char **argv)
 
 #define TYPE file
 #define IN_TYPE FILE *
-#include "delete.c.template"
+#include "delete_template.c"
 #undef TYPE
 #undef IN_TYPE
 
@@ -84,19 +84,19 @@ int main_delete_bin(int argc, char **argv)
     fseek(f, 0, SEEK_END);
     int size = ftell(f);
 
-    if (size % sizeof(struct s_Student) != 0 || size <= 0)
+    if (size % sizeof(struct s_student) != 0 || size <= 0)
     {
         fclose(f);
         fprintf(stderr, "File size is incorrect\n");
         return EXIT_FAILURE;
     }
     fseek(f, 0, SEEK_SET);
-    int students_n = size / sizeof(struct s_Student);
+    int students_n = size / sizeof(struct s_student);
 
     students_n = delete_file(f, f, students_n);
 
     fflush(f);
-    ftruncate(fileno(f), ftell(f));
+    ftruncate(fileno(f), students_n * sizeof(struct s_student));
     fclose(f);
 
     return EXIT_SUCCESS;

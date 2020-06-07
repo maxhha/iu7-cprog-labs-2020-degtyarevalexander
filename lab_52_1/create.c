@@ -10,7 +10,7 @@ int main_create(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    struct s_Student students[MAX_STUDENTS];
+    struct s_student students[MAX_STUDENTS];
     int students_n;
 
     if (parse_file(stdin, MAX_STUDENTS, students, &students_n) != OK)
@@ -33,7 +33,7 @@ int main_create(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    if (fwrite(students, sizeof(struct s_Student), students_n, f) != students_n)
+    if (fwrite(students, sizeof(struct s_student), students_n, f) != students_n)
     {
         fclose(f);
         fprintf(stderr, "Some students hadnt written to file.\n");

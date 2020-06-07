@@ -4,7 +4,7 @@
 
 /* Params:
  *   TYPE - file / array
- *   IN_TYPE - FILE * / struct s_Student *
+ *   IN_TYPE - FILE * / struct s_student *
 **/
 
 #ifdef TYPE
@@ -14,7 +14,7 @@
 
 int TEMPLATE(find, TYPE) (IN_TYPE students_in, IN_TYPE students_out, int n, char *last_name)
 {
-    struct s_Student a;
+    struct s_student a;
     int k = 0;
     for (int i = 0; i < n; i++)
     {

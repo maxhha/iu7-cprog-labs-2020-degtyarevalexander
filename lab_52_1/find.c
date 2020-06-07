@@ -3,8 +3,8 @@
 #include "common.h"
 
 #define TYPE array
-#define IN_TYPE struct s_Student *
-#include "find.c.template"
+#define IN_TYPE struct s_student *
+#include "find_template.c"
 #undef TYPE
 #undef IN_TYPE
 
@@ -24,7 +24,7 @@ int main_find_text(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    struct s_Student students[MAX_STUDENTS];
+    struct s_student students[MAX_STUDENTS];
     int students_n;
 
     if (parse_file(f_in, MAX_STUDENTS, students, &students_n) != OK)
@@ -69,7 +69,7 @@ int main_find_text(int argc, char **argv)
 
 #define TYPE file
 #define IN_TYPE FILE *
-#include "find.c.template"
+#include "find_template.c"
 #undef TYPE
 #undef IN_TYPE
 
@@ -92,14 +92,14 @@ int main_find_bin(int argc, char **argv)
     fseek(f_in, 0, SEEK_END);
     int size = ftell(f_in);
 
-    if (size % sizeof(struct s_Student) != 0 || size <= 0)
+    if (size % sizeof(struct s_student) != 0 || size <= 0)
     {
         fclose(f_in);
         fprintf(stderr, "File size is incorrect\n");
         return EXIT_FAILURE;
     }
     fseek(f_in, 0, SEEK_SET);
-    int students_n = size / sizeof(struct s_Student);
+    int students_n = size / sizeof(struct s_student);
 
     FILE *f_out = fopen(argv[2], "wb");
 

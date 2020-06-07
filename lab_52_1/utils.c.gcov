@@ -2,15 +2,7 @@
         -:    1:#include <stdio.h>
         -:    2:#include "common.h"
         -:    3:
-       27:    4:void printf_student(FILE *f, struct s_Student student)
+        9:    4:void printf_student(FILE *f, struct s_student student)
         -:    5:{
-       27:    6:    fprintf(
-        -:    7:        f,
-        -:    8:        "%s %s %d %d %d %d\n",
-        -:    9:        student.last_name,
-        -:   10:        student.first_name,
-        -:   11:        student.marks[0],
-        -:   12:        student.marks[1],
-        -:   13:        student.marks[2],
-        -:   14:        student.marks[3]);
-       27:   15:}
+        9:    6:    fprintf(f, "%s %s %d %d %d %d\n", student.last_name, student.first_name, student.marks[0], student.marks[1], student.marks[2], student.marks[3]);
+        9:    7:}
