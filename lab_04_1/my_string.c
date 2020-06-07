@@ -44,7 +44,8 @@ char *my_strrchr(const char *s, int c)
 {
     const char *i = NULL;
 
-    do {
+    do
+    {
         if (*s == c)
             i = s;
     } while (*s++ != '\0');
