@@ -1,0 +1,106 @@
+        -:    0:Source:sort.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "common.h"
+        -:    4:
+        -:    5:#define TYPE array
+        -:    6:#define IN_TYPE struct s_student *
+        -:    7:#include "sort_template.c"
+        -:    8:#undef TYPE
+        -:    9:#undef IN_TYPE
+        -:   10:
+    #####:   11:int main_sort_text(int argc, char **argv)
+        -:   12:{
+    #####:   13:    if (argc < 2)
+        -:   14:    {
+    #####:   15:        fprintf(stderr, "No input filename\n");
+    #####:   16:        return EXIT_FAILURE;
+        -:   17:    }
+        -:   18:
+    #####:   19:    FILE *f = fopen(argv[1], "r+a");
+        -:   20:
+    #####:   21:    if (f == NULL)
+        -:   22:    {
+    #####:   23:        fprintf(stderr, "File open error\n");
+    #####:   24:        return EXIT_FAILURE;
+        -:   25:    }
+        -:   26:
+        -:   27:    struct s_student students[MAX_STUDENTS];
+        -:   28:    int students_n;
+        -:   29:
+    #####:   30:    if (parse_file(f, MAX_STUDENTS, students, &students_n) != OK)
+        -:   31:    {
+    #####:   32:        fclose(f);
+    #####:   33:        fprintf(stderr, "Parse error on %d\n", students_n + 1);
+    #####:   34:        return EXIT_FAILURE;
+        -:   35:    }
+        -:   36:
+    #####:   37:    if (students_n == 0)
+        -:   38:    {
+    #####:   39:        fclose(f);
+    #####:   40:        fprintf(stderr, "No students\n");
+    #####:   41:        return EXIT_FAILURE;
+        -:   42:    }
+        -:   43:
+    #####:   44:    sort_array(students, students_n);
+    #####:   45:    fseek(f, 0, SEEK_SET);
+        -:   46:
+    #####:   47:    for (int i = 0; i < students_n; i++)
+        -:   48:    {
+    #####:   49:        printf_student(stdout, students[i]);
+    #####:   50:        printf_student(f, students[i]);
+        -:   51:    }
+    #####:   52:    fclose(f);
+        -:   53:
+    #####:   54:    return EXIT_SUCCESS;
+        -:   55:}
+        -:   56:
+        -:   57:#define TYPE file
+        -:   58:#define IN_TYPE FILE *
+        -:   59:#include "sort_template.c"
+        -:   60:#undef TYPE
+        -:   61:#undef IN_TYPE
+        -:   62:
+        8:   63:int main_sort_bin(int argc, char **argv)
+        -:   64:{
+        8:   65:    if (argc < 2)
+        -:   66:    {
+        1:   67:        fprintf(stderr, "No input filename\n");
+        1:   68:        return EXIT_FAILURE;
+        -:   69:    }
+        -:   70:
+        7:   71:    FILE *f = fopen(argv[1], "rb+a");
+        -:   72:
+        7:   73:    if (f == NULL)
+        -:   74:    {
+        1:   75:        fprintf(stderr, "File open error\n");
+        1:   76:        return EXIT_FAILURE;
+        -:   77:    }
+        -:   78:
+        6:   79:    fseek(f, 0, SEEK_END);
+        6:   80:    int size = ftell(f);
+        -:   81:
+        6:   82:    if (size % sizeof(struct s_student) != 0 || size <= 0)
+        -:   83:    {
+        2:   84:        fclose(f);
+        2:   85:        fprintf(stderr, "File size is incorrect\n");
+        2:   86:        return EXIT_FAILURE;
+        -:   87:    }
+        4:   88:    fseek(f, 0, SEEK_SET);
+        4:   89:    int students_n = size / sizeof(struct s_student);
+        -:   90:
+        4:   91:    sort_file(f, students_n);
+        -:   92:
+        4:   93:    fseek(f, 0, SEEK_SET);
+        -:   94:    struct s_student student;
+        -:   95:
+       13:   96:    for (int i = 0; i < students_n; i++)
+        -:   97:    {
+        9:   98:        fread(&student, sizeof(struct s_student), 1, f);
+        9:   99:        printf_student(stdout, student);
+        -:  100:    }
+        -:  101:
+        4:  102:    fclose(f);
+        -:  103:
+        4:  104:    return EXIT_SUCCESS;
+        -:  105:}

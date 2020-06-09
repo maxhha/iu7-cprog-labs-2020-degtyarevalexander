@@ -1,0 +1,62 @@
+        -:    0:Source:main.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <string.h>
+        -:    4:#include "common.h"
+        -:    5:
+        -:    6:#define CREATE_BIN "cb"
+        -:    7:#define SORT_TXT "st"
+        -:    8:#define SORT_BIN "sb"
+        -:    9:#define FIND_TXT "ft"
+        -:   10:#define FIND_BIN "fb"
+        -:   11:#define DELETE_TXT "dt"
+        -:   12:#define DELETE_BIN "db"
+        -:   13:
+       59:   14:int main(int argc, char **argv)
+        -:   15:{
+       59:   16:    if (argc < 2)
+        -:   17:    {
+        1:   18:        fprintf(stderr, "Not enough arguments\n");
+        1:   19:        return EXIT_FAILURE;
+        -:   20:    }
+        -:   21:
+       58:   22:    char *cmd = argv[1];
+       58:   23:    argv[1] = argv[0];
+        -:   24:
+       58:   25:    if (strcmp(cmd, CREATE_BIN) == 0)
+        -:   26:    {
+        5:   27:        return main_create(argc - 1, argv + 1);
+        -:   28:    }
+        -:   29:
+       53:   30:    if (strcmp(cmd, SORT_TXT) == 0)
+        -:   31:    {
+        8:   32:        return EWRONG_FILE;
+        -:   33:    }
+        -:   34:
+       45:   35:    if (strcmp(cmd, SORT_BIN) == 0)
+        -:   36:    {
+        8:   37:        return main_sort_bin(argc - 1, argv + 1);
+        -:   38:    }
+        -:   39:
+       37:   40:    if (strcmp(cmd, FIND_TXT) == 0)
+        -:   41:    {
+       10:   42:        return EWRONG_FILE;
+        -:   43:    }
+        -:   44:
+       27:   45:    if (strcmp(cmd, FIND_BIN) == 0)
+        -:   46:    {
+       10:   47:        return main_find_bin(argc - 1, argv + 1);
+        -:   48:    }
+        -:   49:
+       17:   50:    if (strcmp(cmd, DELETE_TXT) == 0)
+        -:   51:    {
+        8:   52:        return EWRONG_FILE;
+        -:   53:    }
+        -:   54:
+        9:   55:    if (strcmp(cmd, DELETE_BIN) == 0)
+        -:   56:    {
+        8:   57:        return main_delete_bin(argc - 1, argv + 1);
+        -:   58:    }
+        -:   59:
+        1:   60:    return EXIT_FAILURE;
+        -:   61:}

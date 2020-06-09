@@ -1,0 +1,46 @@
+        -:    0:Source:create.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "common.h"
+        -:    4:
+        5:    5:int main_create(int argc, char **argv)
+        -:    6:{
+        5:    7:    if (argc < 2)
+        -:    8:    {
+        1:    9:        fprintf(stderr, "No output filename\n");
+        1:   10:        return EXIT_FAILURE;
+        -:   11:    }
+        -:   12:
+        -:   13:    struct s_student students[MAX_STUDENTS];
+        -:   14:    int students_n;
+        -:   15:
+        4:   16:    if (parse_file(stdin, MAX_STUDENTS, students, &students_n) != OK)
+        -:   17:    {
+        1:   18:        fprintf(stderr, "Parse input error on %d\n", students_n + 1);
+        1:   19:        return EXIT_FAILURE;
+        -:   20:    }
+        -:   21:
+        3:   22:    if (students_n == 0)
+        -:   23:    {
+        1:   24:        fprintf(stderr, "No students\n");
+        1:   25:        return EXIT_FAILURE;
+        -:   26:    }
+        -:   27:
+        2:   28:    FILE *f = fopen(argv[1], "wb");
+        -:   29:
+        2:   30:    if (f == NULL)
+        -:   31:    {
+    #####:   32:        fprintf(stderr, "Open file error\n");
+    #####:   33:        return EXIT_FAILURE;
+        -:   34:    }
+        -:   35:
+        2:   36:    if (fwrite(students, sizeof(struct s_student), students_n, f) != students_n)
+        -:   37:    {
+    #####:   38:        fclose(f);
+    #####:   39:        fprintf(stderr, "Some students hadnt written to file.\n");
+    #####:   40:        return EXIT_FAILURE;
+        -:   41:    }
+        -:   42:
+        2:   43:    fclose(f);
+        2:   44:    return EXIT_SUCCESS;
+        -:   45:}

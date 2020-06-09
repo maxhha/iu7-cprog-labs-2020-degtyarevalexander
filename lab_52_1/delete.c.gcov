@@ -1,0 +1,104 @@
+        -:    0:Source:delete.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include <unistd.h>
+        -:    4:#include "common.h"
+        -:    5:
+        -:    6:#define TYPE array
+        -:    7:#define IN_TYPE struct s_student *
+        -:    8:#include "delete_template.c"
+        -:    9:#undef TYPE
+        -:   10:#undef IN_TYPE
+        -:   11:
+    #####:   12:int main_delete_text(int argc, char **argv)
+        -:   13:{
+    #####:   14:    if (argc < 2)
+        -:   15:    {
+    #####:   16:        fprintf(stderr, "No input filename\n");
+    #####:   17:        return EXIT_FAILURE;
+        -:   18:    }
+        -:   19:
+    #####:   20:    FILE *f = fopen(argv[1], "r+a");
+        -:   21:
+    #####:   22:    if (f == NULL)
+        -:   23:    {
+    #####:   24:        fprintf(stderr, "File open error\n");
+    #####:   25:        return EXIT_FAILURE;
+        -:   26:    }
+        -:   27:
+        -:   28:    struct s_student students[MAX_STUDENTS];
+        -:   29:    int students_n;
+        -:   30:
+    #####:   31:    if (parse_file(f, MAX_STUDENTS, students, &students_n) != OK)
+        -:   32:    {
+    #####:   33:        fclose(f);
+    #####:   34:        fprintf(stderr, "Parse error on %d\n", students_n + 1);
+    #####:   35:        return EXIT_FAILURE;
+        -:   36:    }
+        -:   37:
+    #####:   38:    if (students_n == 0)
+        -:   39:    {
+    #####:   40:        fclose(f);
+    #####:   41:        fprintf(stderr, "No students\n");
+    #####:   42:        return EXIT_FAILURE;
+        -:   43:    }
+        -:   44:
+    #####:   45:    students_n = delete_array(students, students, students_n);
+        -:   46:
+    #####:   47:    fseek(f, 0, SEEK_SET);
+        -:   48:
+    #####:   49:    for (int i = 0; i < students_n; i++)
+        -:   50:    {
+    #####:   51:        printf_student(f, students[i]);
+        -:   52:    }
+        -:   53:
+    #####:   54:    fflush(f);
+    #####:   55:    ftruncate(fileno(f), ftell(f));
+        -:   56:
+    #####:   57:    fclose(f);
+        -:   58:
+    #####:   59:    return EXIT_SUCCESS;
+        -:   60:}
+        -:   61:
+        -:   62:#define TYPE file
+        -:   63:#define IN_TYPE FILE *
+        -:   64:#include "delete_template.c"
+        -:   65:#undef TYPE
+        -:   66:#undef IN_TYPE
+        -:   67:
+        8:   68:int main_delete_bin(int argc, char **argv)
+        -:   69:{
+        8:   70:    if (argc < 2)
+        -:   71:    {
+        1:   72:        fprintf(stderr, "No input filename\n");
+        1:   73:        return EXIT_FAILURE;
+        -:   74:    }
+        -:   75:
+        7:   76:    FILE *f = fopen(argv[1], "rb+a");
+        -:   77:
+        7:   78:    if (f == NULL)
+        -:   79:    {
+        1:   80:        fprintf(stderr, "File open error\n");
+        1:   81:        return EXIT_FAILURE;
+        -:   82:    }
+        -:   83:
+        6:   84:    fseek(f, 0, SEEK_END);
+        6:   85:    int size = ftell(f);
+        -:   86:
+        6:   87:    if (size % sizeof(struct s_student) != 0 || size <= 0)
+        -:   88:    {
+        2:   89:        fclose(f);
+        2:   90:        fprintf(stderr, "File size is incorrect\n");
+        2:   91:        return EXIT_FAILURE;
+        -:   92:    }
+        4:   93:    fseek(f, 0, SEEK_SET);
+        4:   94:    int students_n = size / sizeof(struct s_student);
+        -:   95:
+        4:   96:    students_n = delete_file(f, f, students_n);
+        -:   97:
+        4:   98:    fflush(f);
+        4:   99:    ftruncate(fileno(f), students_n * sizeof(struct s_student));
+        4:  100:    fclose(f);
+        -:  101:
+        4:  102:    return EXIT_SUCCESS;
+        -:  103:}
