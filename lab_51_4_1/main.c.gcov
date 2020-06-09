@@ -1,0 +1,21 @@
+        -:    0:Source:main.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "process.h"
+        -:    4:
+        3:    5:int main(void)
+        -:    6:{
+        -:    7:    int count;
+        -:    8:
+        3:    9:    if (process(stdin, &count) != OK)
+        -:   10:    {
+        1:   11:        fprintf(stderr, "Input error\n");
+        1:   12:        return EXIT_FAILURE;
+        -:   13:    }
+        -:   14:    else
+        -:   15:    {
+        2:   16:        printf("%d\n", count);
+        -:   17:    }
+        -:   18:
+        2:   19:    return EXIT_SUCCESS;
+        -:   20:}

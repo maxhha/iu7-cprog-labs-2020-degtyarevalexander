@@ -1,0 +1,23 @@
+        -:    0:Source:process.c
+        -:    1:#include <stdio.h>
+        -:    2:#include "process.h"
+        -:    3:
+        3:    4:int process(FILE *f, int *count)
+        -:    5:{
+        3:    6:    *count = 0;
+        -:    7:    int a, b, c;
+        -:    8:
+        3:    9:    if (fscanf(f, "%d %d %d", &a, &b, &c) != 3)
+        -:   10:    {
+        1:   11:        return EINPUT;
+        -:   12:    }
+        -:   13:
+        -:   14:    do
+        -:   15:    {
+        7:   16:        *count += a < b && c < b;
+        7:   17:        a = b;
+        7:   18:        b = c;
+        7:   19:    } while (fscanf(f, "%d", &c) == 1);
+        -:   20:
+        2:   21:    return OK;
+        -:   22:}

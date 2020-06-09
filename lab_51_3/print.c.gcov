@@ -1,0 +1,62 @@
+        -:    0:Source:print.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "common.h"
+        -:    4:
+        -:    5:#define OK 0
+        -:    6:#define ENOTFOUND -1
+        -:    7:
+        5:    8:int print_file(char *filename)
+        -:    9:{
+        5:   10:    FILE *f = fopen(filename, "rb");
+        5:   11:    if (f == NULL)
+        -:   12:    {
+        1:   13:        return ENOTFOUND;
+        -:   14:    }
+        -:   15:
+        -:   16:    int n;
+        4:   17:    int rc = count_numbers_in_file(f, &n);
+        4:   18:    if (rc != OK)
+        -:   19:    {
+        1:   20:        fclose(f);
+        1:   21:        return EFILESIZE;
+        -:   22:    }
+        -:   23:
+        -:   24:    NUMBER_TYPE x;
+        3:   25:    fread(&x, sizeof(NUMBER_TYPE), 1, f);
+        -:   26:
+       33:   27:    while (feof(f) == 0)
+        -:   28:    {
+       30:   29:        printf(NUMBER_FORMAT, x);
+       30:   30:        fread(&x, sizeof(NUMBER_TYPE), 1, f);
+       30:   31:        printf("%c", feof(f) == 0 ? ' ' : '\n');
+        -:   32:    }
+        -:   33:
+        3:   34:    fclose(f);
+        -:   35:
+        3:   36:    return OK;
+        -:   37:}
+        -:   38:
+        6:   39:int main_print(int argc, char **argv)
+        -:   40:{
+        6:   41:    if (argc == 0)
+        -:   42:    {
+        1:   43:        fprintf(stderr, "No filename argument.\n");
+        1:   44:        return EXIT_FAILURE;
+        -:   45:    }
+        -:   46:
+        5:   47:    int rc = print_file(argv[0]);
+        -:   48:
+        5:   49:    if (rc == ENOTFOUND)
+        -:   50:    {
+        1:   51:        fprintf(stderr, "File not found.\n");
+        1:   52:        return EXIT_FAILURE;
+        -:   53:    }
+        4:   54:    if (rc == EFILESIZE)
+        -:   55:    {
+        1:   56:        fprintf(stderr, "File size is invalid.\n");
+        1:   57:        return EXIT_FAILURE;
+        -:   58:    }
+        -:   59:
+        3:   60:    return EXIT_SUCCESS;
+        -:   61:}

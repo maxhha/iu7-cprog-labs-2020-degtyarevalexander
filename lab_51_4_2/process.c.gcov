@@ -1,0 +1,84 @@
+        -:    0:Source:process.c
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdbool.h>
+        -:    3:#include "process.h"
+        -:    4:
+        4:    5:int find_min_max_interval(FILE *f, double *start_val, double *end_val)
+        -:    6:{
+        -:    7:    double x, min, max;;
+        4:    8:    bool max_is_last = true;
+        -:    9:
+        4:   10:    if (fscanf(f, "%lf %lf", &min, &max) != 2)
+        -:   11:    {
+        1:   12:        return EINPUT;
+        -:   13:    }
+        -:   14:
+        3:   15:    if (min > max)
+        -:   16:    {
+        2:   17:        max_is_last = false;
+        2:   18:        x = min;
+        2:   19:        min = max;
+        2:   20:        max = x;
+        -:   21:    }
+        -:   22:
+        9:   23:    while (fscanf(f, "%lf", &x) == 1)
+        -:   24:    {
+        6:   25:        if (x > max)
+        -:   26:        {
+        1:   27:            max = x;
+        1:   28:            max_is_last = true;
+        -:   29:        }
+        6:   30:        if (x < min)
+        -:   31:        {
+        1:   32:            min = x;
+        1:   33:            max_is_last = false;
+        -:   34:        }
+        -:   35:    }
+        -:   36:
+        3:   37:    if (max_is_last)
+        -:   38:    {
+        2:   39:        *start_val = min;
+        2:   40:        *end_val = max;
+        -:   41:    }
+        -:   42:    else
+        -:   43:    {
+        1:   44:        *start_val = max;
+        1:   45:        *end_val = min;
+        -:   46:    }
+        -:   47:
+        3:   48:    return OK;
+        -:   49:}
+        -:   50:
+        3:   51:int get_mean_on_interval(FILE *f, double start_val, double end_val, double *mean)
+        -:   52:{
+        3:   53:    double x, sum = 0;
+        3:   54:    int n = 0;
+        -:   55:
+        4:   56:    while (fscanf(f, "%lf", &x) == 1 && !FEQUAL(x, start_val))
+        -:   57:    {
+        -:   58:    }
+        -:   59:
+        3:   60:    if (!FEQUAL(x, start_val))
+        -:   61:    {
+    #####:   62:        return EINPUT;
+        -:   63:    }
+        -:   64:
+        6:   65:    while (fscanf(f, "%lf", &x) == 1 && !FEQUAL(x, end_val))
+        -:   66:    {
+        3:   67:        sum += x;
+        3:   68:        n++;
+        -:   69:    }
+        -:   70:
+        3:   71:    if (!FEQUAL(x, end_val))
+        -:   72:    {
+    #####:   73:        return EINPUT;
+        -:   74:    }
+        -:   75:
+        3:   76:    if (n == 0)
+        -:   77:    {
+        1:   78:        return EZERODIV;
+        -:   79:    }
+        2:   80:    *mean = sum / n;
+        -:   81:
+        2:   82:    return OK;
+        -:   83:}
