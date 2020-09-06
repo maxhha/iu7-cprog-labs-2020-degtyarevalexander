@@ -23,7 +23,7 @@ int read_objects_from_file(FILE *f, t_object *objects, int *n)
         if (fscanf(f, "%lf%lf", &objects->weight, &objects->volume) != 2)
             return ERR;
 
-        if (objects->weight < 0 || objects->volume <= 0)
+        if (objects->weight <= 0 || objects->volume <= 0)
             return ERR;
 
         fseek(f, 1, SEEK_CUR);
