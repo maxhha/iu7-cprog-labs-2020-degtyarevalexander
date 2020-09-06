@@ -28,12 +28,17 @@ do
 
         if [[ -f $args_file ]]
         then
-            cat $args_file | xargs $PROG > .result
+            r_test=""
 
-            if ( cmp -s $out_file .result )
+            cat $args_file | xargs $PROG > .result
+            rc=$?
+
+            if cmp -s $out_file .result &&
+                [[ $rc = 0 && "pos" == $prefix || "neg" == $prefix ]]
             then
                 echo -e "\033[0;32m[ ok ] ${line}\033[0m"
             else
+                echo Return code: $rc
                 echo -e "\033[0;31m[erro] ${line}\033[0m"
                 echo
                 diff -u $out_file .result
