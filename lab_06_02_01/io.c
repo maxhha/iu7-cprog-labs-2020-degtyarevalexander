@@ -18,6 +18,9 @@ int read_objects_from_file(FILE *f, t_object *objects, int *n)
         if (c != '\n' && s == objects->name + MAX_NAME_LEN)
             return ERR;
 
+        if (s == objects->name)
+            return ERR;
+
         *s = '\0';
 
         if (fscanf(f, "%lf%lf", &objects->weight, &objects->volume) != 2)
