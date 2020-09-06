@@ -5,6 +5,8 @@
 #include "io.h"
 #include "process.h"
 
+#define SHOW_ALL_PREFIX "ALL"
+
 int main(int argc, char const *argv[])
 {
     if (argc < 2 || argc > 3)
@@ -41,7 +43,7 @@ int main(int argc, char const *argv[])
         qsort(objects, objects_n, sizeof(*objects), compare_objects_by_density);
         print_objects(objects, objects_n);
     }
-    else if (strcmp(prefix, "ALL") == 0)
+    else if (strcmp(prefix, SHOW_ALL_PREFIX) == 0)
     {
         print_objects(objects, objects_n);
     }
