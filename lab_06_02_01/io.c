@@ -5,20 +5,16 @@ int read_objects_from_file(FILE *f, t_object *objects, int *n)
     for (*n = 0; *n < MAX_OBJECTS; (*n)++, objects++)
     {
         char *s = objects->name;
-        char c;
+        char *s_end = objects->name + MAX_NAME_LEN;
+        int c;
 
-        while (fscanf(f, "%c", &c) == 1 &&
-            c != '\n' &&
-            s < objects->name + MAX_NAME_LEN)
+        while ((c = fgetc(f)) != EOF && c != '\n' && s < s_end)
             *s++ = c;
 
-        if (feof(f))
+        if (c == EOF)
             return OK;
 
-        if (c != '\n' && s == objects->name + MAX_NAME_LEN)
-            return ERR;
-
-        if (s == objects->name)
+        if (s == objects->name || (c != '\n' && s == s_end))
             return ERR;
 
         *s = '\0';
@@ -29,7 +25,7 @@ int read_objects_from_file(FILE *f, t_object *objects, int *n)
         if (objects->weight <= 0 || objects->volume <= 0)
             return ERR;
 
-        fseek(f, 1, SEEK_CUR);
+        fgetc(f);
     }
 
     return fgetc(f) == EOF ? OK : ERR;

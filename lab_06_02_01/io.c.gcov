@@ -6,40 +6,36 @@
        79:    5:    for (*n = 0; *n < MAX_OBJECTS; (*n)++, objects++)
         -:    6:    {
        75:    7:        char *s = objects->name;
-        -:    8:        char c;
-        -:    9:
-      590:   10:        while (fscanf(f, "%c", &c) == 1 &&
-      586:   11:            c != '\n' &&
-      516:   12:            s < objects->name + MAX_NAME_LEN)
-      515:   13:            *s++ = c;
-        -:   14:
-       75:   15:        if (feof(f))
-       11:   16:            return OK;
-        -:   17:
-       71:   18:        if (c != '\n' && s == objects->name + MAX_NAME_LEN)
-        1:   19:            return ERR;
-        -:   20:
-       70:   21:        if (s == objects->name)
-        1:   22:            return ERR;
-        -:   23:
-       69:   24:        *s = '\0';
-        -:   25:
-       69:   26:        if (fscanf(f, "%lf%lf", &objects->weight, &objects->volume) != 2)
-        3:   27:            return ERR;
-        -:   28:
-       66:   29:        if (objects->weight <= 0 || objects->volume <= 0)
-        2:   30:            return ERR;
-        -:   31:
-       64:   32:        fseek(f, 1, SEEK_CUR);
-        -:   33:    }
-        -:   34:
-        4:   35:    return fgetc(f) == EOF ? OK : ERR;
-        -:   36:}
-        -:   37:
-        5:   38:void print_objects(const t_object *objs, const int n)
-        -:   39:{
-       40:   40:    for (int i = 0; i < n; i++, objs++)
-        -:   41:    {
-       35:   42:        printf("%s\n%0.6lf\n%0.6lf\n", objs->name, objs->weight, objs->volume);
-        -:   43:    }
-        5:   44:}
+       75:    8:        char *s_end = objects->name + MAX_NAME_LEN;
+        -:    9:        int c;
+        -:   10:
+      590:   11:        while ((c = fgetc(f)) != EOF && c != '\n' && s < s_end)
+      515:   12:            *s++ = c;
+        -:   13:
+       75:   14:        if (c == EOF)
+        4:   15:            return OK;
+        -:   16:
+       71:   17:        if (s == objects->name || (c != '\n' && s == s_end))
+        2:   18:            return ERR;
+        -:   19:
+       69:   20:        *s = '\0';
+        -:   21:
+       69:   22:        if (fscanf(f, "%lf%lf", &objects->weight, &objects->volume) != 2)
+        3:   23:            return ERR;
+        -:   24:
+       66:   25:        if (objects->weight <= 0 || objects->volume <= 0)
+        2:   26:            return ERR;
+        -:   27:
+       64:   28:        fgetc(f);
+        -:   29:    }
+        -:   30:
+        4:   31:    return fgetc(f) == EOF ? OK : ERR;
+        -:   32:}
+        -:   33:
+        5:   34:void print_objects(const t_object *objs, const int n)
+        -:   35:{
+       40:   36:    for (int i = 0; i < n; i++, objs++)
+        -:   37:    {
+       35:   38:        printf("%s\n%0.6lf\n%0.6lf\n", objs->name, objs->weight, objs->volume);
+        -:   39:    }
+        5:   40:}
