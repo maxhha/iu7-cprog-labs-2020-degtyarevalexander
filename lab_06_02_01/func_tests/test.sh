@@ -8,13 +8,6 @@ fi
 
 DATA=$(cat readme.md | grep -E "(тесты)|(- [0-9]+? -)")
 
-function echocmd () {
-	local cmd="$*"
-	echo -e "\u001b[38;5;245m$ $cmd \u001b[0m"
-	eval $cmd
-	return $?
-}
-
 prefix=""
 IFS=$'\n'
 for line in $DATA

@@ -9,7 +9,6 @@ int main(int argc, char const *argv[])
 {
     if (argc < 2 || argc > 3)
     {
-        printf("Wrong arguments count\n");
         return EXIT_FAILURE;
     }
     const char *filename = argv[1];
@@ -19,7 +18,6 @@ int main(int argc, char const *argv[])
 
     if (f == NULL)
     {
-        printf("File not found\n");
         return EXIT_FAILURE;
     }
 
@@ -29,14 +27,12 @@ int main(int argc, char const *argv[])
     if (read_objects_from_file(f, objects, &objects_n) != OK)
     {
         fclose(f);
-        printf("Invalid file\n");
         return EXIT_FAILURE;
     }
     fclose(f);
 
     if (objects_n == 0)
     {
-        printf("No data in file\n");
         return EXIT_FAILURE;
     }
 
@@ -54,7 +50,6 @@ int main(int argc, char const *argv[])
         objects_n = filter_objects_by_name(objects, objects_n, argv[2]);
         if (objects_n == 0)
         {
-            printf("Name not found\n");
             return EXIT_FAILURE;
         }
         print_objects(objects, objects_n);
