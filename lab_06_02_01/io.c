@@ -36,6 +36,6 @@ void print_objects(const t_object *objs, const int n)
 {
     for (int i = 0; i < n; i++, objs++)
     {
-        printf("%s %0.6lf %0.6lf\n", objs->name, objs->weight, objs->volume);
+        printf("%s\n%0.6lf\n%0.6lf\n", objs->name, objs->weight, objs->volume);
     }
 }
