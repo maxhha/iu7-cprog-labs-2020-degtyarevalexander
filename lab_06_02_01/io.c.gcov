@@ -1,0 +1,45 @@
+        -:    0:Source:io.c
+        -:    1:#include "io.h"
+        -:    2:
+       15:    3:int read_objects_from_file(FILE *f, t_object *objects, int *n)
+        -:    4:{
+       79:    5:    for (*n = 0; *n < MAX_OBJECTS; (*n)++, objects++)
+        -:    6:    {
+       75:    7:        char *s = objects->name;
+        -:    8:        char c;
+        -:    9:
+      590:   10:        while (fscanf(f, "%c", &c) == 1 &&
+      586:   11:            c != '\n' &&
+      516:   12:            s < objects->name + MAX_NAME_LEN)
+      515:   13:            *s++ = c;
+        -:   14:
+       75:   15:        if (feof(f))
+       11:   16:            return OK;
+        -:   17:
+       71:   18:        if (c != '\n' && s == objects->name + MAX_NAME_LEN)
+        1:   19:            return ERR;
+        -:   20:
+       70:   21:        if (s == objects->name)
+        1:   22:            return ERR;
+        -:   23:
+       69:   24:        *s = '\0';
+        -:   25:
+       69:   26:        if (fscanf(f, "%lf%lf", &objects->weight, &objects->volume) != 2)
+        3:   27:            return ERR;
+        -:   28:
+       66:   29:        if (objects->weight <= 0 || objects->volume <= 0)
+        2:   30:            return ERR;
+        -:   31:
+       64:   32:        fseek(f, 1, SEEK_CUR);
+        -:   33:    }
+        -:   34:
+        4:   35:    return fgetc(f) == EOF ? OK : ERR;
+        -:   36:}
+        -:   37:
+        5:   38:void print_objects(const t_object *objs, const int n)
+        -:   39:{
+       40:   40:    for (int i = 0; i < n; i++, objs++)
+        -:   41:    {
+       35:   42:        printf("%s\n%0.6lf\n%0.6lf\n", objs->name, objs->weight, objs->volume);
+        -:   43:    }
+        5:   44:}

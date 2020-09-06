@@ -38,9 +38,9 @@ do
             then
                 echo -e "\033[0;32m[ ok ] ${line}\033[0m"
             else
-                echo Return code: $rc
                 echo -e "\033[0;31m[erro] ${line}\033[0m"
                 echo
+                echo Return code: $rc
                 diff -u $out_file .result
                 echo
             fi

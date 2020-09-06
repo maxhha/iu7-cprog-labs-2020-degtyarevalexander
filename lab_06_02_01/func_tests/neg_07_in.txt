@@ -1,3 +1,2 @@
 apple
-kilogramm
 1.000000
