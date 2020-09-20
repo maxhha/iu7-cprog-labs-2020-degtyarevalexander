@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../inc/main.h"
 
 int compare_numbers(const void *a, const void *b)
 {

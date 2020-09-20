@@ -1,8 +1,10 @@
-#include "array.h"
+#include "../inc/array.h"
 
 int read_array(FILE *f, int **array, size_t *array_n)
 {
-    int numb, rc, n = 0;
+    int numb, rc;
+    size_t n = 0;
+
     while ((rc = fscanf(f, "%d", &numb)) == 1)
         n++;
 
@@ -16,9 +18,8 @@ int read_array(FILE *f, int **array, size_t *array_n)
 
     fseek(f, 0, SEEK_SET);
 
-    while (fscanf(f, "%d", i++) == 1)
-    {
-    }
+    while (fscanf(f, "%d", i) == 1)
+        i++;
 
     *array_n = n;
 
