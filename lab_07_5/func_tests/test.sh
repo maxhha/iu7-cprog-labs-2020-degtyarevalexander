@@ -9,7 +9,7 @@ then
     exit 1
 fi
 
-if [ $DIR/pos_01_args.txt -nt $DIR/make_tests.sh ]
+if [ $DIR/make_tests.sh -nt $DIR/pos_01_args.txt ]
 then
     (
         cd $DIR
@@ -45,8 +45,10 @@ do
             cat $args_file | xargs $PROG
             rc=$?
 
-            if cmp -s $out_file .result &&
-                [[ $rc = 0 && "pos" == $prefix || "neg" == $prefix ]]
+            pass_pos=( [[ "pos" == $prefix && $rc = 0 && cmp -s $out_file .result ]] )
+            pass_neg=( [[ "neg" == $prefix && $rc != 0 ]] )
+
+            if [[ pass_pos || pass_neg ]]
             then
                 echo -e "\033[0;32m[ ok ] ${line}\033[0m"
             else
