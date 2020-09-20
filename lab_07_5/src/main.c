@@ -17,10 +17,9 @@ int main(int argc, char const **argv) {
     if (fin == NULL)
         return EXIT_FAILURE;
 
-    int *array;
-    size_t array_n;
+    int *b_array, *e_array;
 
-    if (read_array(fin, &array, &array_n) != OK)
+    if (read_array(fin, &b_array, &e_array) != OK)
     {
         fclose(fin);
         return EXIT_FAILURE;
@@ -32,34 +31,34 @@ int main(int argc, char const **argv) {
     {
         if (strcmp(*(argv + 3), FILTER_ARG) != 0)
         {
-            free(array);
+            free(b_array);
             return EXIT_FAILURE;
         }
 
-        int *filtered_begin, *filtered_end;
+        int *b_filtered, *e_filtered;
 
-        if (key(array, array + array_n, &filtered_begin, &filtered_end) != OK)
+        if (key(b_array, e_array, &b_filtered, &e_filtered) != OK)
         {
-            free(array);
+            free(b_array);
             return EXIT_FAILURE;
         }
 
-        free(array);
-        array = filtered_begin;
-        array_n = filtered_end - filtered_begin;
+        free(b_array);
+        b_array = b_filtered;
+        e_array = e_filtered;
     }
 
-    mysort(array, array_n, sizeof(*array), compare_numbers);
+    mysort(b_array, e_array - b_array, sizeof(*b_array), compare_numbers);
 
     FILE *fout = fopen(*(argv + 2), "w");
 
     if (fout == NULL)
         return EXIT_FAILURE;
 
-    write_array(fout, array, array_n);
+    write_array(fout, b_array, e_array);
 
     fclose(fout);
-    free(array);
+    free(b_array);
 
     return EXIT_SUCCESS;
 }

@@ -1,6 +1,6 @@
 #include "../inc/array.h"
 
-int read_array(FILE *f, int **array, size_t *array_n)
+int read_array(FILE *f, int **pb_array, int **pe_array)
 {
     int numb, rc;
     size_t n = 0;
@@ -11,25 +11,24 @@ int read_array(FILE *f, int **array, size_t *array_n)
     if (rc != EOF || n == 0)
         return EREADARRAY;
 
-    int *i = *array = (int *) malloc(n * sizeof(int));
+    int *i = *pb_array = (int *) malloc(n * sizeof(int));
 
     if (i == NULL)
         return EREADARRAY;
+
+    *pe_array = i + n;
 
     fseek(f, 0, SEEK_SET);
 
     while (fscanf(f, "%d", i) == 1)
         i++;
 
-    *array_n = n;
-
     return OK;
 }
 
-void write_array(FILE *f, const int *array, const size_t n)
+void write_array(FILE *f, const int *pb_array, const int *pe_array)
 {
-    const int *end = array + n;
-    for (const int *i = array; i < end; i++)
+    for (const int *i = pb_array; i < pe_array; i++)
         fprintf(f, "%d\n", *i);
 }
 
