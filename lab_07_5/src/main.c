@@ -4,6 +4,7 @@ int compare_numbers(const void *a, const void *b)
 {
     int *a_num = (int *) a;
     int *b_num = (int *) b;
+    printf("cmp %d %d = %d\n", *a_num, *b_num,*b_num - *a_num );
     return *b_num - *a_num;
 }
 
@@ -59,6 +60,7 @@ int main(int argc, char const **argv) {
     write_array(fout, array, array_n);
 
     fclose(fout);
+    free(array);
 
     return EXIT_SUCCESS;
 }
