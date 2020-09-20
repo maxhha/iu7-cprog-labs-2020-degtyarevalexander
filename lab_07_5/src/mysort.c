@@ -8,19 +8,21 @@
         *hi = c; \
     }
 
-void mysort(void *array, size_t n, size_t size, __compar_fn_t cmp)
+int mysort(void *array, size_t n, size_t size, int (*cmp)(const void *, const void *))
 {
     char *base = (char *) array;
     char *last;
     char *j_next;
 
     if (size == 0 || n == 0 || array == NULL || cmp == NULL)
-        return;
+        return ESORT;
 
     for (char *i = base + (n - 1) * size; i > base; i = last)
         for (char *j = last = base; j < i; j += size)
             if ((*cmp)((void *) j, (void *) (j_next = j + size)) < 0)
                 SWAP(last = j, j_next);
+
+    return OK;
 }
 
 #undef SWAP

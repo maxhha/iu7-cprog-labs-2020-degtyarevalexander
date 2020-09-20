@@ -16,7 +16,9 @@ int read_array(FILE *f, int **array, size_t *array_n)
 
     fseek(f, 0, SEEK_SET);
 
-    while (fscanf(f, "%d", i++) == 1) {}
+    while (fscanf(f, "%d", i++) == 1)
+    {
+    }
 
     *array_n = n;
 

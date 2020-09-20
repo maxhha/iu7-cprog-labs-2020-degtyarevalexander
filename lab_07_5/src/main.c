@@ -4,7 +4,6 @@ int compare_numbers(const void *a, const void *b)
 {
     int *a_num = (int *) a;
     int *b_num = (int *) b;
-    printf("cmp %d %d = %d\n", *a_num, *b_num,*b_num - *a_num );
     return *b_num - *a_num;
 }
 

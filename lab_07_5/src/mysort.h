@@ -3,6 +3,9 @@
 
 #include "stdlib.h"
 
-void mysort(void *array, size_t n, size_t size, __compar_fn_t cmp);
+#define OK 0
+#define ESORT 10
+
+int mysort(void *array, size_t n, size_t size, int (*cmp)(const void *, const void *));
 
 #endif // __MYSORT_H__
