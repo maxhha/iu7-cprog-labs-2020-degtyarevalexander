@@ -37,9 +37,13 @@ START_TEST(test_sort)
             for (int *j = data_qsort; j < data_qsort + SUBARRAY_SIZE; j++)
                 printf("%d\t", *j);
             printf("\n");
+
+            free(pb_array);
             ck_abort_msg("Error on sort of %d:%d", (int) (i - pb_array), (int) (i - pb_array) + SUBARRAY_SIZE);
         }
     }
+
+    free(pb_array);
 
     #undef SUBARRAY_SIZE
 }
