@@ -100,16 +100,17 @@ cat > pos_05_out.txt <<EOF
 EOF
 
 
-#- 06 - сортировка большого массива
+#- 06 - сортировка большого массива (10000 элементов)
 cat > pos_06_args.txt <<EOF
-func_tests/pos_06_in.txt .result f
+func_tests/pos_06_in.txt .result
 EOF
 python3 > pos_06_in.txt <<EOF
 import random
+random.seed(2020)
 for i in range(10000):
     print(random.randint(0, 100))
 EOF
-cat pos_06_in.txt | sort > pos_06_out.txt
+cat pos_06_in.txt | sort -n > pos_06_out.txt
 
 ## Негативные тесты
 #- 01 - недостаточно аргументов

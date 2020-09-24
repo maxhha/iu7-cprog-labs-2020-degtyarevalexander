@@ -1,1 +1,1 @@
-func_tests/pos_06_in.txt .result f
+func_tests/pos_06_in.txt .result

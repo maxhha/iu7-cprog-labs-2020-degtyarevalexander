@@ -45,10 +45,12 @@ do
             cat $args_file | xargs $PROG
             rc=$?
 
-            pass_pos=( [[ "pos" == $prefix && $rc = 0 && cmp -s $out_file .result ]] )
-            pass_neg=( [[ "neg" == $prefix && $rc != 0 ]] )
+            [[ "pos" = $prefix ]] && [[ $rc = 0 ]] && cmp -s $out_file .result
+            pass_pos=$?
+            [[ "neg" = $prefix ]] && [[ ! $rc = 0 ]]
+            pass_neg=$?
 
-            if [[ pass_pos || pass_neg ]]
+            if [ $pass_pos = 0 ] || [ $pass_neg = 0 ]
             then
                 echo -e "\033[0;32m[ ok ] ${line}\033[0m"
             else
