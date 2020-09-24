@@ -19,7 +19,7 @@ void mysort(void *array, size_t n, size_t size, int (*cmp)(const void *, const v
 
     for (char *i = base + (n - 1) * size; i > base; i = last)
         for (char *j = last = base; j < i; j += size)
-            if ((*cmp)((void *) j, (void *) (j_next = j + size)) < 0)
+            if ((*cmp)((void *) j, (void *) (j_next = j + size)) > 0)
                 SWAP(last = j, j_next);
 }
 

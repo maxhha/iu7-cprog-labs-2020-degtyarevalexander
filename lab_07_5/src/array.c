@@ -32,8 +32,6 @@ void write_array(FILE *f, const int *pb_array, const int *pe_array)
         fprintf(f, "%d\n", *i);
 }
 
-#include <stdio.h>
-
 int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst)
 {
     if (pb_src == NULL || pe_src == NULL || pe_src <= pb_src)
