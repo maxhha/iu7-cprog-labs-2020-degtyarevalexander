@@ -1,0 +1,27 @@
+        -:    0:Source:src/mysort.c
+        -:    1:#include "../inc/mysort.h"
+        -:    2:
+        -:    3:#define SWAP(a,b) \
+        -:    4:    for (char *lo = a, *hi = b; lo < b; lo++, hi++) \
+        -:    5:    { \
+        -:    6:        char c = *lo; \
+        -:    7:        *lo = *hi; \
+        -:    8:        *hi = c; \
+        -:    9:    }
+        -:   10:
+        6:   11:void mysort(void *array, size_t n, size_t size, int (*cmp)(const void *, const void *))
+        -:   12:{
+        6:   13:    char *base = (char *) array;
+        -:   14:    char *last;
+        -:   15:    char *j_next;
+        -:   16:
+        6:   17:    if (size == 0 || n == 0 || array == NULL || cmp == NULL)
+    #####:   18:        return;
+        -:   19:
+     9857:   20:    for (char *i = base + (n - 1) * size; i > base; i = last)
+ 49971890:   21:        for (char *j = last = base; j < i; j += size)
+ 49962039:   22:            if ((*cmp)((void *) j, (void *) (j_next = j + size)) > 0)
+124818540:   23:                SWAP(last = j, j_next);
+        -:   24:}
+        -:   25:
+        -:   26:#undef SWAP

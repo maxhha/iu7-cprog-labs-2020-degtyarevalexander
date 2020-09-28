@@ -1,0 +1,74 @@
+        -:    0:Source:src/array.c
+        -:    1:#include "../inc/array.h"
+        -:    2:
+       11:    3:int read_array(FILE *f, int **pb_array, int **pe_array)
+        -:    4:{
+        -:    5:    int numb, rc;
+       11:    6:    size_t n = 0;
+        -:    7:
+    10056:    8:    while ((rc = fscanf(f, "%d", &numb)) == 1)
+    10045:    9:        n++;
+        -:   10:
+       11:   11:    if (rc != EOF || n == 0)
+        3:   12:        return EREADARRAY;
+        -:   13:
+        8:   14:    int *i = *pb_array = (int *) malloc(n * sizeof(int));
+        -:   15:
+        8:   16:    if (i == NULL)
+    #####:   17:        return EREADARRAY;
+        -:   18:
+        8:   19:    *pe_array = i + n;
+        -:   20:
+        8:   21:    fseek(f, 0, SEEK_SET);
+        -:   22:
+    10045:   23:    while (fscanf(f, "%d", i) == 1)
+    10037:   24:        i++;
+        -:   25:
+        8:   26:    return OK;
+        -:   27:}
+        -:   28:
+        6:   29:void write_array(FILE *f, const int *pb_array, const int *pe_array)
+        -:   30:{
+        6:   31:    fprintf(f, "%d", *pb_array);
+    10025:   32:    for (const int *i = pb_array + 1; i < pe_array; i++)
+    10019:   33:        fprintf(f, " %d", *i);
+        6:   34:    fprintf(f, "\n");
+        6:   35:}
+        -:   36:
+        2:   37:int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst)
+        -:   38:{
+        2:   39:    if (pb_src == NULL || pe_src == NULL || pe_src <= pb_src)
+    #####:   40:        return EFILTERARRAY;
+        -:   41:
+        2:   42:    size_t n = 0;
+        2:   43:    long long int sum = *(pe_src - 1);
+        -:   44:
+       12:   45:    for (const int *i = pe_src - 2; i >= pb_src; i--)
+        -:   46:    {
+       10:   47:        n += *i > sum;
+       10:   48:        sum += *i;
+        -:   49:    }
+        -:   50:
+        2:   51:    if (n == 0)
+        1:   52:        return EFILTERARRAY;
+        -:   53:
+        1:   54:    *pb_dst = (int *) malloc(n * sizeof(int));
+        -:   55:
+        1:   56:    if (pb_dst == NULL)
+    #####:   57:        return EFILTERARRAY;
+        -:   58:
+        1:   59:    *pe_dst = *pb_dst + n;
+        1:   60:    int *p = *pe_dst - 1;
+        -:   61:
+        1:   62:    sum = *(pe_src - 1);
+        -:   63:
+        8:   64:    for (const int *i = pe_src - 2; i >= pb_src; i--)
+        -:   65:    {
+        7:   66:        if (*i > sum)
+        4:   67:            *p-- = *i;
+        -:   68:
+        7:   69:        sum += *i;
+        -:   70:    }
+        -:   71:
+        1:   72:    return OK;
+        -:   73:}

@@ -28,8 +28,10 @@ int read_array(FILE *f, int **pb_array, int **pe_array)
 
 void write_array(FILE *f, const int *pb_array, const int *pe_array)
 {
-    for (const int *i = pb_array; i < pe_array; i++)
-        fprintf(f, "%d\n", *i);
+    fprintf(f, "%d", *pb_array);
+    for (const int *i = pb_array + 1; i < pe_array; i++)
+        fprintf(f, " %d", *i);
+    fprintf(f, "\n");
 }
 
 int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst)
