@@ -41,6 +41,7 @@ START_TEST(test_key)
     int *e_res = res + 4;
     for (int *i = pb_res, *j = res; i < pe_res && i - pb_res < e_res - res; i++, j++)
         ck_assert_int_eq(*i, *j);
+    free(pb_res);
 }
 END_TEST
 
