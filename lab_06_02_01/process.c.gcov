@@ -1,0 +1,33 @@
+        -:    0:Source:process.c
+        -:    1:#include <math.h>
+        -:    2:#include <string.h>
+        -:    3:#include "process.h"
+        -:    4:#include <stdio.h>
+        -:    5:
+       42:    6:int compare_objects_by_density(const void *a, const void *b)
+        -:    7:{
+       42:    8:    t_object *obj_a = (t_object *) a;
+       42:    9:    t_object *obj_b = (t_object *) b;
+        -:   10:
+       42:   11:    double density_a = obj_a->weight / obj_a->volume;
+       42:   12:    double density_b = obj_b->weight / obj_b->volume;
+        -:   13:
+       42:   14:    if (fabs(density_a - density_b) < EPS)
+        1:   15:        return 0;
+       41:   16:    if (density_a > density_b)
+       18:   17:        return 1;
+       23:   18:    return -1;
+        -:   19:}
+        -:   20:
+        2:   21:int filter_objects_by_name(t_object *objects, int n, const char *name)
+        -:   22:{
+        2:   23:    int k = 0;
+       18:   24:    for (int i = 0; i < n; i++)
+        -:   25:    {
+       16:   26:        if (strstr(objects[i].name, name) == objects[i].name)
+        -:   27:        {
+        2:   28:            objects[k++] = objects[i];
+        -:   29:        }
+        -:   30:    }
+        2:   31:    return k;
+        -:   32:}
