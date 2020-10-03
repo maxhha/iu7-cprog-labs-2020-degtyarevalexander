@@ -39,6 +39,9 @@ int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst)
     if (pb_src == NULL || pe_src == NULL || pe_src <= pb_src)
         return EFILTERARRAY;
 
+    if (pb_dst == NULL || pe_dst == NULL)
+        return EFILTERARRAY;
+
     size_t n = 0;
     long long int sum = *(pe_src - 1);
 
