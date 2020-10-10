@@ -45,8 +45,10 @@ unit_tests.exe : $(UNITOBJS) $(filter-out $(OUTDIR)/main.o, $(OBJS))
 $(OUTDIR)/check_%.o : unit_tests/check_%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OUTDIR)/%.o : src/%.c
+$(OUTDIR)/%.o : src/%.c inc/%.h
 	$(CC) $(CFLAGS) -o $@ -c $<
+
+%.h :
 
 clean :
 	@rm -f *.exe $(OUTDIR)/*.o $(OUTDIR)/*.gcda $(OUTDIR)/*.gcno
