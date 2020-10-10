@@ -29,15 +29,14 @@ START_TEST(test_sort)
         qsort(data_qsort, SUBARRAY_SIZE, sizeof(int), compare_numbers);
         if (memcmp(data_mysort, data_qsort, SUBARRAY_SIZE * sizeof(int)) != 0)
         {
-            printf("mysort: ");
-            for (int *j = data_mysort; j < data_mysort + SUBARRAY_SIZE; j++)
-                printf("%d\t", *j);
-            printf("\n");
-            printf("qsort:  ");
-            for (int *j = data_qsort; j < data_qsort + SUBARRAY_SIZE; j++)
-                printf("%d\t", *j);
-            printf("\n");
 
+            LOG_INFO("%s", "Error on sort arrays");
+            LOG_INFO("%s", "mysort:");
+            for (int *j = data_mysort; j < data_mysort + SUBARRAY_SIZE; j++)
+                LOG_INFO("%d", *j);
+            LOG_INFO("%s", "qsort:");
+            for (int *j = data_qsort; j < data_qsort + SUBARRAY_SIZE; j++)
+                LOG_INFO("%d", *j);
             free(pb_array);
             ck_abort_msg("Error on sort of %d:%d", (int) (i - pb_array), (int) (i - pb_array) + SUBARRAY_SIZE);
         }

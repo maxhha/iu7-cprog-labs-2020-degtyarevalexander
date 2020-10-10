@@ -5,6 +5,7 @@
 #include <check.h>
 #include "array.h"
 #include "mysort.h"
+#include "macrologger.h"
 
 Suite* mysort_suite(void);
 
