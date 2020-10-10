@@ -1,5 +1,12 @@
 #include "../inc/mysort.h"
 
+int compare_numbers(const void *a, const void *b)
+{
+    int a_num = *(int *) a;
+    int b_num = *(int *) b;
+    return a_num < b_num ? -1 : a_num == b_num ? 0 : 1;
+}
+
 #define SWAP(a,b) \
     for (char *lo = a, *hi = b; lo < b; lo++, hi++) \
     { \

@@ -1,12 +1,5 @@
 #include "../inc/main.h"
 
-int compare_numbers(const void *a, const void *b)
-{
-    int a_num = *(int *) a;
-    int b_num = *(int *) b;
-    return a_num < b_num ? -1 : a_num == b_num ? 0 : 1;
-}
-
 int parse_args(int argc, char const **argv, char *filename_in, char *filename_out, bool *filter)
 {
     if (argc < 3 || argc > 4)
@@ -35,21 +28,12 @@ int main(int argc, char const **argv)
     if (parse_args(argc, argv, filename_in, filename_out, &filter) == PARSE_ARGS_ERR)
         return EXIT_FAILURE;
 
-    FILE *fin = fopen(filename_in, "r");
-
-    if (fin == NULL)
-        return EXIT_FAILURE;
-
     int *b_array, *e_array;
 
-    if (read_array(fin, &b_array, &e_array) != OK)
+    if (read_array_from_file(filename_in, &b_array, &e_array) != OK)
     {
-        fclose(fin);
         return EXIT_FAILURE;
     }
-
-    if (fclose(fin))
-        exit(EXIT_FAILURE);
 
     if (filter)
     {
@@ -68,18 +52,9 @@ int main(int argc, char const **argv)
 
     mysort(b_array, e_array - b_array, sizeof(*b_array), compare_numbers);
 
-    FILE *fout = fopen(filename_out, "w");
+    int rc = write_array_to_file(filename_out, b_array, e_array);
 
-    if (fout == NULL)
-    {
-        free(b_array);
-        return EXIT_FAILURE;
-    }
-
-    write_array(fout, b_array, e_array);
-
-    fclose(fout);
     free(b_array);
 
-    return EXIT_SUCCESS;
+    return rc == OK ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -26,12 +26,42 @@ int read_array(FILE *f, int **pb_array, int **pe_array)
     return OK;
 }
 
+int read_array_from_file(const char *filename, int **pb_array, int **pe_array)
+{
+    FILE *f = fopen(filename, "r");
+
+    if (f == NULL)
+        return EREADARRAY;
+
+    int rc = read_array(f, pb_array, pe_array);
+
+    fclose(f);
+
+    return rc;
+}
+
 void write_array(FILE *f, const int *pb_array, const int *pe_array)
 {
     fprintf(f, "%d", *pb_array);
+    
     for (const int *i = pb_array + 1; i < pe_array; i++)
         fprintf(f, " %d", *i);
+
     fprintf(f, "\n");
+}
+
+int write_array_to_file(const char *filename, const int *pb_array, const int *pe_array)
+{
+    FILE *f = fopen(filename, "w");
+
+    if (f == NULL)
+        return EWRITEARRAY;
+
+    write_array(f, pb_array, pe_array);
+
+    fclose(f);
+
+    return OK;
 }
 
 int key(const int *pb_src, const int *pe_src, int **pb_dst, int **pe_dst)
