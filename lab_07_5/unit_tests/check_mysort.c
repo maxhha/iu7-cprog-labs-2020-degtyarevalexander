@@ -3,12 +3,8 @@
 START_TEST(test_sort)
 {
     #define SUBARRAY_SIZE 20
-    FILE *f = fopen("func_tests/pos_06_in.txt", "r");
-    ck_assert_ptr_ne(f, NULL);
-
     int *pb_array, *pe_array;
-    int rc = read_array(f, &pb_array, &pe_array);
-    fclose(f);
+    int rc = read_array_from_file("func_tests/pos_06_in.txt", &pb_array, &pe_array);
 
     ck_assert_int_eq(rc, OK);
 
