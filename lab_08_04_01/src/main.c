@@ -123,7 +123,8 @@ int main(void)
 
         LOG_DEBUG("update matrix B = %p", (void *) b);
     }
-    else {
+    else
+    {
         LOG_DEBUG("grow matrixes are equal%s", "");
     }
 
