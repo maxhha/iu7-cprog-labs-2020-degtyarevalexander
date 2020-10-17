@@ -125,13 +125,19 @@ cat > neg_01_in.txt <<EOF
 -1 9
 EOF
 
-#- 02 - отрицательный размер
+#- 02 - буква в размере матрицы
 cat > neg_02_in.txt <<EOF
--1 9
+1a 9
 EOF
 
-#- 03 - отрицательная степень
+#- 03 - буква в элементе
 cat > neg_03_in.txt <<EOF
+2 1
+1a 1
+EOF
+
+#- 04 - отрицательная степень
+cat > neg_04_in.txt <<EOF
 1 1
 1
 
@@ -141,6 +147,16 @@ cat > neg_03_in.txt <<EOF
 -1 9
 EOF
 
+#- 05 - буква в степени
+cat > neg_05_in.txt <<EOF
+1 1
+1
+
+1 1
+1
+
+1а 9
+EOF
 
 # Добавить список тестов в readme
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
