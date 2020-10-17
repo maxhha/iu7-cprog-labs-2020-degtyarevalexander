@@ -1,0 +1,65 @@
+        -:    0:Source:src/main.c
+        -:    1:#include "../inc/main.h"
+        -:    2:
+ 49962039:    3:int compare_numbers(const void *a, const void *b)
+        -:    4:{
+ 49962039:    5:    int *a_num = (int *) a;
+ 49962039:    6:    int *b_num = (int *) b;
+ 49962039:    7:    return *a_num - *b_num;
+        -:    8:}
+        -:    9:
+       13:   10:int main(int argc, char const **argv) {
+        -:   11:
+       13:   12:    if (argc < 3 || argc > 4)
+        1:   13:        return EXIT_FAILURE;
+        -:   14:
+       12:   15:    FILE *fin = fopen(*(argv + 1), "r");
+        -:   16:
+       12:   17:    if (fin == NULL)
+        1:   18:        return EXIT_FAILURE;
+        -:   19:
+        -:   20:    int *b_array, *e_array;
+        -:   21:
+       11:   22:    if (read_array(fin, &b_array, &e_array) != OK)
+        -:   23:    {
+        3:   24:        fclose(fin);
+        3:   25:        return EXIT_FAILURE;
+        -:   26:    }
+        -:   27:
+        8:   28:    fclose(fin);
+        -:   29:
+        8:   30:    if (argc == 4)
+        -:   31:    {
+        3:   32:        if (strcmp(*(argv + 3), FILTER_ARG) != 0)
+        -:   33:        {
+        1:   34:            free(b_array);
+        2:   35:            return EXIT_FAILURE;
+        -:   36:        }
+        -:   37:
+        -:   38:        int *b_filtered, *e_filtered;
+        -:   39:
+        2:   40:        if (key(b_array, e_array, &b_filtered, &e_filtered) != OK)
+        -:   41:        {
+        1:   42:            free(b_array);
+        1:   43:            return EXIT_FAILURE;
+        -:   44:        }
+        -:   45:
+        1:   46:        free(b_array);
+        1:   47:        b_array = b_filtered;
+        1:   48:        e_array = e_filtered;
+        -:   49:    }
+        -:   50:
+        6:   51:    mysort(b_array, e_array - b_array, sizeof(*b_array), compare_numbers);
+        -:   52:
+        6:   53:    FILE *fout = fopen(*(argv + 2), "w");
+        -:   54:
+        6:   55:    if (fout == NULL)
+    #####:   56:        return EXIT_FAILURE;
+        -:   57:
+        6:   58:    write_array(fout, b_array, e_array);
+        -:   59:
+        6:   60:    fclose(fout);
+        6:   61:    free(b_array);
+        -:   62:
+        6:   63:    return EXIT_SUCCESS;
+        -:   64:}

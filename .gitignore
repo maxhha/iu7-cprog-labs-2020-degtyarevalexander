@@ -1,4 +1,5 @@
 *.out
+*.exe
 *.gcda
 *.gcno
 *.o
