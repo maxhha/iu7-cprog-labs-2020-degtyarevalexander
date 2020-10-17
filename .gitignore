@@ -3,4 +3,5 @@
 *.gcda
 *.gcno
 *.o
+*.d
 .ccls-cache
