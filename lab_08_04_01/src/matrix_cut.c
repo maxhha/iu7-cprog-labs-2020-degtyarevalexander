@@ -174,11 +174,12 @@ matrix_t *cut_matrix_rows(const matrix_t *m)
 
             size_t x = (p - m->data) % m->width;
 
-            if (*p < max_el || (*p == max_el && max_x < x))
+            if (*p < max_el || (*p == max_el && max_x > x))
                 continue;
 
             max_el = *p;
             max_r = r;
+            max_x = x;
 
             LOG_DEBUG("max_el = %d, max_r = %lu, max_x = %lu", max_el, *max_r, max_x);
         }
@@ -229,7 +230,7 @@ matrix_t *cut_matrix(const matrix_t *m)
 
     if (m->width < m->height)
         return cut_matrix_rows(m);
-    else if (m->width != m->height)
+    else if (m->width > m->height)
         return cut_matrix_columns(m);
 
     LOG_DEBUG("make copy%s", "");
