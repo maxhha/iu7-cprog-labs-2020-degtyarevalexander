@@ -5,7 +5,7 @@ int main(void)
     SRunner *runner;
 
     runner = srunner_create(matrix_cut_suite());
-    // srunner_add_suite(runner, s_mysort);
+    srunner_add_suite(runner, matrix_grow_suite());
 
     srunner_run_all(runner, CK_VERBOSE);
 

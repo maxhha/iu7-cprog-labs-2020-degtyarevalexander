@@ -13,8 +13,8 @@ START_TEST(test_cut_square_matrix)
     matrix_t *r = cut_matrix(&m);
 
     ck_assert_ptr_nonnull(r);
-    ck_assert(r->width == m.width);
-    ck_assert(r->height == m.height);
+    ck_assert(r->width == 2);
+    ck_assert(r->height == 2);
     ck_assert(memcmp(r->data, data, 4 * sizeof(int)) == 0);
 
     free_matrix(r);
@@ -41,7 +41,6 @@ START_TEST(test_cut_matrix_rows)
     ck_assert_ptr_nonnull(r);
     ck_assert(r->width == 2);
     ck_assert(r->height == 2);
-    print_matrix(r);
     ck_assert(memcmp(r->data, result_data, 4 * sizeof(int)) == 0);
 
     free_matrix(r);
