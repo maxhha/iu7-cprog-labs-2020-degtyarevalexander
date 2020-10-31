@@ -32,6 +32,8 @@ int cmp_films_by_year(const void *a, const void *b);
 void free_film(film_t *film);
 void free_films_array(film_t **film, size_t n);
 
+int scan_film(FILE *f, film_t **film);
+
 int read_films_from_file(const char *filename, int sort_field, film_t ***result);
 void print_films_array(film_t **films_arr, int n);
 

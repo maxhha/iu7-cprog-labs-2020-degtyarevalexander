@@ -155,6 +155,13 @@ int read_films_from_file(const char *filename, int sort_field, film_t ***result)
     film_t **film_arr = malloc(capacity * sizeof(film_t *));
     film_t *curr;
 
+    if (film_arr == NULL)
+    {
+        LOG_ERROR("cant malloc for result%s", "");
+        fclose(f);
+        return EREAD;
+    }
+
     while (feof(f) == 0)
     {
         LOG_DEBUG("read %d film", n);

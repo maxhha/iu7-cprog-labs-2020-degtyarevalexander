@@ -256,7 +256,7 @@ cat > neg_02_args.txt <<EOF
 func_tests/neg_02_in.txt title
 EOF
 
-#- 03 - неправильное поле
+#- 03 - неправильное поле сортировки
 cat > neg_03_args.txt <<EOF
 func_tests/neg_03_in.txt tite
 EOF
