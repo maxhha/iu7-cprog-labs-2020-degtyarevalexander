@@ -54,10 +54,10 @@ out/%.d: ./src/%.c
 		rm -f $@.$$$$
 
 out/check_%.o : unit_tests/check_%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(flags) -o $@ -c $<
 
 out/%.o : ./src/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(flags) -o $@ -c $<
 
 clean :
 	@rm -f *.exe out/*.o out/*.d out/*.gcda out/*.gcno
