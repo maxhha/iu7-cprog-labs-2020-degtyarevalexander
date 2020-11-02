@@ -25,3 +25,4 @@ rk_03:
   script:
       - cd rk_03_04
       - make build
+      - make run
