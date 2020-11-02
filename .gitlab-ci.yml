@@ -17,3 +17,11 @@ rk_01:
       - gcc -Wall -Werror main.c
       - cd ../rk_01_02
       - gcc --std=c99 -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic main.c
+rk_03:
+  image: gcc
+  stage: build
+  only:
+      - rk_03
+  script:
+      - cd rk_03_04
+      - make build
