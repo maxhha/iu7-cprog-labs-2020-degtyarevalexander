@@ -1,0 +1,157 @@
+        -:    0:Source:src/main.c
+        -:    1:#include "../inc/main.h"
+        -:    2:
+        -:    3:union arguments_key
+        -:    4:{
+        -:    5:    int int_data;
+        -:    6:    char *char_ptr_data;
+        -:    7:};
+        -:    8:
+        -:    9:struct arguments
+        -:   10:{
+        -:   11:    char *file;
+        -:   12:    int field;
+        -:   13:    bool have_key;
+        -:   14:    union arguments_key key;
+        -:   15:};
+        -:   16:
+       17:   17:struct arguments *parse_args(int argc, char *argv[])
+        -:   18:{
+        -:   19:    LOG_DEBUG("argc = %d", argc);
+        -:   20:
+       17:   21:    if (argc < 3 || argc > 4)
+        -:   22:    {
+        -:   23:        LOG_ERROR("at least 2 and max 3 arguments must be passed%s", "");
+        1:   24:        return NULL;
+        -:   25:    }
+        -:   26:
+        -:   27:    LOG_DEBUG("argv[1] = \"%s\"", argv[1]);
+        -:   28:    LOG_DEBUG("argv[2] = \"%s\"", argv[2]);
+        -:   29:
+        -:   30:    int field;
+        -:   31:
+       16:   32:    if (strcmp(argv[2], ARG_FIELD_TITLE) == 0)
+        -:   33:    {
+       10:   34:        field = FILM_FIELD_TITLE;
+        -:   35:    }
+        6:   36:    else if (strcmp(argv[2], ARG_FIELD_NAME) == 0)
+        -:   37:    {
+        2:   38:        field = FILM_FIELD_NAME;
+        -:   39:    }
+        4:   40:    else if (strcmp(argv[2], ARG_FIELD_YEAR) == 0)
+        -:   41:    {
+        3:   42:        field = FILM_FIELD_YEAR;
+        -:   43:    }
+        -:   44:    else
+        -:   45:    {
+        -:   46:        LOG_ERROR("unknown argv[1] field type%s", "");
+        1:   47:        return NULL;
+        -:   48:    }
+        -:   49:
+       15:   50:    struct arguments *a = malloc(sizeof(struct arguments));
+        -:   51:
+       15:   52:    if (a == NULL)
+        -:   53:    {
+        -:   54:        LOG_ERROR("no mem for struct arguments%s", "");
+    #####:   55:        return NULL;
+        -:   56:    }
+        -:   57:
+       15:   58:    a->file = argv[1];
+       15:   59:    a->field = field;
+       15:   60:    a->have_key = false;
+       15:   61:    a->key.char_ptr_data = NULL;
+        -:   62:
+       15:   63:    if (argc < 4)
+       12:   64:        return a;
+        -:   65:
+        3:   66:    a->have_key = true;
+        -:   67:
+        -:   68:
+        -:   69:    LOG_DEBUG("argv[3] = \"%s\"", argv[3]);
+        -:   70:
+        3:   71:    if (field == FILM_FIELD_YEAR)
+        -:   72:    {
+        1:   73:        if (sscanf(argv[3], "%d", &a->key.int_data) != 1)
+        -:   74:        {
+        -:   75:            LOG_ERROR("cant parse year from argv[3]%s", "");
+    #####:   76:            free(a);
+    #####:   77:            return NULL;
+        -:   78:        }
+        -:   79:    }
+        -:   80:    else
+        -:   81:    {
+        2:   82:        a->key.char_ptr_data = argv[3];
+        -:   83:    }
+        -:   84:
+        3:   85:    return a;
+        -:   86:}
+        -:   87:
+       17:   88:int main(int argc, char **argv)
+        -:   89:{
+       17:   90:    struct arguments *args = parse_args(argc, argv);
+        -:   91:
+       17:   92:    if (args == NULL)
+        -:   93:    {
+        -:   94:        LOG_ERROR("parse args failed%s", "");
+        2:   95:        return EXIT_FAILURE;
+        -:   96:    }
+        -:   97:
+        -:   98:    film_t **films_arr;
+       15:   99:    int films_n = read_films_from_file(args->file, args->field, &films_arr);
+        -:  100:
+       15:  101:    if (films_n < 1)
+        -:  102:    {
+        -:  103:        LOG_ERROR("error on reading or no films in file%s", "");
+        7:  104:        free(args);
+        7:  105:        return EXIT_FAILURE;
+        -:  106:    }
+        -:  107:
+        8:  108:    if (!args->have_key)
+        -:  109:    {
+        5:  110:        print_films_array(films_arr, films_n);
+        5:  111:        free_films_array(films_arr, films_n);
+        5:  112:        free(args);
+        -:  113:
+        5:  114:        return EXIT_SUCCESS;
+        -:  115:    }
+        -:  116:
+        3:  117:    film_t search_key = {0};
+        -:  118:
+        3:  119:    if (args->field == FILM_FIELD_TITLE)
+        -:  120:    {
+        -:  121:        LOG_DEBUG("search by title \"%s\"", args->key.char_ptr_data);
+        2:  122:        search_key.title = args->key.char_ptr_data;
+        -:  123:    }
+        1:  124:    else if (args->field == FILM_FIELD_NAME)
+        -:  125:    {
+        -:  126:        LOG_DEBUG("search by name \"%s\"", args->key.char_ptr_data);
+    #####:  127:        search_key.name = args->key.char_ptr_data;
+        -:  128:    }
+        -:  129:    else
+        -:  130:    {
+        -:  131:        LOG_DEBUG("search by year %d", args->key.int_data);
+        1:  132:        search_key.year = args->key.int_data;
+        -:  133:    }
+        -:  134:
+        3:  135:    film_t *key_p = &search_key;
+        -:  136:
+       3*:  137:    int (*cmp)(const void *, const void *) = CMP_FILMS_BY(args->field);
+        -:  138:
+        3:  139:    film_t **p = bsearch(&key_p, films_arr, films_n, sizeof(film_t *), cmp);
+        -:  140:
+        3:  141:    if (p == NULL)
+        -:  142:    {
+        -:  143:        LOG_DEBUG("not found%s", "");
+        1:  144:        printf("Not found\n");
+        -:  145:    }
+        -:  146:    else
+        -:  147:    {
+        -:  148:        LOG_DEBUG("found at %d pos", (int) (p - films_arr));
+        2:  149:        print_films_array(p, 1);
+        -:  150:    }
+        -:  151:
+        3:  152:    free_films_array(films_arr, films_n);
+        3:  153:    free(args);
+        -:  154:
+        3:  155:    return EXIT_SUCCESS;
+        -:  156:}
