@@ -5,19 +5,22 @@ START_TEST(test_cut_square_matrix)
     int data[] = { 1, 2, 3, 4 };
 
     matrix_t m = {
-        .data = data,
+        .data = malloc(sizeof(data)),
         .width = 2,
         .height = 2,
     };
 
-    matrix_t *r = cut_matrix(&m);
+    ck_assert_ptr_nonnull(m.data);
+    memcpy(m.data, data, sizeof(data));
 
-    ck_assert_ptr_nonnull(r);
-    ck_assert(r->width == 2);
-    ck_assert(r->height == 2);
-    ck_assert(memcmp(r->data, data, 4 * sizeof(int)) == 0);
+    int rc = cut_matrix(&m);
 
-    free_matrix(r);
+    ck_assert_int_eq(rc, EXIT_SUCCESS);
+    ck_assert(m.width == 2);
+    ck_assert(m.height == 2);
+    ck_assert(memcmp(m.data, data, sizeof(data)) == 0);
+
+    free(m.data);
 }
 END_TEST
 
@@ -29,21 +32,24 @@ START_TEST(test_cut_matrix_rows)
                    3, 4 };
 
     matrix_t m = {
-        .data = data,
+        .data = malloc(sizeof(data)),
         .width = 2,
         .height = 4,
     };
 
+    ck_assert_ptr_nonnull(m.data);
+    memcpy(m.data, data, sizeof(data));
+
     int result_data[] = {5, 1, 3, 4};
 
-    matrix_t *r = cut_matrix(&m);
+    int rc= cut_matrix(&m);
 
-    ck_assert_ptr_nonnull(r);
-    ck_assert(r->width == 2);
-    ck_assert(r->height == 2);
-    ck_assert(memcmp(r->data, result_data, 4 * sizeof(int)) == 0);
+    ck_assert_int_eq(rc, EXIT_SUCCESS);
+    ck_assert(m.width == 2);
+    ck_assert(m.height == 2);
 
-    free_matrix(r);
+    ck_assert(memcmp(m.data, result_data, sizeof(result_data)) == 0);
+    free(m.data);
 }
 END_TEST
 
@@ -53,21 +59,24 @@ START_TEST(test_cut_matrix_columns)
                    5, 1, 3, 4 };
 
     matrix_t m = {
-        .data = data,
+        .data = malloc(sizeof(data)),
         .width = 4,
         .height = 2,
     };
 
+    ck_assert_ptr_nonnull(m.data);
+    memcpy(m.data, data, sizeof(data));
+
     int result_data[] = {4, 1, 1, 3};
 
-    matrix_t *r = cut_matrix(&m);
+    int rc = cut_matrix(&m);
 
-    ck_assert_ptr_nonnull(r);
-    ck_assert(r->width == 2);
-    ck_assert(r->height == 2);
-    ck_assert(memcmp(r->data, result_data, 4 * sizeof(int)) == 0);
+    ck_assert_int_eq(rc, EXIT_SUCCESS);
+    ck_assert(m.width == 2);
+    ck_assert(m.height == 2);
+    ck_assert(memcmp(m.data, result_data, sizeof(result_data)) == 0);
 
-    free_matrix(r);
+    free(m.data);
 }
 END_TEST
 

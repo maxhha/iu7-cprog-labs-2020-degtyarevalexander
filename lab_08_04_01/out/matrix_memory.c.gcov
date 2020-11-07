@@ -1,0 +1,49 @@
+        -:    0:Source:src/matrix_memory.c
+        -:    1:#include "../inc/matrix_memory.h"
+        -:    2:
+      183:    3:matrix_t *create_matrix(size_t width, size_t height)
+        -:    4:{
+        -:    5:    LOG_DEBUG("width = %lu, height = %lu", width, height);
+      183:    6:    matrix_t *m = malloc(sizeof(matrix_t));
+        -:    7:
+      183:    8:    if (m == NULL)
+        -:    9:    {
+        -:   10:        LOG_ERROR("cant malloc for matrix_t%s", "");
+    #####:   11:        return NULL;
+        -:   12:    }
+        -:   13:
+        -:   14:    LOG_DEBUG("create data%s", "");
+      183:   15:    m->data = malloc(width * height * sizeof(int));
+        -:   16:
+      183:   17:    if (m->data == NULL)
+        -:   18:    {
+        -:   19:        LOG_ERROR("cant malloc for data %lux%lu", width, height);
+    #####:   20:        return NULL;
+        -:   21:    }
+        -:   22:
+      183:   23:    m->width = width;
+      183:   24:    m->height = height;
+        -:   25:
+        -:   26:    LOG_DEBUG("created %p", (void *) m);
+        -:   27:
+      183:   28:    return m;
+        -:   29:}
+        -:   30:
+      183:   31:void free_matrix(matrix_t *m)
+        -:   32:{
+        -:   33:    LOG_DEBUG("m = %p", (void *) m);
+        -:   34:
+      183:   35:    free(m->data);
+      183:   36:    free(m);
+      183:   37:}
+        -:   38:
+       18:   39:void free_matrixes(int n, ...)
+        -:   40:{
+        -:   41:    va_list args;
+        -:   42:
+       18:   43:    va_start(args, n);
+       68:   44:    for (int i = 0; i < n; i++)
+       50:   45:        free_matrix(va_arg(args, matrix_t *));
+        -:   46:
+       18:   47:    va_end(args);
+       18:   48:}

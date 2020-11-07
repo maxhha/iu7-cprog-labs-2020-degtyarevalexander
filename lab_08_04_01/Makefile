@@ -1,4 +1,4 @@
-.PHONY : all run debug runmem gcov clean func check unit
+.PHONY : all run debug runmem gcov clean func unit
 
 CC := gcc
 CFLAGS := --std=c99 -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic
@@ -9,9 +9,6 @@ OBJS := $(SRCS:src/%.c=out/%.o)
 UNITCFLAGS := -lcheck -lpthread -lrt
 UNITSRCS := $(wildcard unit_tests/*.c)
 UNITOBJS := $(UNITSRCS:unit_tests/%.c=out/%.o)
-
-CODECHECKERDIR := ../../CodeChecker/CodeChecker
-CODECHECKER := $(CODECHECKERDIR)/CodeChecker.exe --rules $(CODECHECKERDIR)/Rules.txt
 
 all : app.exe
 
@@ -55,9 +52,5 @@ out/%.o : ./src/%.c
 
 clean :
 	@rm -f *.exe out/*.o out/*.d out/*.gcda out/*.gcno
-
-check : SHELL:=/usr/bin/bash
-check :
-	$(CODECHECKER) $(SRCS)
 
 -include $(SRCS:src/%.c=out/%.d)

@@ -1,0 +1,130 @@
+        -:    0:Source:src/matrix_mul.c
+        -:    1:#include "../inc/matrix_mul.h"
+        -:    2:
+       34:    3:matrix_t *multiply_matrix(const matrix_t *a, const matrix_t *b)
+        -:    4:{
+        -:    5:    LOG_DEBUG("a = %p, b = %p", (void *) a, (void *) b);
+        -:    6:
+        -:    7:    LOG_DEBUG("a->width = %lu, b->width = %lu", a->width, b->width);
+        -:    8:
+       34:    9:    if (a->width != b->height)
+        -:   10:    {
+        -:   11:        LOG_ERROR("a->width != b->width%s", "");
+    #####:   12:        return NULL;
+        -:   13:    }
+        -:   14:
+       34:   15:    size_t w = b->width;
+       34:   16:    size_t h = a->height;
+       34:   17:    size_t n = a->width;
+        -:   18:
+        -:   19:    LOG_DEBUG("w = %lu, h = %lu, n = %lu", w, h, n);
+        -:   20:    LOG_DEBUG("create result matrix%s", "");
+        -:   21:
+       34:   22:    matrix_t *r = create_matrix(w, h);
+        -:   23:
+       34:   24:    if (r == NULL)
+        -:   25:    {
+        -:   26:        LOG_ERROR("cant create result matrix%s", "");
+    #####:   27:        return NULL;
+        -:   28:    }
+        -:   29:
+        -:   30:    LOG_DEBUG("perform multiplication%s", "");
+        -:   31:
+        -:   32:    LOG_DEBUG("xa\t ya\t ia\t xb\t yb\t ib\t ia*ib\t sum%s", "");
+        -:   33:
+      106:   34:    for (size_t y = 0; y < h; y++)
+      248:   35:        for (size_t x = 0; x < w; x++)
+        -:   36:        {
+      176:   37:            int sum = 0;
+      644:   38:            for (size_t i = 0; i < n; i++)
+        -:   39:            {
+      468:   40:                sum += a->data[i + y * n] * b->data[x + i * w];
+        -:   41:                LOG_DEBUG("%lu\t %lu\t %d\t %lu\t %lu\t %d\t %d\t %d", \
+        -:   42:                    i, y, a->data[i + y * n], \
+        -:   43:                    x, i, b->data[x + i * w], \
+        -:   44:                    a->data[i + y * n] * b->data[x + i * w], sum); \
+        -:   45:            }
+        -:   46:            LOG_DEBUG("-------------------------------------%s", "");
+        -:   47:
+      176:   48:            r->data[x + y * w] = sum;
+        -:   49:        }
+        -:   50:
+        -:   51:    LOG_DEBUG("result:%s", "");
+        -:   52:    LOG_DEBUG_MATRIX(r);
+        -:   53:
+        -:   54:    LOG_DEBUG("return %p", (void *) r);
+        -:   55:
+       34:   56:    return r;
+        -:   57:}
+        -:   58:
+       14:   59:matrix_t *get_matrix_power(const matrix_t *m, size_t pwr)
+        -:   60:{
+        -:   61:    LOG_DEBUG("m = %p, pwr = %lu", (void *) m, pwr);
+        -:   62:
+        -:   63:    LOG_DEBUG("create result matrix%s", "");
+       14:   64:    matrix_t *r = create_matrix(m->width, m->height);
+        -:   65:
+       14:   66:    if (r == NULL)
+        -:   67:    {
+        -:   68:        LOG_ERROR("failed to create result matrix%s", "");
+    #####:   69:        return NULL;
+        -:   70:    }
+        -:   71:
+        -:   72:    LOG_DEBUG("create power matrix%s", "");
+       14:   73:    matrix_t *pwr_m = create_matrix(m->width, m->height);
+        -:   74:
+       14:   75:    if (pwr_m == NULL)
+        -:   76:    {
+    #####:   77:        free_matrix(r);
+        -:   78:        LOG_ERROR("failed to create result matrix%s", "");
+    #####:   79:        return NULL;
+        -:   80:    }
+        -:   81:
+        -:   82:    LOG_DEBUG("fill result matrix and power_matrix as E%s", "");
+        -:   83:
+       44:   84:    for (size_t y = 0; y < m->height; y++)
+      104:   85:        for (size_t x = 0; x < m->width; x++)
+       74:   86:            pwr_m->data[x + y * m->width] = r->data[x + y * m->width] = x == y;
+        -:   87:
+        -:   88:    LOG_DEBUG("gather powers of matrix%s", "");
+        -:   89:
+       28:   90:    for (; pwr > 0; pwr /= 2)
+        -:   91:    {
+        -:   92:        LOG_DEBUG("pwr = %lu", pwr);
+       14:   93:        matrix_t *tmp_pwr_m = multiply_matrix(pwr_m, m);
+        -:   94:
+       14:   95:        if (tmp_pwr_m == NULL)
+        -:   96:        {
+        -:   97:            LOG_ERROR("cant get power%s", "");
+    #####:   98:            free_matrixes(2, pwr_m, r);
+    #####:   99:            return NULL;
+        -:  100:        }
+        -:  101:
+       14:  102:        free_matrix(pwr_m);
+       14:  103:        pwr_m = tmp_pwr_m;
+        -:  104:
+       14:  105:        if (pwr % 2 == 0)
+        1:  106:            continue;
+        -:  107:
+        -:  108:        LOG_DEBUG("mul matrix%s", "");
+        -:  109:
+       13:  110:        matrix_t *tmp_r = multiply_matrix(r, pwr_m);
+        -:  111:
+       13:  112:        if (tmp_r == NULL)
+        -:  113:        {
+        -:  114:            LOG_ERROR("cant get new result%s", "");
+    #####:  115:            free_matrixes(2, pwr_m, r);
+    #####:  116:            return NULL;
+        -:  117:        }
+        -:  118:
+       13:  119:        free_matrix(r);
+       13:  120:        r = tmp_r;
+        -:  121:    }
+        -:  122:
+       14:  123:    free_matrix(pwr_m);
+        -:  124:
+        -:  125:    LOG_DEBUG("result:%s", "");
+        -:  126:    LOG_DEBUG_MATRIX(r);
+        -:  127:
+       14:  128:    return r;
+        -:  129:}

@@ -17,21 +17,12 @@ int *get_last_max_element_in_column(const matrix_t *m, size_t col)
 
     LOG_DEBUG("max is M[%lu, %lu] = %d", col, (p - m->data) / m->width, *p);
 
-
     return p;
 }
 
-matrix_t *cut_matrix_columns(const matrix_t *m)
+int cut_matrix_columns(matrix_t *m)
 {
     LOG_DEBUG("m = %p", (void *) m);
-
-    matrix_t *r = create_matrix(m->height, m->height);
-
-    if (r == NULL)
-    {
-        LOG_ERROR("result matrix not created%s", "");
-        return NULL;
-    }
 
     LOG_DEBUG("create rest_columns%s", "");
 
@@ -40,8 +31,7 @@ matrix_t *cut_matrix_columns(const matrix_t *m)
     if (rest_columns == NULL)
     {
         LOG_ERROR("rest_columns not created%s", "");
-        free_matrix(r);
-        return NULL;
+        return EXIT_FAILURE;
     }
 
     for (size_t i = 0; i < m->width; i++)
@@ -49,7 +39,7 @@ matrix_t *cut_matrix_columns(const matrix_t *m)
 
     LOG_DEBUG("filter columns%s", "");
 
-    for (size_t w = m->width; w > r->width; w--)
+    for (size_t w = m->width; w > m->height; w--)
     {
         size_t *max_c = rest_columns;
         size_t *end = rest_columns + w;
@@ -90,26 +80,30 @@ matrix_t *cut_matrix_columns(const matrix_t *m)
 
     for (size_t y = 0; y < m->height; y++)
     {
-        int *r_row = r->data + y * r->width;
-        int *m_row = m->data + y * m->width;
-
         for (size_t x = 0; x < m->height; x++)
         {
-            size_t m_x = rest_columns[x];
-            *(r_row + x) = *(m_row + m_x);
-
-            LOG_DEBUG("data[%lu, %lu] = %d", x, y, *(r_row + x));
+            size_t r_x = rest_columns[x];
+            m->data[x + y * m->height] = m->data[r_x + y * m->width];
         }
     }
 
     free(rest_columns);
 
+    int *tmp = realloc(m->data, m->height * m->height * sizeof(int));
+
+    if (tmp == NULL)
+    {
+        LOG_ERROR("fail to realloc%s", "")
+        return EXIT_FAILURE;
+    }
+
+    m->data = tmp;
+    m->width = m->height;
+
     LOG_DEBUG("result:%s", "");
-    LOG_DEBUG_MATRIX(r);
+    LOG_DEBUG_MATRIX(m);
 
-    LOG_DEBUG("return %p", (void *) r);
-
-    return r;
+    return EXIT_SUCCESS;
 }
 
 int *get_last_max_element_in_row(const matrix_t *m, size_t row)
@@ -131,25 +125,16 @@ int *get_last_max_element_in_row(const matrix_t *m, size_t row)
     return p;
 }
 
-matrix_t *cut_matrix_rows(const matrix_t *m)
+int cut_matrix_rows(matrix_t *m)
 {
     LOG_DEBUG("m = %p", (void *) m);
-
-    matrix_t *r = create_matrix(m->width, m->width);
-
-    if (r == NULL)
-    {
-        LOG_ERROR("result matrix not created%s", "");
-        return NULL;
-    }
 
     size_t *rest_rows = malloc(sizeof(size_t) * m->height);
 
     if (rest_rows == NULL)
     {
         LOG_ERROR("rest_rows not created%s", "");
-        free_matrix(r);
-        return NULL;
+        return EXIT_FAILURE;
     }
 
     for (size_t i = 0; i < m->height; i++)
@@ -157,7 +142,7 @@ matrix_t *cut_matrix_rows(const matrix_t *m)
 
     LOG_DEBUG("filter rows%s", "");
 
-    for (size_t h = m->height; h > r->height; h--)
+    for (size_t h = m->height; h > m->width; h--)
     {
         size_t *max_r = rest_rows;
         size_t max_x = 0;
@@ -200,31 +185,33 @@ matrix_t *cut_matrix_rows(const matrix_t *m)
 
     LOG_DEBUG("copy data to result matrix%s", "");
 
-    for (size_t y = 0; y < r->height; y++)
+    for (size_t y = 0; y < m->width; y++)
     {
         size_t m_y = rest_rows[y] * m->width;
-        int *m_row = m->data + m_y;
-        int *r_row = r->data + y * r->width;
 
-        for (size_t x = 0; x < r->width; x++)
-        {
-            *(r_row + x) = *(m_row + x);
-
-            LOG_DEBUG("data[%lu, %lu] = %d", x, y, *(r_row + x));
-        }
+        memmove(m->data + y * m->width, m->data + m_y, m->width * sizeof(int));
     }
 
     free(rest_rows);
 
+    int *tmp = realloc(m->data, m->width * m->width * sizeof(int));
+
+    if (tmp == NULL)
+    {
+        LOG_ERROR("fail to realloc%s", "")
+        return EXIT_FAILURE;
+    }
+
+    m->data = tmp;
+    m->height = m->width;
+
     LOG_DEBUG("result:%s", "");
-    LOG_DEBUG_MATRIX(r);
+    LOG_DEBUG_MATRIX(m);
 
-    LOG_DEBUG("return %p", (void *) r);
-
-    return r;
+    return EXIT_SUCCESS;
 }
 
-matrix_t *cut_matrix(const matrix_t *m)
+int cut_matrix(matrix_t *m)
 {
     LOG_DEBUG("m->width = %lu, m->height = %lu", m->width, m->height);
 
@@ -233,17 +220,28 @@ matrix_t *cut_matrix(const matrix_t *m)
     else if (m->width > m->height)
         return cut_matrix_columns(m);
 
-    LOG_DEBUG("make copy%s", "");
+    return EXIT_SUCCESS;
+}
 
-    matrix_t *r = create_matrix(m->width, m->height);
+int cut_matrixes(int n, ...)
+{
+    va_list args;
 
-    if (r == NULL)
+    va_start(args, n);
+
+    int i = 0;
+
+    while (i < n)
     {
-        LOG_ERROR("cant create result matrix%s", "");
-        return NULL;
+        matrix_t *m = va_arg(args, matrix_t *);
+
+        if (cut_matrix(m))
+            break;
+
+        i++;
     }
 
-    memcpy(r->data, m->data, m->width * m->height * sizeof(int));
+    va_end(args);
 
-    return r;
+    return i;
 }

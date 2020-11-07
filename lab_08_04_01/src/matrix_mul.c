@@ -95,8 +95,7 @@ matrix_t *get_matrix_power(const matrix_t *m, size_t pwr)
         if (tmp_pwr_m == NULL)
         {
             LOG_ERROR("cant get power%s", "");
-            free_matrix(pwr_m);
-            free_matrix(r);
+            free_matrixes(2, pwr_m, r);
             return NULL;
         }
 
@@ -113,8 +112,7 @@ matrix_t *get_matrix_power(const matrix_t *m, size_t pwr)
         if (tmp_r == NULL)
         {
             LOG_ERROR("cant get new result%s", "");
-            free_matrix(pwr_m);
-            free_matrix(r);
+            free_matrixes(2, pwr_m, r);
             return NULL;
         }
 
