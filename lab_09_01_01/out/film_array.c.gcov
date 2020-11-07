@@ -1,0 +1,259 @@
+        -:    0:Source:src/film_array.c
+        -:    1:#include "../inc/film_array.h"
+        -:    2:
+      652:    3:int cmp_films_by_title(const void *a, const void *b)
+        -:    4:{
+      652:    5:    const film_t *fa = (*((const film_t **) a));
+      652:    6:    const film_t *fb = (*((const film_t **) b));
+      652:    7:    return strcmp(fa->title, fb->title);
+        -:    8:}
+        -:    9:
+        4:   10:int cmp_films_by_name(const void *a, const void *b)
+        -:   11:{
+        4:   12:    const film_t *fa = (*((const film_t **) a));
+        4:   13:    const film_t *fb = (*((const film_t **) b));
+        4:   14:    return strcmp(fa->name, fb->name);
+        -:   15:}
+        -:   16:
+        5:   17:int cmp_films_by_year(const void *a, const void *b)
+        -:   18:{
+        5:   19:    int year_a = (*((const film_t **) a))->year;
+        5:   20:    int year_b = (*((const film_t **) b))->year;
+        5:   21:    return year_a < year_b ? -1 : year_a == year_b ? 0 : 1;
+        -:   22:}
+        -:   23:
+       81:   24:int scan_film(FILE *f, film_t **film)
+        -:   25:{
+       81:   26:    char *buf = NULL;
+       81:   27:    size_t buf_size = 0;
+        -:   28:
+       81:   29:    int str_len = getline(&buf, &buf_size, f);
+        -:   30:
+       81:   31:    if (str_len == -1)
+        -:   32:    {
+        -:   33:        LOG_DEBUG("no new line%s", "");
+        -:   34:
+        9:   35:        if (buf != NULL)
+        9:   36:            free(buf);
+        -:   37:
+        9:   38:        return ENODATA;
+        -:   39:    }
+        -:   40:
+       72:   41:    if (str_len < 2)
+        -:   42:    {
+        -:   43:        LOG_ERROR("title is empty%s", "");
+        -:   44:
+        1:   45:        free(buf);
+        1:   46:        return EREAD;
+        -:   47:    }
+        -:   48:
+       71:   49:    buf[str_len - 1] = '\0';
+        -:   50:
+        -:   51:    LOG_DEBUG("title = \"%s\"", buf);
+        -:   52:
+       71:   53:    char *title = strdup(buf);
+        -:   54:
+       71:   55:    if (title == NULL)
+        -:   56:    {
+        -:   57:        LOG_ERROR("no mem for title%s", "");
+    #####:   58:        free(buf);
+    #####:   59:        return EREAD;
+        -:   60:    }
+        -:   61:
+       71:   62:    str_len = getline(&buf, &buf_size, f);
+        -:   63:
+       71:   64:    if (str_len < 2)
+        -:   65:    {
+        -:   66:        LOG_ERROR("no name in file%s", "");
+        2:   67:        free(title);
+        2:   68:        free(buf);
+        2:   69:        return EREAD;
+        -:   70:    }
+        -:   71:
+       69:   72:    buf[str_len - 1] = '\0';
+        -:   73:
+        -:   74:    LOG_DEBUG("name = \"%s\"", buf);
+        -:   75:
+       69:   76:    char *name = strdup(buf);
+        -:   77:
+       69:   78:    if (name == NULL)
+        -:   79:    {
+        -:   80:        LOG_ERROR("no mem for name%s", "");
+    #####:   81:        free(title);
+    #####:   82:        free(buf);
+    #####:   83:        return EREAD;
+        -:   84:    }
+        -:   85:
+       69:   86:    str_len = getline(&buf, &buf_size, f);
+        -:   87:
+       69:   88:    if (str_len < 2)
+        -:   89:    {
+        -:   90:        LOG_ERROR("no year in file%s", "");
+        1:   91:        free(name);
+        1:   92:        free(title);
+        1:   93:        free(buf);
+        1:   94:        return EREAD;
+        -:   95:    }
+        -:   96:
+        -:   97:    int year;
+        -:   98:
+       68:   99:    if (sscanf(buf, "%d", &year) != 1 || year <= 0)
+        -:  100:    {
+        -:  101:        LOG_ERROR("cant read year%s","");
+        1:  102:        free(name);
+        1:  103:        free(title);
+        1:  104:        free(buf);
+        1:  105:        return EREAD;
+        -:  106:    }
+        -:  107:
+        -:  108:    LOG_DEBUG("year = %d", year);
+        -:  109:
+       67:  110:    *film = malloc(sizeof(film_t));
+        -:  111:
+       67:  112:    (*film)->title = title;
+       67:  113:    (*film)->name = name;
+       67:  114:    (*film)->year = year;
+        -:  115:
+       67:  116:    free(buf);
+       67:  117:    return OK;
+        -:  118:}
+        -:  119:
+       67:  120:void free_film(film_t *film)
+        -:  121:{
+       67:  122:    free(film->name);
+       67:  123:    free(film->title);
+       67:  124:    free(film);
+       67:  125:}
+        -:  126:
+       13:  127:void free_films_array(film_t **films, size_t n)
+        -:  128:{
+       13:  129:    film_t **end = films + n;
+        -:  130:
+        -:  131:    LOG_DEBUG("free %lu films", n);
+        -:  132:
+       80:  133:    for (film_t **i = films; i < end; i++)
+       67:  134:        free_film(*i);
+        -:  135:
+       13:  136:    free(films);
+       13:  137:}
+        -:  138:
+       15:  139:int read_films_from_file(const char *filename, int sort_field, film_t ***result)
+        -:  140:{
+        -:  141:    LOG_DEBUG("filename = %s; sort_field = %d", filename, sort_field);
+        -:  142:
+       15:  143:    FILE *f = fopen(filename, "r");
+        -:  144:
+       15:  145:    if (f == NULL)
+        -:  146:    {
+        -:  147:        LOG_ERROR("cant open file%s", "");
+        1:  148:        return EREAD;
+        -:  149:    }
+        -:  150:
+       14:  151:    int (*cmp)(const void *a, const void *b) = CMP_FILMS_BY(sort_field);
+        -:  152:
+       14:  153:    int n = 0;
+       14:  154:    int capacity = 4;
+       14:  155:    film_t **film_arr = malloc(capacity * sizeof(film_t *));
+        -:  156:    film_t *curr;
+        -:  157:
+       14:  158:    if (film_arr == NULL)
+        -:  159:    {
+        -:  160:        LOG_ERROR("cant malloc for result%s", "");
+    #####:  161:        fclose(f);
+    #####:  162:        return EREAD;
+        -:  163:    }
+        -:  164:
+       81:  165:    while (feof(f) == 0)
+        -:  166:    {
+        -:  167:        LOG_DEBUG("read %d film", n);
+        -:  168:
+       81:  169:        int rc = scan_film(f, &curr);
+        -:  170:
+       81:  171:        if (rc == ENODATA)
+        9:  172:            break;
+        -:  173:
+       72:  174:        if (rc != OK)
+        -:  175:        {
+        -:  176:            LOG_ERROR("read film error%s", "");
+        5:  177:            free_films_array(film_arr, n);
+        5:  178:            fclose(f);
+        5:  179:            return EREAD;
+        -:  180:        }
+        -:  181:
+       67:  182:        if (n == capacity)
+        -:  183:        {
+        4:  184:            capacity *= 2;
+        -:  185:
+        -:  186:            LOG_DEBUG("malloc for %d", capacity);
+        -:  187:
+        4:  188:            film_t **tmp = realloc(film_arr, capacity * sizeof(film_t *));
+        -:  189:
+        4:  190:            if (tmp == NULL)
+        -:  191:            {
+        -:  192:                LOG_ERROR("cant malloc for %d elements", capacity);
+    #####:  193:                free_film(curr);
+    #####:  194:                free_films_array(film_arr, n);
+    #####:  195:                fclose(f);
+    #####:  196:                return EREAD;
+        -:  197:            }
+        -:  198:
+        4:  199:            film_arr = tmp;
+        -:  200:        }
+        -:  201:
+       67:  202:        film_t **end = film_arr + n;
+        -:  203:
+       67:  204:        film_t **p = film_arr;
+        -:  205:
+      671:  206:        while (p < end && cmp(p, &curr) <= 0)
+      604:  207:            p++;
+        -:  208:
+        -:  209:        LOG_DEBUG("insert at %d", (int) (p - film_arr));
+        -:  210:
+      702:  211:        for (film_t **i = end; i > p; i--)
+      635:  212:            *i = *(i - 1);
+        -:  213:
+       67:  214:        *p = curr;
+       67:  215:        n++;
+        -:  216:    }
+        -:  217:
+        9:  218:    if (n == 0)
+        -:  219:    {
+        -:  220:        LOG_ERROR("file is empty%s", "");
+        1:  221:        free(film_arr);
+        1:  222:        fclose(f);
+        1:  223:        return ENODATA;
+        -:  224:    }
+        -:  225:
+        8:  226:    film_t **tmp = realloc(film_arr, n * sizeof(film_t *));
+        -:  227:
+        8:  228:    if (tmp != NULL)
+        8:  229:        film_arr = tmp;
+        -:  230:
+        -:  231:    #if LOG_LEVEL >= DEBUG_LEVEL
+        -:  232:
+        -:  233:    LOG_DEBUG("readed %d films", n);
+        -:  234:    LOG_DEBUG("%-10s | %-10s | %s", "title", "name", "year");
+        -:  235:
+        -:  236:    for (int i = 0; i < n; i++)
+        -:  237:    {
+        -:  238:        film_t *film = film_arr[i];
+        -:  239:        LOG_DEBUG("%-10s | %-10s | %d", film->title, film->name, film->year);
+        -:  240:    }
+        -:  241:
+        -:  242:    #endif // LOG_LEVEL >= DEBUG_LEVEL
+        -:  243:
+        8:  244:    fclose(f);
+        -:  245:
+        8:  246:    *result = film_arr;
+        -:  247:
+        8:  248:    return n;
+        -:  249:}
+        -:  250:
+        7:  251:void print_films_array(film_t **films_arr, int n)
+        -:  252:{
+       20:  253:    for (int i = 0; i < n; i++)
+        -:  254:    {
+       13:  255:        film_t *film = films_arr[i];
+       13:  256:        printf("%s\n%s\n%d\n", film->title, film->name, film->year);
+        -:  257:    }
+        7:  258:}
