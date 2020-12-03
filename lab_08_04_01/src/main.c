@@ -57,42 +57,36 @@ int grow_matrixes(matrix_t **a, matrix_t **b)
     LOG_DEBUG("select matrix to grow%s", "");
     LOG_DEBUG("a->width = %lu, b->width = %lu", (*a)->width, (*b)->width);
 
+    matrix_t **small_m, **big_m;
+
     if ((*a)->width < (*b)->width)
     {
         LOG_DEBUG("grow matrix A%s", "");
-        matrix_t *growed = grow_matrix(*a, (*b)->width);
-
-        if (growed == NULL)
-        {
-            LOG_ERROR("grow failed%s", "");
-            return EXIT_FAILURE;
-        }
-
-        free_matrix(*a);
-        *a = growed;
-
-        LOG_DEBUG("update matrix A = %p", (void *) *a);
+        small_m = a;
+        big_m = b;
     }
     else if ((*a)->width > (*b)->width)
     {
         LOG_DEBUG("grow matrix B%s", "");
-        matrix_t *growed = grow_matrix(*b, (*a)->width);
-
-        if (growed == NULL)
-        {
-            LOG_ERROR("grow failed%s", "");
-            return EXIT_FAILURE;
-        }
-
-        free_matrix(*b);
-        *b = growed;
-
-        LOG_DEBUG("update matrix B = %p", (void *) *b);
+        small_m = b;
+        big_m = a;
     }
     else
     {
         LOG_DEBUG("grow matrixes are equal%s", "");
+        return EXIT_SUCCESS;
     }
+
+    matrix_t *growed_m = grow_matrix(*small_m, (*big_m)->width);
+
+    if (growed_m == NULL)
+    {
+        LOG_ERROR("grow failed%s", "");
+        return EXIT_FAILURE;
+    }
+
+    free_matrix(*small_m);
+    *small_m = growed_m;
 
     return EXIT_SUCCESS;
 }

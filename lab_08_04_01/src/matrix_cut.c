@@ -68,13 +68,13 @@ int cut_matrix_columns(matrix_t *m)
             *(c - 1) = *c;
     }
 
-    #if LOG_LEVEL >= DEBUG_LEVEL
+    #ifdef DEBUG_ENABLED
     LOG_DEBUG("rest columns:%s", "");
 
     for (size_t c = 0; c < m->height; c++)
         LOG_DEBUG("rest_columns[%lu] = %lu", c, rest_columns[c]);
 
-    #endif // LOG_DEBUG
+    #endif // DEBUG_ENABLED
 
     LOG_DEBUG("copy data to result matrix%s", "");
 
@@ -93,7 +93,7 @@ int cut_matrix_columns(matrix_t *m)
 
     if (tmp == NULL)
     {
-        LOG_ERROR("fail to realloc%s", "")
+        LOG_ERROR("fail to realloc%s", "");
         return EXIT_FAILURE;
     }
 
@@ -175,13 +175,13 @@ int cut_matrix_rows(matrix_t *m)
             *(r - 1) = *r;
     }
 
-    #if LOG_LEVEL >= DEBUG_LEVEL
+    #ifdef DEBUG_ENABLED
     LOG_DEBUG("rest rows:%s", "");
 
     for (size_t r = 0; r < m->width; r++)
         LOG_DEBUG("rest_rows[%lu] = %lu", r, rest_rows[r]);
 
-    #endif // LOG_DEBUG
+    #endif // DEBUG_ENABLED
 
     LOG_DEBUG("copy data to result matrix%s", "");
 
@@ -198,7 +198,7 @@ int cut_matrix_rows(matrix_t *m)
 
     if (tmp == NULL)
     {
-        LOG_ERROR("fail to realloc%s", "")
+        LOG_ERROR("fail to realloc%s", "");
         return EXIT_FAILURE;
     }
 
@@ -225,20 +225,17 @@ int cut_matrix(matrix_t *m)
 
 int cut_matrixes(int n, ...)
 {
+    int i;
     va_list args;
 
     va_start(args, n);
 
-    int i = 0;
-
-    while (i < n)
+    for (i = 0; i < n; i++)
     {
         matrix_t *m = va_arg(args, matrix_t *);
 
         if (cut_matrix(m))
             break;
-
-        i++;
     }
 
     va_end(args);

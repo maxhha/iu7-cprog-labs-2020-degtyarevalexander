@@ -69,58 +69,28 @@ matrix_t *get_matrix_power(const matrix_t *m, size_t pwr)
         return NULL;
     }
 
-    LOG_DEBUG("create power matrix%s", "");
-    matrix_t *pwr_m = create_matrix(m->width, m->height);
-
-    if (pwr_m == NULL)
-    {
-        free_matrix(r);
-        LOG_ERROR("failed to create result matrix%s", "");
-        return NULL;
-    }
-
     LOG_DEBUG("fill result matrix and power_matrix as E%s", "");
 
     for (size_t y = 0; y < m->height; y++)
         for (size_t x = 0; x < m->width; x++)
-            pwr_m->data[x + y * m->width] = r->data[x + y * m->width] = x == y;
+            r->data[x + y * m->width] = x == y;
 
     LOG_DEBUG("gather powers of matrix%s", "");
 
-    for (; pwr > 0; pwr /= 2)
+    for (; pwr > 0; pwr--)
     {
-        LOG_DEBUG("pwr = %lu", pwr);
-        matrix_t *tmp_pwr_m = multiply_matrix(pwr_m, m);
-
-        if (tmp_pwr_m == NULL)
-        {
-            LOG_ERROR("cant get power%s", "");
-            free_matrixes(2, pwr_m, r);
-            return NULL;
-        }
-
-        free_matrix(pwr_m);
-        pwr_m = tmp_pwr_m;
-
-        if (pwr % 2 == 0)
-            continue;
-
-        LOG_DEBUG("mul matrix%s", "");
-
-        matrix_t *tmp_r = multiply_matrix(r, pwr_m);
+        matrix_t *tmp_r = multiply_matrix(r, m);
 
         if (tmp_r == NULL)
         {
             LOG_ERROR("cant get new result%s", "");
-            free_matrixes(2, pwr_m, r);
+            free_matrix(r);
             return NULL;
         }
 
         free_matrix(r);
         r = tmp_r;
     }
-
-    free_matrix(pwr_m);
 
     LOG_DEBUG("result:%s", "");
     LOG_DEBUG_MATRIX(r);

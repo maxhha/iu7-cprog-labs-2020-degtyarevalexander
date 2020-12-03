@@ -41,6 +41,7 @@ void free_matrixes(int n, ...)
     va_list args;
 
     va_start(args, n);
+
     for (int i = 0; i < n; i++)
         free_matrix(va_arg(args, matrix_t *));
 

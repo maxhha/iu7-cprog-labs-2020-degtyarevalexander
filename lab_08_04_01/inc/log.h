@@ -5,6 +5,7 @@
 #include "macrologger.h"
 
 #if LOG_LEVEL >= DEBUG_LEVEL
+#define DEBUG_ENABLED
 #define LOG_DEBUG_MATRIX(m) do {\
     for (size_t y = 0; y < (m)->height; y++) \
     { \
