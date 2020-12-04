@@ -13,7 +13,7 @@ void free_list(node_t *head, void (*free_data)(void *))
 
 void *pop_front(node_t **head)
 {
-    if (!head)
+    if (!head || !*head)
         return NULL;
 
     void *data = (*head)->data;
