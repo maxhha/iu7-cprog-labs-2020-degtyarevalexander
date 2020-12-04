@@ -6,7 +6,9 @@ transaction_t *create_transaction_from_line(char *line)
     transaction_t *tr = malloc(sizeof(transaction_t));
 
     if (tr == NULL)
+    {
         return NULL;
+    }
 
     line = strdup(line);
 
@@ -17,8 +19,8 @@ transaction_t *create_transaction_from_line(char *line)
         free(line);
         return NULL;
     }
+    
     LOG_DEBUG("date = %s", tr->date);
-
 
     char *amount_str = strtok(NULL, ";");
 
@@ -37,6 +39,7 @@ transaction_t *create_transaction_from_line(char *line)
         free(line);
         return NULL;
     }
+
     LOG_DEBUG("amount = %d", tr->amount);
 
     if (!(tr->message = strtok(NULL, ";")))
@@ -46,6 +49,7 @@ transaction_t *create_transaction_from_line(char *line)
         free(line);
         return NULL;
     }
+
     LOG_DEBUG("message = %s", tr->message);
 
     if (strtok(NULL, ";"))

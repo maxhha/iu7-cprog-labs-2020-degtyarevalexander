@@ -2,7 +2,9 @@
 
 void free_list(node_t *head, void (*free_data)(void *))
 {
-    for (node_t *p = head; p; )
+    node_t *p = head;
+
+    while (p)
     {
         free_data(p->data);
         node_t *t = p;
