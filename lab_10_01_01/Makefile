@@ -1,9 +1,9 @@
-.PHONY : init all run debug runmem gcov clean cleangcov func check unit fdev udev
+.PHONY : init all run debug runmem gcov clean func unit dev fdev udev
 
 CC := gcc
 CFLAGS := --std=gnu99 -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic
 CFLAGS += $(cflags)
-SRCS := $(wildcard src/*.c)
+SRCS := $(filter-out $(wildcard src/*.tmpl.c), $(wildcard src/*.c))
 OBJS := $(SRCS:src/%.c=out/%.o)
 
 UNITCFLAGS := -lcheck -lpthread -lrt
@@ -13,13 +13,13 @@ UNITOBJS := $(UNITSRCS:unit_tests/%.c=out/%.o)
 all : app.exe
 
 init :
-	mkdir inc out src func_tests unit_tests
+	mkdir inc src func_tests unit_tests
 
 run : app.exe
 	./app.exe $(args)
 
 app.exe : $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 debug func: CFLAGS += -g -fno-inline -fno-omit-frame-pointer -O0 --coverage
 debug : all
@@ -29,7 +29,7 @@ runmem : debug
 
 gcov :
 	@rm -f out/*.c.gcov
-	echo
+	@echo
 	@gcov -d out/*.gcda | \
 		sed -u \
 			-Ee "s/File ('[^']+?')/File \x1B[0;33m\1\x1B[0m/g" \
@@ -51,18 +51,18 @@ unit_tests.exe : $(UNITOBJS) $(filter-out out/main.o, $(OBJS))
 	$(CC) $(CFLAGS) $(flags) -o $@ $^ $(UNITCFLAGS)
 
 out :
-	@if [ ! -d out ]; then mkdir out; fi
+	mkdir out
 
-out/%.d: ./src/%.c ./out
+out/%.d: ./src/%.c | ./out
 	@set -e; rm -f $@; \
 		$(CC) -MM $(CFLAGS) $< > $@.$$$$; \
 		sed 's,\($*\)\.o[ :]*,out/\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
 
-out/check_%.o : unit_tests/check_%.c
+out/check_%.o : unit_tests/check_%.c | ./out
 	$(CC) $(CFLAGS) $(flags) -o $@ -c $<
 
-out/%.o : ./src/%.c
+out/%.o : ./src/%.c | ./out
 	$(CC) $(CFLAGS) $(flags) -o $@ -c $<
 
 clean :
@@ -71,7 +71,7 @@ clean :
 dev :
 	@clear
 	@make -s run
-	@inotifywait -e close_write -mq func_tests/make_tests.sh func_tests/test.sh src/ inc/ | \
+	@inotifywait -e close_write -mq src/ inc/ | \
 		while read -r dir evts file; do clear; make -s run; done
 
 fdev:

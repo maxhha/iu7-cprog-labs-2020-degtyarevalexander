@@ -58,8 +58,6 @@ func_tests/pos_05_in.txt .result 1
 EOF
 cat > pos_05_in.txt <<EOF
 2020-12-31;100;table
-2020-12-31;300;bag
-2020-12-31;200;rose
 EOF
 cat > pos_05_out.txt <<EOF
 2020-12-31;100;table
@@ -105,11 +103,13 @@ cat > neg_01_in.txt <<EOF
 2
 3
 EOF
+echo > neg_01_out.txt
 
 #- 02 - несуществующий файл
 cat > neg_02_args.txt <<EOF
 func_tests/neg_02_in.txt .result f
 EOF
+echo > neg_02_out.txt
 
 #- 03 - неправильная операция
 cat > neg_03_args.txt <<EOF
@@ -120,6 +120,7 @@ cat > neg_03_in.txt <<EOF
 2
 3
 EOF
+echo > neg_03_out.txt
 
 #- 04 - пустой файл
 cat > neg_04_args.txt <<EOF
