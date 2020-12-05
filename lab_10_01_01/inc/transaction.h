@@ -8,7 +8,8 @@
 #include <string.h>
 #include "log.h"
 
-typedef struct {
+typedef struct
+{
     char *date;
     int amount;
     char *message;

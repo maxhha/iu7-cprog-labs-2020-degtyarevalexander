@@ -99,8 +99,7 @@ void front_back_split(node_t *head, node_t **back)
     } \
 } while (0)
 
-node_t *sorted_merge(node_t **head_a, node_t **head_b,
-    int (*cmp)(const void*, const void*))
+node_t *sorted_merge(node_t **head_a, node_t **head_b, int (*cmp)(const void*, const void*))
 {
     if (!head_a || !head_b || !cmp)
         return NULL;
