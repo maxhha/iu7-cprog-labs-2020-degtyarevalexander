@@ -5,16 +5,13 @@ int main(int argc, char **argv)
     if (argc != 4)
         return EXIT_FAILURE;
 
-    char *filein = argv[1];
-    char *fileout = argv[2];
-    char op = argv[3][0];
+    char *filein = argv[1], *fileout = argv[2], op = argv[3][0];
 
     LOG_DEBUG("filein = \"%s\"", filein);
     LOG_DEBUG("fileout = \"%s\"", fileout);
     LOG_DEBUG("op = '%c'", op);
 
-    node_t *in_list = read_csv(filein);
-    node_t *out_list = NULL;
+    node_t *in_list = read_csv(filein), *out_list = NULL;
 
     if (!in_list)
     {

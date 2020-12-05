@@ -88,17 +88,6 @@ void front_back_split(node_t *head, node_t **back)
     turtle->next = NULL;
 }
 
-#define APPEND(head, tail, el) do { \
-    if (tail) \
-    { \
-        tail = tail->next = el; \
-    } \
-    else \
-    { \
-        head = tail = el; \
-    } \
-} while (0)
-
 node_t *sorted_merge(node_t **head_a, node_t **head_b, int (*cmp)(const void*, const void*))
 {
     if (!head_a || !head_b || !cmp)
