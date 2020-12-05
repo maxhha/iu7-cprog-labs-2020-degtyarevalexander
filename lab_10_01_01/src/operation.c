@@ -20,9 +20,9 @@ node_t *operation_first(node_t **in_list)
     return r;
 }
 
-int cmp_amount_is_greater(const void *a, const void *b)
+int cmp_amount_le(const void *a, const void *b)
 {
-    return ((transaction_t *) a)->amount > ((transaction_t *) b)->amount;
+    return ((transaction_t *) a)->amount <= ((transaction_t *) b)->amount;
 }
 
 node_t *operation_find(node_t **in_list)
@@ -31,7 +31,7 @@ node_t *operation_find(node_t **in_list)
     node_t *tail = NULL;
     transaction_t *data = (*in_list)->data;
 
-    node_t *p = find((*in_list)->next, data, cmp_amount_is_greater);
+    node_t *p = find((*in_list)->next, data, cmp_amount_le);
 
     while (p)
     {
@@ -64,7 +64,7 @@ node_t *operation_find(node_t **in_list)
             head = tail = t;
         }
 
-        p = find(p->next, data, cmp_amount_is_greater);
+        p = find(p->next, data, cmp_amount_le);
     }
 
     return head;

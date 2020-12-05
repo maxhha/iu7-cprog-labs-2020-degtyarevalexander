@@ -36,7 +36,7 @@ node_t *find(node_t *head, const void *data, int (*cmp)(const void *, const void
 
     node_t *p = head;
 
-    while (p && !cmp(p->data, data))
+    while (p && cmp(p->data, data))
     {
         p = p->next;
     }
