@@ -6,7 +6,9 @@ void free_list(node_t *head, void (*free_data)(void *))
 
     while (p)
     {
-        free_data(p->data);
+        if (free_data)
+            free_data(p->data);
+
         node_t *t = p;
         p = p->next;
         free(t);
@@ -40,4 +42,19 @@ node_t *find(node_t *head, const void *data, int (*cmp)(const void *, const void
     }
 
     return p;
+}
+
+node_t *reverse(node_t *head)
+{
+    node_t *p = head, *pp = NULL;
+
+    while (p)
+    {
+        node_t *n = p->next;
+        p->next = pp;
+        pp = p;
+        p = n;
+    }
+
+    return pp;
 }

@@ -32,6 +32,7 @@ int main(int argc, char **argv)
     }
     else if (op == OP_REVERSE)
     {
+        out_list = operation_reverse(&in_list);
     }
     else if (op == OP_SORT_DATE)
     {
@@ -47,11 +48,12 @@ int main(int argc, char **argv)
     }
     else
     {
-        LOG_ERROR("fail to read file%s", "");
+        LOG_ERROR("no out list%s", "");
         rc = EXIT_FAILURE;
     }
 
-    free_list(in_list, (void (*)(void *)) free_transaction);
+    if (in_list)
+        free_list(in_list, (void (*)(void *)) free_transaction);
 
     return rc;
 }

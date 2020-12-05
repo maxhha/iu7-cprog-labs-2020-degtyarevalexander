@@ -69,3 +69,12 @@ node_t *operation_find(node_t **in_list)
 
     return head;
 }
+
+node_t *operation_reverse(node_t **in_list)
+{
+    node_t *head = reverse(*in_list);
+
+    *in_list = NULL;
+
+    return head;
+}

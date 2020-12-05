@@ -80,7 +80,7 @@ EOF
 
 #- 07 - сортировать по дате
 cat > pos_07_args.txt <<EOF
-func_tests/pos_07_in.txt .result r
+func_tests/pos_07_in.txt .result d
 EOF
 cat > pos_07_in.txt <<EOF
 2021-07-31;100;table
