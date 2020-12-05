@@ -42,7 +42,7 @@ do
 
         if [[ -f $args_file ]]
         then
-            cat $args_file | xargs $PROG
+            cat $args_file | xargs $PROG 2> .log
             rc=$?
 
             [[ "pos" = $prefix ]] && [[ $rc = 0 ]] && cmp -s $out_file .result
@@ -54,6 +54,7 @@ do
             then
                 echo -e "\033[0;32m[ ok ] ${line}\033[0m"
             else
+                cat .log
                 echo -e "\033[0;31m[erro] ${line}\033[0m"
                 echo
                 echo Return code: $rc
@@ -62,6 +63,7 @@ do
             fi
 
             rm -f .result
+            rm -f .log
 
         else
             echo -e "\033[0;37m[skip] ${line}\033[0m"

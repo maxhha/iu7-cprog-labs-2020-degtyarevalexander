@@ -26,3 +26,18 @@ void *pop_front(node_t **head)
 
     return data;
 }
+
+node_t *find(node_t *head, const void *data, int (*cmp)(const void *, const void *))
+{
+    if (!cmp)
+        return NULL;
+
+    node_t *p = head;
+
+    while (p && !cmp(p->data, data))
+    {
+        p = p->next;
+    }
+
+    return p;
+}

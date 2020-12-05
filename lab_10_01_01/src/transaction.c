@@ -19,7 +19,7 @@ transaction_t *create_transaction_from_line(char *line)
         free(line);
         return NULL;
     }
-    
+
     LOG_DEBUG("date = %s", tr->date);
 
     char *amount_str = strtok(NULL, ";");
@@ -61,6 +61,31 @@ transaction_t *create_transaction_from_line(char *line)
     }
 
     return tr;
+}
+
+transaction_t *copy_transaction(transaction_t *tr)
+{
+    transaction_t *t = malloc(sizeof(transaction_t));
+
+    if (!t)
+        return t;
+
+    int line_len = (tr->message - tr->date) + strlen(tr->message) + 1;
+
+    t->date = malloc(line_len);
+
+    if (!t->date)
+    {
+        free(t);
+        return NULL;
+    }
+
+    memcpy(t->date, tr->date, line_len);
+
+    t->amount = tr->amount;
+    t->message = tr->message - tr->date + t->date;
+
+    return t;
 }
 
 void free_transaction(transaction_t *tr)

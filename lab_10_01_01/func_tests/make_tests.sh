@@ -9,7 +9,7 @@ cat > pos_01_in.txt <<EOF
 2020-12-31;100;cat
 EOF
 cat > pos_01_out.txt <<EOF
-2020-12-31;300;300 dollars on table
+2020-12-31;300;door
 EOF
 
 #- 02 - поиск записей. равная сумма
@@ -149,7 +149,7 @@ echo > neg_06_out.txt
 
 #- 07 - поиск записей. нет найденных
 cat > neg_07_args.txt <<EOF
-func_tests/pos_03_in.txt .result f
+func_tests/neg_07_in.txt .result f
 EOF
 cat > neg_07_in.txt <<EOF
 2020-12-31;300;table

@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 
     if (op == OP_FIND)
     {
+        out_list = operation_find(&in_list);
     }
     else if (op == OP_FIRST)
     {

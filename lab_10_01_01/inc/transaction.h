@@ -15,6 +15,7 @@ typedef struct {
 } transaction_t;
 
 transaction_t *create_transaction_from_line(char *str);
+transaction_t *copy_transaction(transaction_t *tr);
 void free_transaction(transaction_t *);
 
 #endif // __TRANSACTION_H__
