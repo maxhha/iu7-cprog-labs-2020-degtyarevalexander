@@ -78,3 +78,17 @@ node_t *operation_reverse(node_t **in_list)
 
     return head;
 }
+
+int cmp_by_date(const void *a, const void *b)
+{
+    return strcmp(((transaction_t *) a)->date, ((transaction_t *) b)->date);
+}
+
+node_t *operation_sort_by_date(node_t **in_list)
+{
+    node_t *head = sort(*in_list, cmp_by_date);
+
+    *in_list = NULL;
+
+    return head;
+}

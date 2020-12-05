@@ -36,6 +36,7 @@ int main(int argc, char **argv)
     }
     else if (op == OP_SORT_DATE)
     {
+        out_list = operation_sort_by_date(&in_list);
     }
 
     int rc;
