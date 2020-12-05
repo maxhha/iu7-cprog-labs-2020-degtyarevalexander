@@ -1,0 +1,67 @@
+        -:    0:Source:src/matrix_io.c
+        -:    1:#include "../inc/matrix_io.h"
+        -:    2:
+       42:    3:matrix_t *scan_matrix(void)
+        -:    4:{
+        -:    5:    int w, h;
+        -:    6:
+        -:    7:    LOG_DEBUG("scan matrix size%s", "");
+        -:    8:
+       42:    9:    if (scanf("%d %d", &h, &w) != 2)
+        -:   10:    {
+        -:   11:        LOG_ERROR("invalid width or height input%s", "");
+        2:   12:        return NULL;
+        -:   13:    }
+        -:   14:
+        -:   15:    LOG_DEBUG("readed w = %d; h = %d", w, h);
+        -:   16:
+       40:   17:    if (w <= 0 || h <= 0)
+        -:   18:    {
+        -:   19:        LOG_ERROR("width or height is not positive%s", "");
+        2:   20:        return NULL;
+        -:   21:    }
+        -:   22:
+       38:   23:    matrix_t *m = create_matrix(w, h);
+        -:   24:
+       38:   25:    if (m == NULL)
+        -:   26:    {
+        -:   27:        LOG_ERROR("matrix not created%s", "");
+    #####:   28:        return NULL;
+        -:   29:    }
+        -:   30:
+        -:   31:    LOG_DEBUG("fill matrix%s", "");
+        -:   32:
+      210:   33:    for (int *i = m->data, *end = m->data + w * h; i < end; i++)
+        -:   34:    {
+      174:   35:        if (scanf("%d", i) != 1)
+        -:   36:        {
+        -:   37:            LOG_ERROR("invalid element input%s", "");
+        2:   38:            free_matrix(m);
+        2:   39:            return NULL;
+        -:   40:        }
+        -:   41:        LOG_DEBUG("data[%lu, %lu] = %d", (i - m->data) % w, (i - m->data) / w, *i);
+        -:   42:    }
+        -:   43:
+        -:   44:    LOG_DEBUG("result:%s", "");
+        -:   45:    LOG_DEBUG_MATRIX(m);
+        -:   46:
+        -:   47:    LOG_DEBUG("scanned to %p", (void *) m);
+       36:   48:    return m;
+        -:   49:}
+        -:   50:
+       14:   51:void print_matrix(const matrix_t *m)
+        -:   52:{
+        -:   53:    LOG_DEBUG("m = %p", (void *) m);
+        -:   54:
+       44:   55:    for (size_t y = 0; y < m->height; y++)
+        -:   56:    {
+       30:   57:        int *m_row = m->data + y * m->width;
+        -:   58:
+       30:   59:        printf("%d", *m_row);
+        -:   60:
+       74:   61:        for (size_t x = 1; x < m->width; x++)
+       44:   62:            printf(" %d", *(m_row + x));
+        -:   63:
+       30:   64:        printf("\n");
+        -:   65:    }
+       14:   66:}

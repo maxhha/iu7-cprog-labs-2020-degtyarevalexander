@@ -1,0 +1,189 @@
+        -:    0:Source:src/main.c
+        -:    1:#include "../inc/main.h"
+        -:    2:#include <stdarg.h>
+        -:    3:
+       24:    4:int read_matrixes(matrix_t **a, matrix_t **b)
+        -:    5:{
+        -:    6:    LOG_DEBUG("read matrix A%s", "");
+        -:    7:
+       24:    8:    *a = scan_matrix();
+        -:    9:
+       24:   10:    if (*a == NULL)
+        -:   11:    {
+        -:   12:        LOG_ERROR("failed to scan matrix A%s", "");
+        6:   13:        return EXIT_FAILURE;
+        -:   14:    }
+        -:   15:
+        -:   16:    LOG_DEBUG("read matrix B%s", "");
+        -:   17:
+       18:   18:    *b = scan_matrix();
+        -:   19:
+       18:   20:    if (*b == NULL)
+        -:   21:    {
+        -:   22:        LOG_ERROR("failed to scan matrix B%s", "");
+    #####:   23:        free_matrix(*a);
+    #####:   24:        return EXIT_FAILURE;
+        -:   25:    }
+        -:   26:
+       18:   27:    return EXIT_SUCCESS;
+        -:   28:}
+        -:   29:
+       18:   30:int read_powers(int *a_pwr, int *b_pwr)
+        -:   31:{
+        -:   32:    LOG_DEBUG("read a_pwr b_pwr%s", "");
+        -:   33:
+        -:   34:    LOG_DEBUG("scan a and b powers%s", "");
+        -:   35:
+       18:   36:    if (scanf("%d %d", a_pwr, b_pwr) != 2)
+        -:   37:    {
+        -:   38:        LOG_ERROR("invalid input for a_pwr or b_pwr%s", "");
+        -:   39:
+        2:   40:        return EXIT_FAILURE;
+        -:   41:    }
+        -:   42:
+        -:   43:    LOG_DEBUG("a_pwr = %d, b_pwr = %d", *a_pwr, *b_pwr);
+        -:   44:
+       16:   45:    if (*a_pwr < 0 || *b_pwr < 0)
+        -:   46:    {
+        -:   47:        LOG_ERROR("a_pwr or b_pwr is negative%s", "");
+        -:   48:
+        2:   49:        return EXIT_FAILURE;
+        -:   50:    }
+        -:   51:
+       14:   52:    return EXIT_SUCCESS;
+        -:   53:}
+        -:   54:
+       14:   55:int grow_matrixes(matrix_t **a, matrix_t **b)
+        -:   56:{
+        -:   57:    LOG_DEBUG("select matrix to grow%s", "");
+        -:   58:    LOG_DEBUG("a->width = %lu, b->width = %lu", (*a)->width, (*b)->width);
+        -:   59:
+       14:   60:    if ((*a)->width < (*b)->width)
+        -:   61:    {
+        -:   62:        LOG_DEBUG("grow matrix A%s", "");
+        4:   63:        matrix_t *growed = grow_matrix(*a, (*b)->width);
+        -:   64:
+        4:   65:        if (growed == NULL)
+        -:   66:        {
+        -:   67:            LOG_ERROR("grow failed%s", "");
+    #####:   68:            return EXIT_FAILURE;
+        -:   69:        }
+        -:   70:
+        4:   71:        free_matrix(*a);
+        4:   72:        *a = growed;
+        -:   73:
+        -:   74:        LOG_DEBUG("update matrix A = %p", (void *) *a);
+        -:   75:    }
+       10:   76:    else if ((*a)->width > (*b)->width)
+        -:   77:    {
+        -:   78:        LOG_DEBUG("grow matrix B%s", "");
+        2:   79:        matrix_t *growed = grow_matrix(*b, (*a)->width);
+        -:   80:
+        2:   81:        if (growed == NULL)
+        -:   82:        {
+        -:   83:            LOG_ERROR("grow failed%s", "");
+    #####:   84:            return EXIT_FAILURE;
+        -:   85:        }
+        -:   86:
+        2:   87:        free_matrix(*b);
+        2:   88:        *b = growed;
+        -:   89:
+        -:   90:        LOG_DEBUG("update matrix B = %p", (void *) *b);
+        -:   91:    }
+        -:   92:    else
+        -:   93:    {
+        -:   94:        LOG_DEBUG("grow matrixes are equal%s", "");
+        -:   95:    }
+        -:   96:
+       14:   97:    return EXIT_SUCCESS;
+        -:   98:}
+        -:   99:
+       14:  100:int make_powers(matrix_t **a, matrix_t **b, int a_pwr, int b_pwr)
+        -:  101:{
+        -:  102:    LOG_DEBUG("make power of A%s", "");
+        -:  103:
+       14:  104:    matrix_t *a_in_power = get_matrix_power(*a, a_pwr);
+        -:  105:
+       14:  106:    if (a_in_power == NULL)
+        -:  107:    {
+        -:  108:        LOG_ERROR("get power of matrix A broken%s", "");
+    #####:  109:        return EXIT_FAILURE;
+        -:  110:    }
+        -:  111:
+       14:  112:    free_matrix(*a);
+       14:  113:    *a = a_in_power;
+        -:  114:
+        -:  115:    LOG_DEBUG("make power of B%s", "");
+        -:  116:
+       14:  117:    matrix_t *b_in_power = get_matrix_power(*b, b_pwr);
+        -:  118:
+       14:  119:    if (b_in_power == NULL)
+        -:  120:    {
+        -:  121:        LOG_ERROR("get power of matrix A broken%s", "");
+    #####:  122:        return EXIT_FAILURE;
+        -:  123:    }
+        -:  124:
+       14:  125:    free_matrix(*b);
+       14:  126:    *b = b_in_power;
+        -:  127:
+       14:  128:    return EXIT_SUCCESS;
+        -:  129:}
+        -:  130:
+       24:  131:int main(void)
+        -:  132:{
+        -:  133:    matrix_t *a, *b, *result;
+        -:  134:    int a_pwr, b_pwr;
+        -:  135:
+       24:  136:    if (read_matrixes(&a, &b) != EXIT_SUCCESS)
+        -:  137:    {
+        -:  138:        LOG_ERROR("fail read matrixes%s", "");
+        6:  139:        return EXIT_FAILURE;
+        -:  140:    }
+        -:  141:
+       18:  142:    if (read_powers(&a_pwr, &b_pwr) != EXIT_SUCCESS)
+        -:  143:    {
+        -:  144:        LOG_ERROR("fail read powers%s", "");
+        4:  145:        free_matrixes(2, a, b);
+        4:  146:        return EXIT_FAILURE;
+        -:  147:    }
+        -:  148:
+       14:  149:    if (cut_matrixes(2, a, b) != 2)
+        -:  150:    {
+        -:  151:        LOG_ERROR("matrixes not cutted%s", "");
+    #####:  152:        free_matrixes(2, a, b);
+    #####:  153:        return EXIT_FAILURE;
+        -:  154:    }
+        -:  155:
+       14:  156:    if (grow_matrixes(&a, &b) != EXIT_SUCCESS)
+        -:  157:    {
+        -:  158:        LOG_ERROR("fail grow matrixes%s", "");
+    #####:  159:        free_matrixes(2, a, b);
+    #####:  160:        return EXIT_FAILURE;
+        -:  161:    }
+        -:  162:
+       14:  163:    if (make_powers(&a, &b, a_pwr, b_pwr) != EXIT_SUCCESS)
+        -:  164:    {
+        -:  165:        LOG_ERROR("fail grow matrixes%s", "");
+    #####:  166:        free_matrixes(2, a, b);
+    #####:  167:        return EXIT_FAILURE;
+        -:  168:    }
+        -:  169:
+        -:  170:    LOG_DEBUG("multiply matrix A @ B%s", "");
+        -:  171:
+       14:  172:    if ((result = multiply_matrix(a, b)) == NULL)
+        -:  173:    {
+        -:  174:        LOG_ERROR("multiplication is broken%s", "");
+    #####:  175:        free_matrixes(2, a, b);
+    #####:  176:        return EXIT_FAILURE;
+        -:  177:    }
+        -:  178:
+        -:  179:    LOG_DEBUG("output result%s", "");
+        -:  180:
+       14:  181:    print_matrix(result);
+        -:  182:
+        -:  183:    LOG_DEBUG("free memory%s", "");
+        -:  184:
+       14:  185:    free_matrixes(3, result, a, b);
+        -:  186:
+       14:  187:    return EXIT_SUCCESS;
+        -:  188:}
