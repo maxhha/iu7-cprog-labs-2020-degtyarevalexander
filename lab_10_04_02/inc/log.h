@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-// #define LOG_LEVEL 0x00
+#define LOG_LEVEL 0x00
 #include "macrologger.h"
 
 #endif // __LOG_H__
