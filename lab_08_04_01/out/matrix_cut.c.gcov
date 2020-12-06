@@ -1,0 +1,248 @@
+        -:    0:Source:src/matrix_cut.c
+        -:    1:#include "../inc/matrix_cut.h"
+        -:    2:
+       67:    3:int *get_last_max_element_in_column(const matrix_t *m, size_t col)
+        -:    4:{
+        -:    5:    LOG_DEBUG("m = %p, col = %lu", (void *) m, col);
+       67:    6:    int *p = m->data + col;
+        -:    7:
+        -:    8:    LOG_DEBUG("max_y\tmax_el\tx\ty\tdata%s", "");
+        -:    9:
+      130:   10:    for (size_t y = 1; y < m->height; y++)
+        -:   11:    {
+        -:   12:        LOG_DEBUG("%lu\t%d\t%lu\t%lu\t%d", (p - m->data) / m->width, *p, col, y, m->data[col + y * m->width]);
+        -:   13:
+       63:   14:        if (*p <= m->data[col + y * m->width])
+       28:   15:            p = m->data + col + y * m->width;
+        -:   16:    }
+        -:   17:
+        -:   18:    LOG_DEBUG("max is M[%lu, %lu] = %d", col, (p - m->data) / m->width, *p);
+        -:   19:
+       67:   20:    return p;
+        -:   21:}
+        -:   22:
+       11:   23:int cut_matrix_columns(matrix_t *m)
+        -:   24:{
+        -:   25:    LOG_DEBUG("m = %p", (void *) m);
+        -:   26:
+        -:   27:    LOG_DEBUG("create rest_columns%s", "");
+        -:   28:
+       11:   29:    size_t *rest_columns = malloc(sizeof(size_t) * m->width);
+        -:   30:
+       11:   31:    if (rest_columns == NULL)
+        -:   32:    {
+        -:   33:        LOG_ERROR("rest_columns not created%s", "");
+    #####:   34:        return EXIT_FAILURE;
+        -:   35:    }
+        -:   36:
+       51:   37:    for (size_t i = 0; i < m->width; i++)
+       40:   38:        rest_columns[i] = i;
+        -:   39:
+        -:   40:    LOG_DEBUG("filter columns%s", "");
+        -:   41:
+       31:   42:    for (size_t w = m->width; w > m->height; w--)
+        -:   43:    {
+       20:   44:        size_t *max_c = rest_columns;
+       20:   45:        size_t *end = rest_columns + w;
+       20:   46:        int max_el = m->data[*max_c];
+        -:   47:
+        -:   48:        LOG_DEBUG("max_el = %d, max_c = %lu", max_el, *max_c);
+        -:   49:
+       87:   50:        for (size_t *c = rest_columns; c < end; c++)
+        -:   51:        {
+        -:   52:            LOG_DEBUG("find max in %lu column", *c);
+        -:   53:
+       67:   54:            int *p = get_last_max_element_in_column(m, *c);
+        -:   55:
+       67:   56:            if (*p < max_el)
+       22:   57:                continue;
+        -:   58:
+       45:   59:            max_el = *p;
+       45:   60:            max_c = c;
+        -:   61:
+        -:   62:            LOG_DEBUG("max_el = %d, max_c = %lu", max_el, *max_c);
+        -:   63:        }
+        -:   64:
+        -:   65:        LOG_DEBUG("remove %lu col", *max_c);
+        -:   66:
+       33:   67:        for (size_t *c = max_c + 1; c < end; c++)
+       13:   68:            *(c - 1) = *c;
+        -:   69:    }
+        -:   70:
+        -:   71:    #if LOG_LEVEL >= DEBUG_LEVEL
+        -:   72:    LOG_DEBUG("rest columns:%s", "");
+        -:   73:
+        -:   74:    for (size_t c = 0; c < m->height; c++)
+        -:   75:        LOG_DEBUG("rest_columns[%lu] = %lu", c, rest_columns[c]);
+        -:   76:
+        -:   77:    #endif // LOG_DEBUG
+        -:   78:
+        -:   79:    LOG_DEBUG("copy data to result matrix%s", "");
+        -:   80:
+       31:   81:    for (size_t y = 0; y < m->height; y++)
+        -:   82:    {
+       58:   83:        for (size_t x = 0; x < m->height; x++)
+        -:   84:        {
+       38:   85:            size_t r_x = rest_columns[x];
+       38:   86:            m->data[x + y * m->height] = m->data[r_x + y * m->width];
+        -:   87:        }
+        -:   88:    }
+        -:   89:
+       11:   90:    free(rest_columns);
+        -:   91:
+       11:   92:    int *tmp = realloc(m->data, m->height * m->height * sizeof(int));
+        -:   93:
+       11:   94:    if (tmp == NULL)
+        -:   95:    {
+        -:   96:        LOG_ERROR("fail to realloc%s", "")
+    #####:   97:        return EXIT_FAILURE;
+        -:   98:    }
+        -:   99:
+       11:  100:    m->data = tmp;
+       11:  101:    m->width = m->height;
+        -:  102:
+        -:  103:    LOG_DEBUG("result:%s", "");
+        -:  104:    LOG_DEBUG_MATRIX(m);
+        -:  105:
+       11:  106:    return EXIT_SUCCESS;
+        -:  107:}
+        -:  108:
+        7:  109:int *get_last_max_element_in_row(const matrix_t *m, size_t row)
+        -:  110:{
+        -:  111:    LOG_DEBUG("m = %p, row = %lu", (void *) m, row);
+        7:  112:    int *p = m->data + row * m->width;
+        -:  113:
+        -:  114:    LOG_DEBUG("max_x\tmax_el\tx\ty\tdata%s", "");
+        -:  115:
+       14:  116:    for (size_t x = 1; x < m->width; x++)
+        -:  117:    {
+        -:  118:        LOG_DEBUG("%lu\t%d\t%lu\t%lu\t%d", (p - m->data) % m->width, *p, x, row, m->data[x + row * m->width]);
+        -:  119:
+        7:  120:        if (*p < m->data[x + row * m->width])
+        4:  121:            p = m->data + x + row * m -> width;
+        -:  122:    }
+        -:  123:
+        -:  124:    LOG_DEBUG("max is M[%lu, %lu] = %d",  (p - m->data) % m->width, row, *p);
+        7:  125:    return p;
+        -:  126:}
+        -:  127:
+        1:  128:int cut_matrix_rows(matrix_t *m)
+        -:  129:{
+        -:  130:    LOG_DEBUG("m = %p", (void *) m);
+        -:  131:
+        1:  132:    size_t *rest_rows = malloc(sizeof(size_t) * m->height);
+        -:  133:
+        1:  134:    if (rest_rows == NULL)
+        -:  135:    {
+        -:  136:        LOG_ERROR("rest_rows not created%s", "");
+    #####:  137:        return EXIT_FAILURE;
+        -:  138:    }
+        -:  139:
+        5:  140:    for (size_t i = 0; i < m->height; i++)
+        4:  141:        rest_rows[i] = i;
+        -:  142:
+        -:  143:    LOG_DEBUG("filter rows%s", "");
+        -:  144:
+        3:  145:    for (size_t h = m->height; h > m->width; h--)
+        -:  146:    {
+        2:  147:        size_t *max_r = rest_rows;
+        2:  148:        size_t max_x = 0;
+        2:  149:        size_t *end = rest_rows + h;
+        2:  150:        int max_el = m->data[*max_r * m->width];
+        -:  151:
+        -:  152:        LOG_DEBUG("max_el = %d, max_r = %lu, max_x = %lu", max_el, *max_r, max_x);
+        -:  153:
+        9:  154:        for (size_t *r = rest_rows; r < end; r++)
+        -:  155:        {
+        -:  156:            LOG_DEBUG("find max in %lu row", *r);
+        -:  157:
+        7:  158:            int *p = get_last_max_element_in_row(m, *r);
+        -:  159:
+        7:  160:            size_t x = (p - m->data) % m->width;
+        -:  161:
+        7:  162:            if (*p < max_el || (*p == max_el && max_x > x))
+        5:  163:                continue;
+        -:  164:
+        2:  165:            max_el = *p;
+        2:  166:            max_r = r;
+        2:  167:            max_x = x;
+        -:  168:
+        -:  169:            LOG_DEBUG("max_el = %d, max_r = %lu, max_x = %lu", max_el, *max_r, max_x);
+        -:  170:        }
+        -:  171:
+        -:  172:        LOG_DEBUG("remove %lu row", *max_r);
+        -:  173:
+        7:  174:        for (size_t *r = max_r + 1; r < end; r++)
+        5:  175:            *(r - 1) = *r;
+        -:  176:    }
+        -:  177:
+        -:  178:    #if LOG_LEVEL >= DEBUG_LEVEL
+        -:  179:    LOG_DEBUG("rest rows:%s", "");
+        -:  180:
+        -:  181:    for (size_t r = 0; r < m->width; r++)
+        -:  182:        LOG_DEBUG("rest_rows[%lu] = %lu", r, rest_rows[r]);
+        -:  183:
+        -:  184:    #endif // LOG_DEBUG
+        -:  185:
+        -:  186:    LOG_DEBUG("copy data to result matrix%s", "");
+        -:  187:
+        3:  188:    for (size_t y = 0; y < m->width; y++)
+        -:  189:    {
+        2:  190:        size_t m_y = rest_rows[y] * m->width;
+        -:  191:
+        2:  192:        memmove(m->data + y * m->width, m->data + m_y, m->width * sizeof(int));
+        -:  193:    }
+        -:  194:
+        1:  195:    free(rest_rows);
+        -:  196:
+        1:  197:    int *tmp = realloc(m->data, m->width * m->width * sizeof(int));
+        -:  198:
+        1:  199:    if (tmp == NULL)
+        -:  200:    {
+        -:  201:        LOG_ERROR("fail to realloc%s", "")
+    #####:  202:        return EXIT_FAILURE;
+        -:  203:    }
+        -:  204:
+        1:  205:    m->data = tmp;
+        1:  206:    m->height = m->width;
+        -:  207:
+        -:  208:    LOG_DEBUG("result:%s", "");
+        -:  209:    LOG_DEBUG_MATRIX(m);
+        -:  210:
+        1:  211:    return EXIT_SUCCESS;
+        -:  212:}
+        -:  213:
+       31:  214:int cut_matrix(matrix_t *m)
+        -:  215:{
+        -:  216:    LOG_DEBUG("m->width = %lu, m->height = %lu", m->width, m->height);
+        -:  217:
+       31:  218:    if (m->width < m->height)
+        1:  219:        return cut_matrix_rows(m);
+       30:  220:    else if (m->width > m->height)
+       11:  221:        return cut_matrix_columns(m);
+        -:  222:
+       19:  223:    return EXIT_SUCCESS;
+        -:  224:}
+        -:  225:
+       14:  226:int cut_matrixes(int n, ...)
+        -:  227:{
+        -:  228:    va_list args;
+        -:  229:
+       14:  230:    va_start(args, n);
+        -:  231:
+       14:  232:    int i = 0;
+        -:  233:
+       42:  234:    while (i < n)
+        -:  235:    {
+       28:  236:        matrix_t *m = va_arg(args, matrix_t *);
+        -:  237:
+       28:  238:        if (cut_matrix(m))
+    #####:  239:            break;
+        -:  240:
+       28:  241:        i++;
+        -:  242:    }
+        -:  243:
+       14:  244:    va_end(args);
+        -:  245:
+       14:  246:    return i;
+        -:  247:}
