@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include "log.h"
 #include "power_list.h"
 

@@ -3,6 +3,17 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "log.h"
+#include "list.h"
+
+typedef struct
+{
+    int base;
+    int pwr;
+} power_t;
+
+node_t *int_to_power_list(int x);
+void print_power_list(node_t *head);
 
 #endif // __POWER_LIST_H__
