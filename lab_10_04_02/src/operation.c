@@ -69,7 +69,6 @@ int perform_operation_mul(void)
     }
 
     node_t *result = multiply_power_lists(&a, &b);
-
     print_power_list(result);
 
     free_list(result, free);
@@ -79,7 +78,25 @@ int perform_operation_mul(void)
 
 int perform_operation_sqr(void)
 {
-    return EXIT_FAILURE;
+    node_t *a = NULL, *b = NULL;
+
+    if (scanf_power_lists(1, &a) != 1)
+        return EXIT_FAILURE;
+
+    b = copy_power_list(a);
+
+    if (!b)
+    {
+        free_list(a, free);
+        return EXIT_FAILURE;
+    }
+
+    node_t *result = multiply_power_lists(&a, &b);
+    print_power_list(result);
+
+    free_list(result, free);
+
+    return EXIT_SUCCESS;
 }
 
 int perform_operation_div(void)

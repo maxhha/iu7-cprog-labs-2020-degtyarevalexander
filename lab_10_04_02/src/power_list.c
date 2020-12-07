@@ -120,7 +120,7 @@ void print_power_list(node_t *head)
     }
 
     node_t *p = head;
-    power_t *power = (power_t *) p->data;
+    power_t *power = p->data;
 
     while (power->base > 1)
     {
@@ -139,8 +139,8 @@ node_t *multiply_power_lists(node_t **head_a, node_t **head_b)
 
     for (node_t *p = head; p && p->next;)
     {
-        power_t *power = (power_t *) p->data;
-        power_t *next_power = (power_t *) p->next->data;
+        power_t *power = p->data;
+        power_t *next_power = p->next->data;
 
         LOG_DEBUG("base: %d; %d", power->base, next_power->base);
         if (power->base != next_power->base)
@@ -154,4 +154,26 @@ node_t *multiply_power_lists(node_t **head_a, node_t **head_b)
     }
 
     return head;
+}
+
+node_t *copy_power_list(node_t *head)
+{
+    node_t *res = NULL, *tail = NULL;;
+
+    for (node_t *p = head; p; p = p->next)
+    {
+        power_t *power = p->data;
+
+        node_t *p_copy = create_power(power->base, power->pwr);
+
+        if (!p_copy)
+        {
+            free_list(res, free);
+            return NULL;
+        }
+
+        APPEND(res, tail, p_copy);
+    }
+
+    return res;
 }
