@@ -16,22 +16,26 @@ int main(void)
 
     buf[readed - 1] = '\0';
 
+    int rc = EXIT_FAILURE;
+
     if (strcmp(buf, OPERATION_OUT) == 0)
     {
-        return perform_operation_out();
+        rc = perform_operation_out();
     }
     if (strcmp(buf, OPERATION_MUL) == 0)
     {
-        return perform_operation_mul();
+        rc = perform_operation_mul();
     }
     if (strcmp(buf, OPERATION_SQR) == 0)
     {
-        return perform_operation_sqr();
+        rc = perform_operation_sqr();
     }
     if (strcmp(buf, OPERATION_DIV) == 0)
     {
-        return perform_operation_div();
+        rc = perform_operation_div();
     }
 
-    return EXIT_FAILURE;
+    free(buf);
+
+    return rc;
 }

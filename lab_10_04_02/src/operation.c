@@ -10,22 +10,15 @@ int scanf_power_lists(int n, ...)
     while (i < n)
     {
         node_t **head = va_arg(args, node_t **);
-
         int x;
 
-        if (scanf("%d", &x) != 1)
+        if (scanf("%d", &x) != 1 || x < 1)
         {
             LOG_ERROR("fail read number%s", "");
             break;
         }
 
         LOG_DEBUG("x = %d", x);
-
-        if (x < 1)
-        {
-            LOG_ERROR("number < 1%s", "");
-            break;
-        }
 
         *head = int_to_power_list(x);
 
@@ -101,5 +94,19 @@ int perform_operation_sqr(void)
 
 int perform_operation_div(void)
 {
-    return EXIT_FAILURE;
+    node_t *a = NULL, *b = NULL;
+
+    if (scanf_power_lists(2, &a, &b) != 2)
+    {
+        if (a)
+            free_list(a, free);
+        return EXIT_FAILURE;
+    }
+
+    node_t *result = divide_power_lists(&a, &b);
+    print_power_list(result);
+
+    free_list(result, free);
+
+    return EXIT_SUCCESS;
 }

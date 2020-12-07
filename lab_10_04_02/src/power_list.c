@@ -177,3 +177,45 @@ node_t *copy_power_list(node_t *head)
 
     return res;
 }
+
+bool has_power_list_neg_pwr(node_t *head)
+{
+    for (node_t *p = head; p; p = p->next)
+        if (((power_t *) p->data)->pwr < 0)
+            return true;
+    return false;
+}
+
+node_t *divide_power_lists(node_t **head_a, node_t **head_b)
+{
+    for (node_t *p = *head_b; p; p = p->next)
+        ((power_t *) p->data)->pwr = -((power_t *) p->data)->pwr;
+
+    node_t *result = multiply_power_lists(head_a, head_b);
+
+    result = remove_zero_powers(result);
+
+    if (!has_power_list_neg_pwr(result))
+        return result;
+
+    int a = 1, b = 1;
+
+    for (power_t *power = pop_front(&result); power; power = pop_front(&result))
+    {
+        while (power->pwr > 0)
+        {
+            a *= power->base;
+            power->pwr--;
+        }
+
+        while (power->pwr < 0)
+        {
+            b *= power->base;
+            power->pwr++;
+        }
+
+        free(power);
+    }
+
+    return b > a ? NULL : int_to_power_list(a / b);
+}
