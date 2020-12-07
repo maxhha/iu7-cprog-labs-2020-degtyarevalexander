@@ -44,7 +44,7 @@ bool is_base_simple_in_power_list(node_t *head, int base)
 
 node_t *remove_zero_powers(node_t *head)
 {
-    for (node_t *p = head, *prev = NULL; p && p->next ; )
+    for (node_t *p = head, *prev = NULL; p && p->next;)
     {
         if (((power_t *) p->data)->pwr != 0)
         {
@@ -114,10 +114,7 @@ node_t *int_to_power_list(int x)
 void print_power_list(node_t *head)
 {
     if (head == NULL)
-    {
-        printf("(NO OUT, ERROR)\n");
         return;
-    }
 
     node_t *p = head;
     power_t *power = p->data;

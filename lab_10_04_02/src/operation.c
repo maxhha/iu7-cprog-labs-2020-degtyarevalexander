@@ -104,6 +104,10 @@ int perform_operation_div(void)
     }
 
     node_t *result = divide_power_lists(&a, &b);
+
+    if (!result)
+        return EXIT_FAILURE;
+
     print_power_list(result);
 
     free_list(result, free);
