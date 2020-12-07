@@ -123,6 +123,10 @@ ss
 EOF
 echo > neg_05_out.txt
 
+#- 06 - пустой ввод
+printf "" > neg_06_in.txt
+echo > neg_06_out.txt
+
 # Добавить список тестов в readme
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
