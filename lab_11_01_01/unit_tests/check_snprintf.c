@@ -104,7 +104,7 @@ START_TEST(snprintf_hex_other)
 
     ck_assert_int_eq(
         snprintf(s1, 12, "  0x%x  ", i),
-        my_snprintf(s2, 12, "  0x%x ", i));
+        my_snprintf(s2, 12, "  0x%x  ", i));
     ck_assert_str_eq(s1, s2);
 }
 END_TEST

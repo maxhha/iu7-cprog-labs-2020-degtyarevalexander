@@ -8,13 +8,39 @@
     (len)++; \
 } while(0)
 
+void printint(char **s, size_t maxlen, int *len, char *convert, unsigned int i)
+{
+    if (i == 0)
+        return;
+    printint(s, maxlen, len, convert, i / 16);
+    ADDCHAR(*s, *len, maxlen, convert[i % 16]);
+}
+
 void printarg(char **s, size_t maxlen, const char **fmt, int *len, va_list *args)
 {
     if (**fmt == 'c')
     {
-        char c = (char) va_arg(*args, int);
+        char c = va_arg(*args, int);
         ADDCHAR(*s, *len, maxlen, c);
         (*fmt)++;
+        return;
+    }
+
+    if (**fmt == 'x')
+    {
+        (*fmt)++;
+        unsigned int i = va_arg(*args, int);
+        char convert[] = "0123456789abcdef";
+
+        if (i == 0)
+        {
+            ADDCHAR(*s, *len, maxlen, '0');
+            return;
+        }
+
+        printint(s, maxlen, len, convert, i);
+        
+        return;
     }
 }
 
