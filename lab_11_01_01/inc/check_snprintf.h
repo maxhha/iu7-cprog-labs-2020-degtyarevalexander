@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <check.h>
+#include <limits.h>
 #include "my_snprintf.h"
 
 #define SUITE Suite
