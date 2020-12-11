@@ -8,9 +8,20 @@ START_TEST(snprintf_null)
 }
 END_TEST
 
+START_TEST(snprintf_text)
+{
+    char s1[8] = "", s2[8] = "";
+
+    ck_assert_int_eq(
+        snprintf(s1, 8, "bla bla"),
+        my_snprintf(s2, 8, "bla bla"));
+    ck_assert_str_eq(s1, s2);
+}
+END_TEST
+
 START_TEST(snprintf_char)
 {
-    char s1[2], s2[2];
+    char s1[2] = "", s2[2] = "";
 
     ck_assert_int_eq(
         snprintf(s1, 2, "%c", 'A'),
@@ -29,7 +40,7 @@ END_TEST
 
 START_TEST(snprintf_char_and_other)
 {
-    char s1[5], s2[5];
+    char s1[5] = "", s2[5] = "";
 
     ck_assert_int_eq(
         snprintf(NULL, 0, " 12%c", 'X'),
@@ -41,7 +52,7 @@ END_TEST
 
 START_TEST(snprintf_hex)
 {
-    char s1[2], s2[2];
+    char s1[2] = "", s2[2] = "";
 
     ck_assert_int_eq(
         snprintf(s1, 2, "%x", 15),
@@ -52,7 +63,7 @@ END_TEST
 
 START_TEST(snprintf_hex_overflow)
 {
-    char s1[2], s2[2];
+    char s1[2] = "", s2[2] = "";
     int i = 16;
 
     ck_assert_int_eq(
@@ -64,7 +75,7 @@ END_TEST
 
 START_TEST(snprintf_hex_two_chars)
 {
-    char s1[3], s2[3];
+    char s1[3] = "", s2[3] = "";
     int i = 24;
 
     ck_assert_int_eq(
@@ -76,7 +87,7 @@ END_TEST
 
 START_TEST(snprintf_hex_neg)
 {
-    char s1[4], s2[4];
+    char s1[4] = "", s2[4] = "";
     int i = -31;
 
     ck_assert_int_eq(
@@ -88,7 +99,7 @@ END_TEST
 
 START_TEST(snprintf_hex_other)
 {
-    char s1[12], s2[12];
+    char s1[12] = "", s2[12] = "";
     int i = -31;
 
     ck_assert_int_eq(
@@ -100,7 +111,7 @@ END_TEST
 
 START_TEST(snprintf_str)
 {
-    char s1[12], s2[12];
+    char s1[12] = "", s2[12] = "";
     char s[] = "hello";
 
     ck_assert_int_eq(
@@ -112,7 +123,7 @@ END_TEST
 
 START_TEST(snprintf_str_zero)
 {
-    char s1[12], s2[12];
+    char s1[12] = "", s2[12] = "";
     char s[] = "";
 
     ck_assert_int_eq(
@@ -124,7 +135,7 @@ END_TEST
 
 START_TEST(snprintf_str_overflow)
 {
-    char s1[12], s2[12];
+    char s1[12] = "", s2[12] = "";
     char s[] = "1234 hello world !!!!";
 
     ck_assert_int_eq(
@@ -146,7 +157,7 @@ END_TEST
 
 START_TEST(snprintf_str_other)
 {
-    char s1[12], s2[12];
+    char s1[12] = "", s2[12] = "";
     char s[] = "hello world !!!!";
 
     ck_assert_int_eq(
@@ -159,7 +170,7 @@ END_TEST
 
 START_TEST(snprintf_longhex)
 {
-    char s1[20], s2[20];
+    char s1[20] = "", s2[20] = "";
     unsigned long i = ULONG_MAX;
 
     ck_assert_int_eq(
@@ -171,7 +182,7 @@ END_TEST
 
 START_TEST(snprintf_shorthex)
 {
-    char s1[20], s2[20];
+    char s1[20] = "", s2[20] = "";
     unsigned short i = USHRT_MAX;
 
     ck_assert_int_eq(
@@ -183,7 +194,7 @@ END_TEST
 
 START_TEST(snprintf_big_combo)
 {
-    char s1[128], s2[128];
+    char s1[128] = "", s2[128] = "";
     char c = 'X';
     int i = 10;
     char s[] = "world";
@@ -224,6 +235,7 @@ Suite *my_snprintf_suite(void)
     suite_add_tcase(s, tc_neg);
 
     tc_pos = tcase_create("positives");
+    tcase_add_test(tc_pos, snprintf_text);
     tcase_add_test(tc_pos, snprintf_char);
     tcase_add_test(tc_pos, snprintf_char_null);
     tcase_add_test(tc_pos, snprintf_char_and_other);
