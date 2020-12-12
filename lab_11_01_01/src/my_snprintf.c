@@ -8,11 +8,11 @@
     (len)++; \
 } while(0)
 
-void printint(char **s, size_t maxlen, int *len, char *convert, unsigned int i)
+void printhex(char **s, size_t maxlen, int *len, char *convert, unsigned long i)
 {
     if (i == 0)
         return;
-    printint(s, maxlen, len, convert, i / 16);
+    printhex(s, maxlen, len, convert, i / 16);
     ADDCHAR(*s, *len, maxlen, convert[i % 16]);
 }
 
@@ -26,10 +26,26 @@ void printarg(char **s, size_t maxlen, const char **fmt, int *len, va_list *args
         return;
     }
 
-    if (**fmt == 'x')
+    if (**fmt == 'x' || ((**fmt == 'l' || **fmt == 'h') && *(*fmt + 1) == 'x'))
     {
-        (*fmt)++;
-        unsigned int i = va_arg(*args, int);
+        unsigned long i;
+
+        if (**fmt == 'l')
+        {
+            i = va_arg(*args, unsigned long);
+            *fmt += 2;
+        }
+        else if (**fmt == 'h')
+        {
+            i = (unsigned short) va_arg(*args, int);
+            *fmt += 2;
+        }
+        else
+        {
+            i = va_arg(*args, unsigned int);
+            *fmt += 1;
+        }
+
         char convert[] = "0123456789abcdef";
 
         if (i == 0)
@@ -38,7 +54,7 @@ void printarg(char **s, size_t maxlen, const char **fmt, int *len, va_list *args
             return;
         }
 
-        printint(s, maxlen, len, convert, i);
+        printhex(s, maxlen, len, convert, i);
 
         return;
     }
