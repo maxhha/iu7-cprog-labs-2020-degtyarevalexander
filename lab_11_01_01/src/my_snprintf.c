@@ -39,7 +39,26 @@ void printarg(char **s, size_t maxlen, const char **fmt, int *len, va_list *args
         }
 
         printint(s, maxlen, len, convert, i);
-        
+
+        return;
+    }
+
+    if (**fmt == 's')
+    {
+        (*fmt)++;
+        char *str = va_arg(*args, char *);
+
+        if (str == NULL)
+        {
+            str = "(null)";
+        }
+
+        while (*str)
+        {
+            ADDCHAR(*s, *len, maxlen, *str);
+            str++;
+        }
+
         return;
     }
 }
@@ -54,16 +73,15 @@ int my_snprintf (char *s, size_t maxlen, const char *format, ...)
 
     while (*c != '\0')
     {
-        if (*c == '%')
-        {
-            c++;
-            printarg(&s, maxlen, &c, &len, &args);
-        }
-        else
+        if (*c != '%')
         {
             ADDCHAR(s, len, maxlen, *c);
             c++;
+            continue;
         }
+
+        c++;
+        printarg(&s, maxlen, &c, &len, &args);
     }
 
     if ((s) != NULL && len < maxlen)

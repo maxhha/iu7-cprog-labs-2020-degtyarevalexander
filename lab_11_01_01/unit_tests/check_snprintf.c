@@ -133,6 +133,18 @@ START_TEST(snprintf_str_zero)
 }
 END_TEST
 
+START_TEST(snprintf_str_null)
+{
+    char s1[12] = "", s2[12] = "";
+    char *s = NULL;
+
+    ck_assert_int_eq(
+        snprintf(s1, 12, "%s", s),
+        my_snprintf(s2, 12, "%s", s));
+    ck_assert_str_eq(s1, s2);
+}
+END_TEST
+
 START_TEST(snprintf_str_overflow)
 {
     char s1[12] = "", s2[12] = "";
@@ -162,7 +174,7 @@ START_TEST(snprintf_str_other)
 
     ck_assert_int_eq(
         snprintf(s1, 12, "1234 %s", s),
-        my_snprintf(s2, 12, "%s", s));
+        my_snprintf(s2, 12, "1234 %s", s));
     ck_assert_str_eq(s1, s2);
 }
 END_TEST
@@ -246,6 +258,7 @@ Suite *my_snprintf_suite(void)
     tcase_add_test(tc_pos, snprintf_hex_other);
     tcase_add_test(tc_pos, snprintf_str);
     tcase_add_test(tc_pos, snprintf_str_zero);
+    tcase_add_test(tc_pos, snprintf_str_null);
     tcase_add_test(tc_pos, snprintf_str_overflow);
     tcase_add_test(tc_pos, snprintf_str_len);
     tcase_add_test(tc_pos, snprintf_str_other);
