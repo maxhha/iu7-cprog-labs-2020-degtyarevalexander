@@ -3,12 +3,12 @@
 #define ADDCHAR(s, len, maxlen, ch) do { \
     if ((s) != NULL && maxlen && (len) < (maxlen)) \
     { \
-        s[len] = (ch); \
+        (s)[len] = (ch); \
     } \
     (len)++; \
 } while(0)
 
-void printhex(char **s, size_t maxlen, int *len, char *convert, unsigned long i)
+void printhex(char **s, size_t maxlen, size_t *len, char *convert, unsigned long i)
 {
     if (i == 0)
         return;
@@ -41,7 +41,7 @@ int my_snprintf (char *s, size_t maxlen, const char *format, ...)
             c++;
             continue;
         }
-        /*
+
         if (*c == 'x' || ((*c == 'l' || *c == 'h') && *(c + 1) == 'x'))
         {
             unsigned long i;
@@ -93,7 +93,6 @@ int my_snprintf (char *s, size_t maxlen, const char *format, ...)
 
             continue;
         }
-        */
     }
 
     if (s != NULL && maxlen)
