@@ -55,8 +55,8 @@ START_TEST(snprintf_hex)
     char s1[2] = "", s2[2] = "";
 
     ck_assert_int_eq(
-        snprintf(s1, 2, "%x", 15),
-        my_snprintf(s2, 2, "%x", 15));
+        snprintf(s1, 2, "%x", 0),
+        my_snprintf(s2, 2, "%x", 0));
     ck_assert_str_eq(s1, s2);
 }
 END_TEST
