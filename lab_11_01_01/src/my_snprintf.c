@@ -1,9 +1,9 @@
 #include "../inc/my_snprintf.h"
 
 #define ADDCHAR(s, len, maxlen, ch) do { \
-    if ((s) != NULL && (len) + 1 < (maxlen)) \
+    if ((s) != NULL && maxlen && (len) < (maxlen)) \
     { \
-        *((s)++) = (ch); \
+        s[len] = (ch); \
     } \
     (len)++; \
 } while(0)
@@ -18,11 +18,10 @@ void printhex(char **s, size_t maxlen, int *len, char *convert, unsigned long i)
 
 int my_snprintf (char *s, size_t maxlen, const char *format, ...)
 {
-    int len = 0;
     va_list args;
-    const char *c = format;
-
     va_start(args, format);
+    size_t len = 0;
+    const char *c = format;
 
     while (*c != '\0')
     {
@@ -42,7 +41,7 @@ int my_snprintf (char *s, size_t maxlen, const char *format, ...)
             c++;
             continue;
         }
-
+        /*
         if (*c == 'x' || ((*c == 'l' || *c == 'h') && *(c + 1) == 'x'))
         {
             unsigned long i;
@@ -94,11 +93,12 @@ int my_snprintf (char *s, size_t maxlen, const char *format, ...)
 
             continue;
         }
+        */
     }
 
-    if ((s) != NULL && len < maxlen)
+    if (s != NULL && maxlen)
     {
-        *s = '\0';
+        s[len < maxlen ? len : maxlen - 1] = '\0';
     }
 
     va_end(args);
