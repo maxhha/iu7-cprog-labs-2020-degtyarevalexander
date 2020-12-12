@@ -16,69 +16,6 @@ void printhex(char **s, size_t maxlen, int *len, char *convert, unsigned long i)
     ADDCHAR(*s, *len, maxlen, convert[i % 16]);
 }
 
-void printarg(char **s, size_t maxlen, const char **fmt, int *len, va_list *args)
-{
-    if (**fmt == 'c')
-    {
-        char c = va_arg(*args, int);
-        ADDCHAR(*s, *len, maxlen, c);
-        (*fmt)++;
-        return;
-    }
-
-    if (**fmt == 'x' || ((**fmt == 'l' || **fmt == 'h') && *(*fmt + 1) == 'x'))
-    {
-        unsigned long i;
-
-        if (**fmt == 'l')
-        {
-            i = va_arg(*args, unsigned long);
-            *fmt += 2;
-        }
-        else if (**fmt == 'h')
-        {
-            i = (unsigned short) va_arg(*args, int);
-            *fmt += 2;
-        }
-        else
-        {
-            i = va_arg(*args, unsigned int);
-            *fmt += 1;
-        }
-
-        char convert[] = "0123456789abcdef";
-
-        if (i == 0)
-        {
-            ADDCHAR(*s, *len, maxlen, '0');
-            return;
-        }
-
-        printhex(s, maxlen, len, convert, i);
-
-        return;
-    }
-
-    if (**fmt == 's')
-    {
-        (*fmt)++;
-        char *str = va_arg(*args, char *);
-
-        if (str == NULL)
-        {
-            str = "(null)";
-        }
-
-        while (*str)
-        {
-            ADDCHAR(*s, *len, maxlen, *str);
-            str++;
-        }
-
-        return;
-    }
-}
-
 int my_snprintf (char *s, size_t maxlen, const char *format, ...)
 {
     int len = 0;
@@ -97,7 +34,66 @@ int my_snprintf (char *s, size_t maxlen, const char *format, ...)
         }
 
         c++;
-        printarg(&s, maxlen, &c, &len, &args);
+
+        if (*c == 'c')
+        {
+            char cc = va_arg(args, int);
+            ADDCHAR(s, len, maxlen, cc);
+            c++;
+            continue;
+        }
+
+        if (*c == 'x' || ((*c == 'l' || *c == 'h') && *(c + 1) == 'x'))
+        {
+            unsigned long i;
+
+            if (*c == 'l')
+            {
+                i = va_arg(args, unsigned long);
+                c += 2;
+            }
+            else if (*c == 'h')
+            {
+                i = (unsigned short) va_arg(args, int);
+                c += 2;
+            }
+            else
+            {
+                i = va_arg(args, unsigned int);
+                c += 1;
+            }
+
+            char convert[] = "0123456789abcdef";
+
+            if (i == 0)
+            {
+                ADDCHAR(s, len, maxlen, '0');
+                continue;
+            }
+
+            printhex(&s, maxlen, &len, convert, i);
+
+            continue;
+        }
+
+        if (*c == 's')
+        {
+            c++;
+            char *str = va_arg(args, char *);
+
+            if (str == NULL)
+            {
+                str = "(null)";
+            }
+
+            while (*str != '\0')
+            {
+                ADDCHAR(s, len, maxlen, *str);
+                str++;
+            }
+
+            continue;
+        }
     }
 
     if ((s) != NULL && len < maxlen)
