@@ -8,8 +8,12 @@ OBJS := $(SRCS:src/%.c=out/%.o)
 
 all : liblab_07_5.a
 
-liblab_07_5.a: $(filter-out out/main.o, $(OBJS))
+liblab_07_5.a: $(OBJS)
 	ar -rc $@ $^
+
+liblab_07_5.so: CFLAGS += -fPIC
+liblab_07_5.so: $(OBJS)
+	$(CC) -shared -o $@ $(OBJS)
 
 out :
 	mkdir out

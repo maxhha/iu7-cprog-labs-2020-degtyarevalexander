@@ -3,23 +3,26 @@
 CC := gcc
 CFLAGS := --std=gnu99 -Wall -Werror -Wfloat-equal -Wfloat-conversion -Wpedantic
 CFLAGS += $(cflags)
-LFLAGS := -Llibs -Wl,-rpath=libs
+LFLAGS := -Llibs
 SRCS := $(filter-out $(wildcard src/*.tmpl.c), $(wildcard src/*.c))
 OBJS := $(SRCS:src/%.c=out/%.o)
 
-STATIC_LIB := lab_07_5
+LIBNAME := lab_07_5
 
-UNITCFLAGS := -lcheck -lpthread -lrt $(LFLAGS) -l$(STATIC_LIB)
+UNITCFLAGS := -lcheck -lpthread -lrt $(LFLAGS) -l$(LIBNAME)
 UNITSRCS := $(wildcard unit_tests/*.c)
 UNITOBJS := $(UNITSRCS:unit_tests/%.c=out/%.o)
 
 
-all : app_static.exe
+all : app_static.exe app_dyn.exe
 
-app_static.exe : $(OBJS) libs/lib$(STATIC_LIB).a
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LFLAGS) -l$(STATIC_LIB)
+app_static.exe : $(OBJS) libs/lib$(LIBNAME).a
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LFLAGS) -l$(LIBNAME)
 
-debug func: CFLAGS += -g -fno-inline -fno-omit-frame-pointer -O0 --coverage
+app_dyn.exe : $(OBJS) libs/lib$(LIBNAME).so
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LFLAGS) -l$(LIBNAME)
+
+debug func : CFLAGS += -g -fno-inline -fno-omit-frame-pointer -O0 --coverage
 debug : all
 
 gcov :
@@ -42,7 +45,7 @@ unit : unit_tests.exe
 			-Ee "s/.+ Passed/\x1B[0;32m&\x1B[0m/g" \
 			-Ee "s/.+ Assertion.+/\x1B[0;31m&\x1B[0m/g"
 
-unit_tests.exe : $(UNITOBJS) $(filter-out out/main.o, $(OBJS)) libs/lib$(STATIC_LIB).a
+unit_tests.exe : $(UNITOBJS) $(filter-out out/main.o, $(OBJS)) libs/lib$(LIBNAME).a
 	$(CC) $(CFLAGS) $(flags) -o $@ $^ $(UNITCFLAGS)
 
 out :
@@ -51,11 +54,15 @@ out :
 libs :
 	mkdir libs
 
-libs/lib$(STATIC_LIB).a: | libs
+libs/lib$(LIBNAME).a : | libs
 	make -C deps/lab_07_5 liblab_07_5.a
 	cp deps/lab_07_5/liblab_07_5.a $@
 
-out/%.d: ./src/%.c | ./out
+libs/lib$(LIBNAME).so : | libs
+	make -C deps/lab_07_5 liblab_07_5.so
+	cp deps/lab_07_5/liblab_07_5.so $@
+
+out/%.d : ./src/%.c | ./out
 	@set -e; rm -f $@; \
 		$(CC) -MM $(CFLAGS) $< > $@.$$$$; \
 		sed 's,\($*\)\.o[ :]*,out/\1.o $@ : ,g' < $@.$$$$ > $@; \
