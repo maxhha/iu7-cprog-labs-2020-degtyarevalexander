@@ -21,25 +21,68 @@ int parse_args(int argc, char **argv, char **filein, char **fileout, bool *filte
 
 int main(int argc, char **argv)
 {
+    #ifdef __USE_DYNLIN__
+
+    void *hlib = dlopen(LIB_PATH, RTLD_NOW);
+
+    if (hlib == NULL)
+        return EXIT_FAILURE;
+
+    #define LOAD(name) \
+        dl ## name ## _t name; \
+        *((void **) (&(name))) = dlsym(hlib, # name ); \
+        if (name == NULL) \.
+        { \
+            dlclose(hlib); \
+            return EXIT_FAILURE; \
+        }
+
+    LOAD(key)
+    LOAD(mysort)
+    LOAD(write_array_to_file)
+    LOAD(read_array_from_file)
+    LOAD(compare_numbers)
+
+    #else
+
+    #endif // __USE_DYNLIN__
+
     char *filename_in = NULL;
     char *filename_out = NULL;
     bool filter = false;
 
     if (parse_args(argc, argv, &filename_in, &filename_out, &filter) == PARSE_ARGS_ERR)
+    {
+        #ifdef __USE_DYNLIN__
+        dlclose(hlib);
+        #endif // __USE_DYNLIN__
+
         return EXIT_FAILURE;
+    }
 
     int *b_array, *e_array;
 
     if (read_array_from_file(filename_in, &b_array, &e_array) != OK)
+    {
+        #ifdef __USE_DYNLIN__
+        dlclose(hlib);
+        #endif // __USE_DYNLIN__
+
         return EXIT_FAILURE;
+    }
 
     if (filter)
     {
         int n = key(b_array, e_array, NULL, NULL);
 
-        if (n == 0)
+        if (n <= 0)
         {
             free(b_array);
+
+            #ifdef __USE_DYNLIN__
+            dlclose(hlib);
+            #endif // __USE_DYNLIN__
+
             return EXIT_FAILURE;
         }
 
@@ -48,6 +91,11 @@ int main(int argc, char **argv)
         if (b_filtered == NULL)
         {
             free(b_array);
+
+            #ifdef __USE_DYNLIN__
+            dlclose(hlib);
+            #endif // __USE_DYNLIN__
+
             return EXIT_FAILURE;
         }
 
@@ -55,6 +103,11 @@ int main(int argc, char **argv)
         {
             free(b_array);
             free(b_filtered);
+
+            #ifdef __USE_DYNLIN__
+            dlclose(hlib);
+            #endif // __USE_DYNLIN__
+
             return EXIT_FAILURE;
         }
 
@@ -68,6 +121,10 @@ int main(int argc, char **argv)
     int rc = write_array_to_file(filename_out, b_array, e_array);
 
     free(b_array);
+
+    #ifdef __USE_DYNLIN__
+    dlclose(hlib);
+    #endif // __USE_DYNLIN__
 
     return rc == OK ? EXIT_SUCCESS : EXIT_FAILURE;
 }

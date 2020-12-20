@@ -14,13 +14,18 @@ UNITSRCS := $(wildcard unit_tests/*.c)
 UNITOBJS := $(UNITSRCS:unit_tests/%.c=out/%.o)
 
 
-all : app_static.exe app_dyn.exe
+all : app_static.exe app_dyn.exe app_dyn_lin.exe
 
 app_static.exe : $(OBJS) libs/lib$(LIBNAME).a
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LFLAGS) -l$(LIBNAME)
 
 app_dyn.exe : $(OBJS) libs/lib$(LIBNAME).so
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LFLAGS) -l$(LIBNAME)
+
+app_dyn_lin.exe : CFLAGS += -D__USE_DYNLIN__
+app_dyn_lin.exe : LFLAGS := -ldl
+app_dyn_lin.exe : $(OBJS) libs/lib$(LIBNAME).so
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LFLAGS)
 
 debug func : CFLAGS += -g -fno-inline -fno-omit-frame-pointer -O0 --coverage
 debug : all
