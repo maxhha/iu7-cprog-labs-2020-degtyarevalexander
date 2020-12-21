@@ -31,6 +31,6 @@ out/%.o : ./src/%.c | ./out
 	$(CC) $(CFLAGS) $(flags) -o $@ -c $<
 
 clean :
-	@rm -f *.exe out/*.o out/*.d out/*.gcda out/*.gcno
+	@rm -f *.exe out/*.o out/*.d out/*.gcda out/*.gcno ./*.so
 
 -include $(SRCS:src/%.c=out/%.d)

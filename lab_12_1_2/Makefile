@@ -9,3 +9,7 @@ build :
 
 unit :
 	python3 -m unittest discover -s unit_tests
+
+clean :
+	rm -rf $(wildcard ./*/__pycache__/)
+	make -C deps/array clean
