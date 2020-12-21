@@ -1,4 +1,4 @@
-.PHONY : all build run debug clean
+.PHONY : all build run debug clean unit
 
 all : run
 run : build
@@ -6,3 +6,6 @@ run : build
 
 build :
 	make -C deps/array libarr.so
+
+unit :
+	python3 -m unittest discover -s unit_tests

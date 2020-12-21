@@ -21,7 +21,7 @@ LIB.copy_full_squares.restype = c_size_t
 
 def rotate_array(a, shift):
     if len(a) == 0:
-        raise Exception("Пустой массив")
+        return []
 
     if shift < 0:
         raise Exception("Отрицательный сдвиг")
