@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.array import rotate_array, filter_full_squares_array
+from array import rotate_array, filter_full_squares_array
 
 class Root(tk.Tk):
     def __init__(self):

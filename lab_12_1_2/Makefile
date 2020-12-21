@@ -2,7 +2,7 @@
 
 all : run
 run : build
-	python3 runner.py
+	python3 src
 
 build :
 	make -C deps/array libarr.so
