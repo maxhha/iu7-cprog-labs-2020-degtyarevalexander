@@ -12,7 +12,7 @@ rk_04:
   stage: build
   only:
     - rk_04
-  scrpit:
+  script:
     - cd rk_04_AABD
     - make build
     - cat in.txt
