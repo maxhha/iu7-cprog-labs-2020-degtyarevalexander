@@ -1,0 +1,10 @@
+        -:    0:Source:src/my_snprintf.c
+        -:    0:Graph:out/my_snprintf.gcno
+        -:    0:Data:out/my_snprintf.gcda
+        -:    0:Runs:2
+        -:    1:#include "../inc/my_snprintf.h"
+        -:    2:
+        1:    3:int my_snprintf (char *s, size_t maxlen, const char *format, ...)
+        -:    4:{
+        1:    5:    return 1;
+        -:    6:}
